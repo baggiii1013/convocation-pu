@@ -1,76 +1,99 @@
 import { faker } from '@faker-js/faker';
-import bcrypt from 'bcryptjs';
-import { prisma } from 'db';
-import type { AccountState, IAMPolicy } from 'db/generated/prisma';
+import bcrypt from 'bcrypt';
+import type { AccountState, UserRole } from '../../../../packages/db/generated/prisma/index.js';
+import { prisma } from '../../../../packages/db/index.js';
 import { logger } from '../utils/logger.js';
 
 export const seedAccounts = async (): Promise<void> => {
   logger.info('Seeding Accounts...');
 
   try {
-    // Get IAM policies for assignment
-    const policies = await prisma.iAMPolicy.findMany();
-    const superAdminPolicy = policies.find((p: IAMPolicy) => p.name === 'SUPER_ADMIN');
-    const readAccountsPolicy = policies.find((p: IAMPolicy) => p.name === 'READ_ACCOUNTS');
-    const readAttendeesPolicy = policies.find((p: IAMPolicy) => p.name === 'READ_ATTENDEES');
-
-    const hashedPassword = await bcrypt.hash('password123', 12);
+    // Hash password for all test accounts
+    const hashedPassword = await bcrypt.hash('Password123', 12);
 
     const accounts = [
-      // Super Admin Account
+      // Admin Account
       {
         email: 'admin@puconvocation.com',
+        password: hashedPassword,
+        firstName: 'System',
+        lastName: 'Administrator',
         displayName: 'System Administrator',
+        role: 'ADMIN' as UserRole,
         profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: superAdminPolicy ? [superAdminPolicy.id] : [],
-        accountState: 'ACTIVE' as AccountState
-      },
-      // Faculty Accounts
-      {
-        email: 'dean.engineering@puconvocation.com',
-        displayName: 'Dr. Rajesh Kumar',
-        profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: [readAccountsPolicy?.id, readAttendeesPolicy?.id].filter(Boolean) as string[],
-        accountState: 'ACTIVE' as AccountState
-      },
-      {
-        email: 'dean.medical@puconvocation.com',
-        displayName: 'Dr. Priya Sharma',
-        profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: [readAttendeesPolicy?.id].filter(Boolean) as string[],
-        accountState: 'ACTIVE' as AccountState
-      },
-      {
-        email: 'registrar@puconvocation.com',
-        displayName: 'Prof. Anil Patel',
-        profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: [readAccountsPolicy?.id, readAttendeesPolicy?.id].filter(Boolean) as string[],
-        accountState: 'ACTIVE' as AccountState
+        assignedIAMPolicies: [], // Simplified for now
+        accountState: 'ACTIVE' as AccountState,
+        isActive: true
       },
       // Staff Accounts
       {
-        email: 'convocation.coordinator@puconvocation.com',
-        displayName: 'Ms. Neha Gupta',
+        email: 'dean.engineering@puconvocation.com',
+        password: hashedPassword,
+        firstName: 'Rajesh',
+        lastName: 'Kumar',
+        displayName: 'Dr. Rajesh Kumar',
+        role: 'STAFF' as UserRole,
         profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: [readAttendeesPolicy?.id].filter(Boolean) as string[],
-        accountState: 'ACTIVE' as AccountState
+        assignedIAMPolicies: [],
+        accountState: 'ACTIVE' as AccountState,
+        isActive: true
+      },
+      {
+        email: 'dean.medical@puconvocation.com',
+        password: hashedPassword,
+        firstName: 'Priya',
+        lastName: 'Sharma',
+        displayName: 'Dr. Priya Sharma',
+        role: 'STAFF' as UserRole,
+        profileImageURL: faker.image.avatar(),
+        assignedIAMPolicies: [],
+        accountState: 'ACTIVE' as AccountState,
+        isActive: true
+      },
+      {
+        email: 'registrar@puconvocation.com',
+        password: hashedPassword,
+        firstName: 'Anil',
+        lastName: 'Patel',
+        displayName: 'Prof. Anil Patel',
+        role: 'STAFF' as UserRole,
+        profileImageURL: faker.image.avatar(),
+        assignedIAMPolicies: [],
+        accountState: 'ACTIVE' as AccountState,
+        isActive: true
+      },
+      // Staff Account
+      {
+        email: 'convocation.coordinator@puconvocation.com',
+        password: hashedPassword,
+        firstName: 'Neha',
+        lastName: 'Gupta',
+        displayName: 'Ms. Neha Gupta',
+        role: 'STAFF' as UserRole,
+        profileImageURL: faker.image.avatar(),
+        assignedIAMPolicies: [],
+        accountState: 'ACTIVE' as AccountState,
+        isActive: true
       }
     ];
 
-    // Generate additional random accounts
+    // Generate additional random student accounts
     for (let i = 0; i < 15; i++) {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
       const accountStates: AccountState[] = ['ACTIVE', 'INACTIVE', 'SUSPENDED', 'PENDING_VERIFICATION'];
+      
       accounts.push({
         email: faker.internet.email({ firstName, lastName, provider: 'puconvocation.com' }),
+        password: hashedPassword,
+        firstName,
+        lastName,
         displayName: `${firstName} ${lastName}`,
+        role: 'STUDENT' as UserRole,
         profileImageURL: faker.image.avatar(),
-        assignedIAMPolicies: faker.helpers.arrayElements(
-          policies.filter((p: IAMPolicy) => p.name !== 'SUPER_ADMIN').map((p: IAMPolicy) => p.id),
-          { min: 0, max: 3 }
-        ),
-        accountState: faker.helpers.arrayElement(accountStates)
+        assignedIAMPolicies: [],
+        accountState: faker.helpers.arrayElement(accountStates),
+        isActive: faker.datatype.boolean({ probability: 0.8 }) // 80% chance of being active
       });
     }
 

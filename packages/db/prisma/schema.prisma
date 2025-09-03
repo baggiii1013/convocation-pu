@@ -15,10 +15,16 @@ datasource db {
 model Account {
   id                    String   @id @default(auto()) @map("_id") @db.ObjectId
   email                 String   @unique
-  displayName           String
+  password              String   // Hashed password for authentication
+  firstName             String   // User's first name
+  lastName              String   // User's last name
+  displayName           String   // Full display name (computed or set)
   profileImageURL       String?
+  role                  UserRole @default(STUDENT) // User role for authorization
   assignedIAMPolicies   String[] // Array of IAM policy IDs
   accountState          AccountState @default(ACTIVE)
+  isActive              Boolean  @default(true) // Account active status
+  lastLoginAt           DateTime? // Last login timestamp
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   
@@ -201,6 +207,12 @@ model Convocation {
 }
 
 // Enums
+enum UserRole {
+  ADMIN
+  STAFF
+  STUDENT
+}
+
 enum AccountState {
   ACTIVE
   INACTIVE

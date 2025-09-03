@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
+import authRoutes from './auth.routes.js';
 
 const router = Router();
 
@@ -22,8 +23,10 @@ router.get('/version', (req: Request, res: Response) => {
   });
 });
 
+// Authentication routes
+router.use('/auth', authRoutes);
+
 // TODO: Add route modules here as they are created
-// router.use('/auth', authRoutes);
 // router.use('/accounts', accountRoutes);
 // router.use('/attendees', attendeeRoutes);
 // router.use('/config', configRoutes);

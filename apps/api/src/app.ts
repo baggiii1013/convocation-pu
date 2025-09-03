@@ -2,6 +2,8 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
+import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
@@ -35,6 +37,38 @@ export const createApp = (): express.Application => {
     crossOriginEmbedderPolicy: false,
   }));
 
+  // Rate limiting middleware
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: config.NODE_ENV === 'production' ? 100 : 1000, // Limit each IP to 100 requests per windowMs in production
+    message: {
+      success: false,
+      message: 'Too many requests from this IP, please try again later.',
+      code: 'RATE_LIMIT_EXCEEDED'
+    },
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  });
+  app.use(limiter);
+
+  // Auth rate limiting (stricter for auth endpoints)
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: config.NODE_ENV === 'production' ? 5 : 50, // Limit each IP to 5 auth requests per windowMs in production
+    message: {
+      success: false,
+      message: 'Too many authentication attempts, please try again later.',
+      code: 'AUTH_RATE_LIMIT_EXCEEDED'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // NoSQL injection prevention
+  // app.use(mongoSanitize({
+  //   replaceWith: '_'
+  // }));
+
   // CORS configuration
   app.use(cors({
     origin: [
@@ -60,6 +94,9 @@ export const createApp = (): express.Application => {
   } else {
     app.use(morgan('combined'));
   }
+
+  // Apply auth rate limiter to auth routes specifically
+  app.use('/api/v1/auth', authLimiter);
 
   // Routes
   app.use('/api/v1', routes);
