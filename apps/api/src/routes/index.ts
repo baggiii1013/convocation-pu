@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
+import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
 
 const router = Router();
@@ -26,9 +27,11 @@ router.get('/version', (req: Request, res: Response) => {
 // Authentication routes
 router.use('/auth', authRoutes);
 
+// Attendee management routes
+router.use('/attendees', attendeeRoutes);
+
 // TODO: Add route modules here as they are created
 // router.use('/accounts', accountRoutes);
-// router.use('/attendees', attendeeRoutes);
 // router.use('/config', configRoutes);
 // router.use('/analytics', analyticsRoutes);
 // router.use('/transactions', transactionRoutes);
