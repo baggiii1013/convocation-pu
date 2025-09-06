@@ -1,6 +1,7 @@
 'use client';
 
 import api from '@/lib/axios';
+import axios from 'axios';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 // Types
@@ -75,16 +76,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         accountState: account.accountState,
         isActive: account.isActive,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
       
       // Clear any existing tokens
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       
-      throw new Error(
-        error.response?.data?.message || 'Login failed. Please try again.'
-      );
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || 'Login failed. Please try again.'
+        );
+      }
+      throw new Error('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

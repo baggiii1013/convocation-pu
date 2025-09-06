@@ -93,7 +93,7 @@ export default function DashboardPage() {
             Welcome back, {user?.displayName}!
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Here's what's happening with your convocation activities.
+            Here&apos;s what&apos;s happening with your convocation activities.
           </p>
         </div>
 

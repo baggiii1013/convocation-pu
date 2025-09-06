@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -18,7 +18,7 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
@@ -50,118 +50,175 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-slate-900">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="flex justify-center">
-            <div className="h-12 w-12 rounded-lg bg-slate-900 dark:bg-slate-50" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/50 relative overflow-hidden">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-background/50 border rounded-full -z-20" />
+      </div>
+
+      <div className="flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          {/* Header */}
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center relative shadow-glow">
+                <span className="text-white font-bold text-2xl">PU</span>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-gold rounded-full shadow-gold"></div>
+              </div>
+            </div>
+            
+            <div className="inline-block px-4 py-2 mb-4 bg-gradient-gold-subtle text-gold-dark font-semibold rounded-full border border-gold/20 shadow-sm">
+              Convocation Portal
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+              Welcome back
+            </h1>
+            <p className="text-muted-foreground">
+              Sign in to your PU Convocation account
+            </p>
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-slate-50">
-            Welcome back
-          </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
-            Sign in to your PU Convocation account
-          </p>
-        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign in</CardTitle>
-            <CardDescription>
-              Enter your email and password to access your account
-            </CardDescription>
-          </CardHeader>
+          {/* Form Card */}
+          <Card className="bg-card/50 backdrop-blur border-border hover:border-gold/20 transition-all duration-300 relative overflow-hidden shadow-gold">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-gold-subtle rounded-full blur-xl opacity-30"></div>
+            
+            <CardHeader className="relative z-10">
+              <CardTitle className="text-foreground text-xl">Sign in</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Enter your credentials to access the convocation platform
+              </CardDescription>
+            </CardHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <CardContent className="space-y-4">
-              {error && (
-                <div className="rounded-md bg-red-50 p-4 border border-red-200 dark:bg-red-900/50 dark:border-red-800">
-                  <div className="text-sm text-red-800 dark:text-red-200">
-                    {error}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <CardContent className="space-y-6 relative z-10">
+                {error && (
+                  <div className="rounded-lg bg-red-50/80 backdrop-blur p-4 border border-red-200/50 dark:bg-red-900/30 dark:border-red-800/50">
+                    <div className="text-sm text-red-800 dark:text-red-200 font-medium">
+                      {error}
+                    </div>
+                  </div>
+                )}
+
+                <Input
+                  label="Email address"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  {...register('email')}
+                  error={errors.email?.message}
+                  className="bg-background/50 backdrop-blur border-border focus:border-gold/50 transition-all duration-300"
+                />
+
+                <Input
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  {...register('password')}
+                  error={errors.password?.message}
+                  className="bg-background/50 backdrop-blur border-border focus:border-gold/50 transition-all duration-300"
+                />
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <input
+                      id="remember-me"
+                      name="remember-me"
+                      type="checkbox"
+                      className="h-4 w-4 text-gold focus:ring-gold border-border rounded transition-colors duration-300"
+                    />
+                    <label htmlFor="remember-me" className="ml-2 block text-sm text-foreground font-medium">
+                      Remember me
+                    </label>
+                  </div>
+
+                  <div className="text-sm">
+                    <Link
+                      href="/forgot-password"
+                      className="font-medium text-gold hover:text-gold-dark transition-colors duration-300"
+                    >
+                      Forgot password?
+                    </Link>
                   </div>
                 </div>
-              )}
+              </CardContent>
 
-              <Input
-                label="Email address"
-                type="email"
-                autoComplete="email"
-                required
-                {...register('email')}
-                error={errors.email?.message}
-              />
+              <CardFooter className="flex flex-col space-y-6 relative z-10">
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-gold text-black border-0 shadow-gold hover:shadow-gold-intense hover:scale-105 transition-all duration-300 font-semibold"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
+                      <span>Signing in...</span>
+                    </div>
+                  ) : (
+                    'Sign in to Convocation Portal'
+                  )}
+                </Button>
 
-              <Input
-                label="Password"
-                type="password"
-                autoComplete="current-password"
-                required
-                {...register('password')}
-                error={errors.password?.message}
-              />
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-900 dark:text-slate-50">
-                    Remember me
-                  </label>
+                <div className="text-center">
+                  <span className="text-sm text-muted-foreground">
+                    Don&apos;t have an account?{' '}
+                    <Link
+                      href="/register"
+                      className="font-semibold text-gold hover:text-gold-dark transition-colors duration-300"
+                    >
+                      Create account
+                    </Link>
+                  </span>
                 </div>
+              </CardFooter>
+            </form>
+          </Card>
 
-                <div className="text-sm">
-                  <Link
-                    href="/forgot-password"
-                    className="font-medium text-slate-600 hover:text-slate-500 dark:text-slate-400 dark:hover:text-slate-300"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-
-            <CardFooter className="flex flex-col space-y-4">
-              <Button
-                type="submit"
-                className="w-full"
-                loading={isLoading}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign in'}
-              </Button>
-
-              <div className="text-center">
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  Don't have an account?{' '}
-                  <Link
-                    href="/register"
-                    className="font-medium text-slate-900 hover:text-slate-700 dark:text-slate-50 dark:hover:text-slate-300"
-                  >
-                    Sign up
-                  </Link>
-                </span>
-              </div>
-            </CardFooter>
-          </form>
-        </Card>
-
-        <div className="mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
-          <p>
-            By signing in, you agree to our{' '}
-            <Link href="/terms" className="underline">
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy" className="underline">
-              Privacy Policy
-            </Link>
-          </p>
+          {/* Footer */}
+          <div className="text-center text-xs text-muted-foreground">
+            <p>
+              By signing in, you agree to our{' '}
+              <Link href="/terms" className="text-gold hover:text-gold-dark underline transition-colors duration-300">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy" className="text-gold hover:text-gold-dark underline transition-colors duration-300">
+                Privacy Policy
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/50 relative overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute inset-0 overflow-hidden -z-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center relative shadow-glow mx-auto mb-4">
+              <span className="text-white font-bold text-2xl">PU</span>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-gold rounded-full shadow-gold"></div>
+            </div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto mb-2"></div>
+            <p className="text-muted-foreground">Loading convocation portal...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

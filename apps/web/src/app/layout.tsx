@@ -1,6 +1,6 @@
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -19,7 +19,11 @@ export const metadata: Metadata = {
   description: "Digital platform for managing convocation ceremonies at Parul University. Streamlining registration, seat allocation, and ceremonial processes.",
   keywords: "Parul University, Convocation, Graduation, Ceremony, Registration",
   authors: [{ name: "Kaustubh Bagale" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
