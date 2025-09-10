@@ -10,10 +10,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const registerSchema = z.object({
-  displayName: z.string().min(2, 'Name must be at least 2 characters'),
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
@@ -46,10 +48,15 @@ export default function RegisterPage() {
       setIsLoading(true);
       setError(null);
       
-      const { ...registerData } = data;
+      // Extract confirmPassword and prepare data for API
+      const { confirmPassword, ...registerData } = data;
       
-      await api.post('/auth/register', registerData);
+      await api.post('/api/v1/auth/register', {
+        ...registerData,
+        role: 'STUDENT' // Default role for registration
+      });
       
+      toast.success('Account created successfully! Please sign in to continue.');
       setSuccess(true);
       
       // Redirect to login after successful registration
@@ -57,11 +64,12 @@ export default function RegisterPage() {
         router.push('/login?message=Registration successful. Please sign in.');
       }, 2000);
     } catch (err: unknown) {
+      let errorMessage = 'Registration failed';
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Registration failed');
-      } else {
-        setError('An unexpected error occurred');
+        errorMessage = err.response?.data?.message || 'Registration failed';
       }
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -170,15 +178,27 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                <Input
-                  label="Full Name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  {...register('displayName')}
-                  error={errors.displayName?.message}
-                  className="bg-background/50 backdrop-blur border-border focus:border-gold/50 transition-all duration-300"
-                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Input
+                    label="First Name"
+                    type="text"
+                    autoComplete="given-name"
+                    required
+                    {...register('firstName')}
+                    error={errors.firstName?.message}
+                    className="bg-background/50 backdrop-blur border-border focus:border-gold/50 transition-all duration-300"
+                  />
+
+                  <Input
+                    label="Last Name"
+                    type="text"
+                    autoComplete="family-name"
+                    required
+                    {...register('lastName')}
+                    error={errors.lastName?.message}
+                    className="bg-background/50 backdrop-blur border-border focus:border-gold/50 transition-all duration-300"
+                  />
+                </div>
 
                 <Input
                   label="Email address"

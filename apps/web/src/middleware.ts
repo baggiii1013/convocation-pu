@@ -30,7 +30,7 @@ const adminRoutes = [
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get('token')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
   const userRole = request.cookies.get('userRole')?.value;
 
   // Check if the current path is public
@@ -51,21 +51,21 @@ export function middleware(request: NextRequest) {
   // If it's a public route, allow access
   if (isPublicRoute) {
     // If user is authenticated and trying to access auth pages, redirect to dashboard
-    if (token && (pathname === '/login' || pathname === '/register')) {
+    if (refreshToken && (pathname === '/login' || pathname === '/register')) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
     return NextResponse.next();
   }
 
   // If user is not authenticated and trying to access protected routes
-  if ((isProtectedRoute || isAdminRoute) && !token) {
+  if ((isProtectedRoute || isAdminRoute) && !refreshToken) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   // If user is authenticated but not admin and trying to access admin routes
-  if (isAdminRoute && token && userRole !== 'ADMIN') {
+  if (isAdminRoute && refreshToken && userRole !== 'ADMIN') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

@@ -2,6 +2,7 @@
 
 import api from '@/lib/axios';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 // Types
@@ -37,6 +38,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   // Check if user is authenticated
   const isAuthenticated = !!user;
@@ -53,35 +55,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setLoading(true);
       
-      const response = await api.post('/api/auth/login', {
+      const response = await api.post('/api/v1/auth/login', {
         email,
         password,
       });
 
-      const { accessToken, refreshToken, account } = response.data.data;
+      const { accessToken, user: userData } = response.data.data;
 
-      // Store tokens
+      // Store access token in localStorage
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
 
       // Set user data
       setUser({
-        id: account.id,
-        email: account.email,
-        firstName: account.firstName,
-        lastName: account.lastName,
-        displayName: account.displayName,
-        role: account.role,
-        profileImageURL: account.profileImageURL,
-        accountState: account.accountState,
-        isActive: account.isActive,
+        id: userData.id,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        displayName: userData.displayName || `${userData.firstName} ${userData.lastName}`,
+        role: userData.role.toUpperCase() as 'ADMIN' | 'STAFF' | 'STUDENT',
+        profileImageURL: userData.profileImageURL,
+        accountState: userData.accountState || 'ACTIVE',
+        isActive: userData.isActive !== false,
       });
     } catch (error: unknown) {
       console.error('Login error:', error);
       
       // Clear any existing tokens
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
       
       if (axios.isAxiosError(error)) {
         throw new Error(
@@ -98,14 +98,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = async () => {
     try {
       // Call logout endpoint to invalidate token on server
-      await api.post('/api/auth/logout');
+      await api.post('/api/v1/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
       // Clear local storage and user state
-      localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setUser(null);
+      // Redirect to homepage
+      router.push('/');
     }
   };
 
@@ -121,7 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
 
         // Verify token and get user data
-        const response = await api.get('/api/auth/profile');
+        const response = await api.get('/api/v1/auth/profile');
         const userData = response.data.data;
 
         setUser({

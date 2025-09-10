@@ -7,8 +7,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -27,6 +28,14 @@ function LoginForm() {
 
   const redirectTo = searchParams.get('redirect') || '/dashboard';
 
+  // Show success message if redirected from registration
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message) {
+      toast.success(message);
+    }
+  }, [searchParams]);
+
   const {
     register,
     handleSubmit,
@@ -41,9 +50,12 @@ function LoginForm() {
       setError(null);
       
       await login(data.email, data.password);
+      toast.success('Welcome back! Login successful.');
       router.push(redirectTo);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      const errorMessage = err instanceof Error ? err.message : 'Login failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

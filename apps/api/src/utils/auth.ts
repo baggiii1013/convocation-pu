@@ -173,18 +173,72 @@ export const generateTokenPair = (user: Account) => {
 };
 
 /**
- * Get cookie options for refresh token
+ * Get cookie options for refresh token with maximum security
  * @param secure - Whether to use secure cookies (HTTPS only)
- * @returns Cookie options object
+ * @returns Cookie options object with all security measures
  */
 export const getRefreshTokenCookieOptions = (secure: boolean = process.env.NODE_ENV === 'production') => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   return {
-    httpOnly: true, // Prevent XSS attacks
-    secure: secure, // HTTPS only in production
-    sameSite: 'strict' as const, // CSRF protection
+    httpOnly: true, // Prevent XSS attacks - cookie not accessible via JavaScript
+    secure: isProduction, // HTTPS only in production
+    sameSite: 'strict' as const, // Strictest CSRF protection - cookie only sent for same-site requests
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    path: '/', // Available for all routes
-    domain: process.env.COOKIE_DOMAIN || undefined // Set domain if needed for subdomains
+    path: '/', // Restrict to root path only
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+  };
+};
+
+/**
+ * Get cookie options for user role with security measures
+ * Note: httpOnly must be false for Next.js middleware access
+ * @returns Cookie options object with security measures
+ */
+export const getUserRoleCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  return {
+    httpOnly: false, // Must be false for Next.js middleware access
+    secure: isProduction, // HTTPS only in production
+    sameSite: 'strict' as const, // Strictest CSRF protection
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+    path: '/', // Restrict to root path only
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+  };
+};
+
+/**
+ * Get cookie clearing options for refresh token
+ * Must match the options used when setting the cookie
+ * @returns Cookie clearing options
+ */
+export const getRefreshTokenClearOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'strict' as const,
+    path: '/',
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
+  };
+};
+
+/**
+ * Get cookie clearing options for user role
+ * Must match the options used when setting the cookie
+ * @returns Cookie clearing options
+ */
+export const getUserRoleClearOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  return {
+    httpOnly: false,
+    secure: isProduction,
+    sameSite: 'strict' as const,
+    path: '/',
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
   };
 };
 

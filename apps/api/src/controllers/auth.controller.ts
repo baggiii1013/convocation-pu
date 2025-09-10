@@ -2,10 +2,13 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { prisma } from '../../../../packages/db/index.js';
 import {
-    generateTokenPair,
-    getRefreshTokenCookieOptions,
-    verifyRefreshToken,
-    type AccessTokenPayload
+  generateTokenPair,
+  getRefreshTokenClearOptions,
+  getRefreshTokenCookieOptions,
+  getUserRoleClearOptions,
+  getUserRoleCookieOptions,
+  verifyRefreshToken,
+  type AccessTokenPayload
 } from '../utils/auth.js';
 import { logger } from '../utils/logger.js';
 
@@ -59,8 +62,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Generate tokens
     const { accessToken, refreshToken } = generateTokenPair(user);
 
-    // Set refresh token as httpOnly cookie
+    // Set refresh token as secure httpOnly cookie
     res.cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
+    
+    // Set user role in a secure cookie for middleware access
+    res.cookie('userRole', user.role, getUserRoleCookieOptions());
 
     logger.info(`New user registered: ${email} with role ${role}`);
 
@@ -135,8 +141,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Generate tokens
     const { accessToken, refreshToken } = generateTokenPair(user);
 
-    // Set refresh token as httpOnly cookie
+    // Set refresh token as secure httpOnly cookie
     res.cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
+    
+    // Set user role in a secure cookie for middleware access
+    res.cookie('userRole', user.role, getUserRoleCookieOptions());
 
     logger.info(`User logged in: ${email}`);
 
@@ -201,8 +210,11 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     // Generate new tokens
     const { accessToken, refreshToken: newRefreshToken } = generateTokenPair(user);
 
-    // Set new refresh token as httpOnly cookie
+    // Set new refresh token as secure httpOnly cookie
     res.cookie('refreshToken', newRefreshToken, getRefreshTokenCookieOptions());
+    
+    // Update user role cookie (in case role changed)
+    res.cookie('userRole', user.role, getUserRoleCookieOptions());
 
     logger.info(`Token refreshed for user: ${user.email}`);
 
@@ -242,8 +254,11 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = req.user as AccessTokenPayload;
 
-    // Clear refresh token cookie
-    res.clearCookie('refreshToken');
+    // Clear refresh token cookie with matching options
+    res.clearCookie('refreshToken', getRefreshTokenClearOptions());
+    
+    // Clear user role cookie with matching options
+    res.clearCookie('userRole', getUserRoleClearOptions());
 
     logger.info(`User logged out: ${user?.email || 'unknown'}`);
 

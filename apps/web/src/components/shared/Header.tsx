@@ -101,7 +101,7 @@ export function Header() {
                 className="flex items-center space-x-2 rounded-full bg-slate-100 p-2 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700"
               >
                 <div className="h-6 w-6 rounded-full bg-slate-600 text-xs text-white flex items-center justify-center">
-                  {getInitials(user.displayName)}
+                  {getInitials(user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim())}
                 </div>
                 <svg
                   className="h-4 w-4 text-slate-600 dark:text-slate-400"
@@ -121,8 +121,8 @@ export function Header() {
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-48 rounded-md border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-800 dark:bg-slate-950">
                   <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300">
-                    <div className="font-medium">{user.displayName}</div>
-                    <div className="text-slate-500">{user.email}</div>
+                    <div className="font-medium">{user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim()}</div>
+                    <div className="text-slate-500">{user?.email}</div>
                   </div>
                   <hr className="border-slate-200 dark:border-slate-800" />
                   <Link

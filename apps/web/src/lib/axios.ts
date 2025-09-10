@@ -4,6 +4,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
   timeout: 10000,
+  withCredentials: true, // Important: allows cookies to be sent
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,40 +40,23 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        // Try to refresh the token
-        const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
+        // Try to refresh the token using cookie
+        const response = await api.post('/api/v1/auth/refresh');
         
-        if (refreshToken) {
-          const response = await axios.post(`${api.defaults.baseURL}/api/auth/refresh`, {
-            refreshToken,
-          });
-          
-          const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-          
-          // Store new tokens
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('accessToken', accessToken);
-            if (newRefreshToken) {
-              localStorage.setItem('refreshToken', newRefreshToken);
-            }
-          }
-          
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return api(originalRequest);
-        } else {
-          // No refresh token available, redirect to login
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
-          }
+        const { accessToken } = response.data.data;
+        
+        // Store new access token
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('accessToken', accessToken);
         }
+        
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
       } catch (refreshError) {
         // Refresh failed, redirect to login
         if (typeof window !== 'undefined') {
           localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);

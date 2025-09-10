@@ -58,7 +58,11 @@ export function isValidEmail(email: string): boolean {
 /**
  * Generate initials from name
  */
-export function getInitials(name: string): string {
+export function getInitials(name: string | undefined | null): string {
+  if (!name || typeof name !== 'string') {
+    return 'U'; // Default to 'U' for User
+  }
+  
   return name
     .split(' ')
     .map((n) => n[0])
