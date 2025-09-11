@@ -3,7 +3,7 @@
   "module": "index.ts",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "start": "bun src/server.ts",
+    "start:prod": "node dist/apps/api/src/server.js",
     "build": "tsc",
     "type-check": "tsc --noEmit",
     "seed": "bun src/seeders/seedDatabase.ts",
