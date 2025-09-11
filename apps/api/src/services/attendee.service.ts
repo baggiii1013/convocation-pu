@@ -1,5 +1,5 @@
-import type { Attendee, Prisma } from '../../../../packages/db/generated/prisma/index.js';
-import { prisma } from '../../../../packages/db/index.js';
+import type { Attendee, Prisma } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 export interface AttendeeCreateInput {

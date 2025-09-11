@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from 'db';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 // Helper function to ensure min is always less than max

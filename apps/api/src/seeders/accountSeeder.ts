@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import bcrypt from 'bcrypt';
-import type { AccountState, UserRole } from '../../../../packages/db/generated/prisma/index.js';
-import { prisma } from '../../../../packages/db/index.js';
+import type { AccountState, UserRole } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 export const seedAccounts = async (): Promise<void> => {

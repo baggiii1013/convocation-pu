@@ -1,4 +1,4 @@
-import { prisma } from 'db';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 export const seedIAMPolicies = async (): Promise<void> => {

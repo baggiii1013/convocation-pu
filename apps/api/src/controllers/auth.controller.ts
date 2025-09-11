@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
-import { prisma } from '../../../../packages/db/index.js';
+import { prisma } from '../lib/prisma.js';
 import {
   generateTokenPair,
   getRefreshTokenClearOptions,

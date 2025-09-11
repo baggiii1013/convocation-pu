@@ -1,5 +1,5 @@
-import type { Account, AccountState, Prisma, UserRole } from '../../../../packages/db/generated/prisma/index.js';
-import { prisma } from '../../../../packages/db/index.js';
+import type { Account, AccountState, Prisma, UserRole } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 // Input types for Account operations

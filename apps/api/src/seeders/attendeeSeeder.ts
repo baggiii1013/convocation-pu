@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from 'db';
-import type { Account, Department } from 'db/generated/prisma';
+import { prisma } from '../lib/prisma.js';
+import type { Account, Department } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 export const seedAttendees = async (): Promise<void> => {

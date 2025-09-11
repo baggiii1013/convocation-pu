@@ -1,4 +1,4 @@
-import { prisma } from '../../../../packages/db/index.js';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 import { seedAccounts } from './accountSeeder.js';
 import { seedAnalytics } from './analyticsSeeder.js';
