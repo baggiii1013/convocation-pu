@@ -75,6 +75,8 @@ export const createApp = (): express.Application => {
       config.FRONTEND_URL,
       'http://localhost:3000',
       'http://localhost:3001',
+      'https://convocation-pu-web-mtg8-kaustubh-bagales-projects-138465e6.vercel.app',
+      /\.vercel\.app$/, // Allow all Vercel deployments
     ],
     credentials: true,
     optionsSuccessStatus: 200,
