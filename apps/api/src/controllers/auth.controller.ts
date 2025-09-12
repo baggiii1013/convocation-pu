@@ -2,13 +2,15 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import {
-  generateTokenPair,
-  getRefreshTokenClearOptions,
-  getRefreshTokenCookieOptions,
-  getUserRoleClearOptions,
-  getUserRoleCookieOptions,
-  verifyRefreshToken,
-  type AccessTokenPayload
+    generateTokenPair,
+    getAccessTokenClearOptions,
+    getAccessTokenCookieOptions,
+    getRefreshTokenClearOptions,
+    getRefreshTokenCookieOptions,
+    getUserRoleClearOptions,
+    getUserRoleCookieOptions,
+    verifyRefreshToken,
+    type AccessTokenPayload
 } from '../utils/auth.js';
 import { logger } from '../utils/logger.js';
 
@@ -62,6 +64,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Generate tokens
     const { accessToken, refreshToken } = generateTokenPair(user);
 
+    // Set access token as secure httpOnly cookie
+    res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
+    
     // Set refresh token as secure httpOnly cookie
     res.cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
     
@@ -74,8 +79,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Account created successfully',
       data: {
-        user,
-        accessToken
+        user
       }
     });
 
@@ -141,6 +145,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Generate tokens
     const { accessToken, refreshToken } = generateTokenPair(user);
 
+    // Set access token as secure httpOnly cookie
+    res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
+    
     // Set refresh token as secure httpOnly cookie
     res.cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
     
@@ -159,8 +166,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role
-        },
-        accessToken
+        }
       }
     });
 
@@ -210,6 +216,9 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     // Generate new tokens
     const { accessToken, refreshToken: newRefreshToken } = generateTokenPair(user);
 
+    // Set new access token as secure httpOnly cookie
+    res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
+    
     // Set new refresh token as secure httpOnly cookie
     res.cookie('refreshToken', newRefreshToken, getRefreshTokenCookieOptions());
     
@@ -222,7 +231,6 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Token refreshed successfully',
       data: {
-        accessToken,
         user: {
           id: user.id,
           email: user.email,
@@ -254,6 +262,9 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = req.user as AccessTokenPayload;
 
+    // Clear access token cookie with matching options
+    res.clearCookie('accessToken', getAccessTokenClearOptions());
+    
     // Clear refresh token cookie with matching options
     res.clearCookie('refreshToken', getRefreshTokenClearOptions());
     

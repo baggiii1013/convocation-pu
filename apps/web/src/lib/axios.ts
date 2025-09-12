@@ -1,5 +1,13 @@
 import axios from 'axios';
 
+// Track if user just logged out to prevent unnecessary refresh attempts
+let isLoggedOut = false;
+
+// Function to set logout state
+export const setLoggedOutState = (state: boolean) => {
+  isLoggedOut = state;
+};
+
 // Validate that the API URL is configured
 if (!process.env.NEXT_PUBLIC_API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL environment variable is required but not set');
@@ -15,22 +23,22 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to attach JWT token
-api.interceptors.request.use(
-  (config) => {
-    // Get token from localStorage (you might want to use a more secure storage method)
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+// Request interceptor - no longer needed since tokens are in cookies
+// api.interceptors.request.use(
+//   (config) => {
+//     // Get token from localStorage (you might want to use a more secure storage method)
+//     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
     
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 // Response interceptor to handle token refresh logic
 api.interceptors.response.use(
@@ -44,25 +52,42 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
+      // Don't try to refresh on these endpoints to prevent infinite loops
+      const skipRefreshEndpoints = ['/api/v1/auth/refresh', '/api/v1/auth/logout'];
+      const isSkipRefreshEndpoint = skipRefreshEndpoints.some(endpoint => 
+        originalRequest.url?.includes(endpoint)
+      );
+      
+      // Don't attempt refresh if user just logged out
+      if (isSkipRefreshEndpoint || isLoggedOut) {
+        // For refresh and logout endpoints, don't attempt refresh
+        if (typeof window !== 'undefined') {
+          // Only redirect to login if we're not already on auth pages
+          const currentPath = window.location.pathname;
+          if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+            window.location.href = '/login';
+          }
+        }
+        return Promise.reject(error);
+      }
+      
       try {
         // Try to refresh the token using cookie
         const response = await api.post('/api/v1/auth/refresh');
         
-        const { accessToken } = response.data.data;
+        // No need to store tokens - they're automatically set in httpOnly cookies
         
-        // Store new access token
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('accessToken', accessToken);
-        }
-        
-        // Retry original request with new token
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        // Retry original request with new cookies
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
+        // Refresh failed, set logged out state and redirect to login
+        isLoggedOut = true;
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken');
-          window.location.href = '/login';
+          // Only redirect to login if we're not already on auth pages
+          const currentPath = window.location.pathname;
+          if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(refreshError);
       }

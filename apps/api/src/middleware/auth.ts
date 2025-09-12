@@ -57,9 +57,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
       code: 'INVALID_TOKEN'
     });
   }
-};
-
-/**
+};/**
  * Role-based authorization middleware
  * @param allowedRoles - Array of roles that can access the route
  */

@@ -60,12 +60,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
 
-      const { accessToken, user: userData } = response.data.data;
+      const { user: userData } = response.data.data;
 
-      // Store access token in localStorage
-      localStorage.setItem('accessToken', accessToken);
-
-      // Set user data
+      // Set user data (no need to store tokens - they're in httpOnly cookies)
       setUser({
         id: userData.id,
         email: userData.email,
@@ -80,8 +77,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (error: unknown) {
       console.error('Login error:', error);
       
-      // Clear any existing tokens
-      localStorage.removeItem('accessToken');
+      // Clear any existing user state
+      setUser(null);
       
       if (axios.isAxiosError(error)) {
         throw new Error(
@@ -102,8 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Clear local storage and user state
-      localStorage.removeItem('refreshToken');
+      // Clear user state (cookies are cleared server-side)
       setUser(null);
       // Redirect to homepage
       router.push('/');
@@ -114,14 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-        
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-
-        // Verify token and get user data
+        // Try to get user profile - if cookies are valid, this will succeed
         const response = await api.get('/api/v1/auth/profile');
         const userData = response.data.data;
 
@@ -137,11 +126,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           isActive: userData.isActive,
         });
       } catch (error) {
-        console.error('Auth check error:', error);
+        // Only log error if it's not a 401 (which is expected when not logged in)
+        if (axios.isAxiosError(error) && error.response?.status !== 401) {
+          console.error('Auth check error:', error);
+        }
         
-        // Clear invalid tokens
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        // Clear user state if authentication fails
         setUser(null);
       } finally {
         setLoading(false);

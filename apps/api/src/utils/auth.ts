@@ -173,6 +173,24 @@ export const generateTokenPair = (user: Account) => {
 };
 
 /**
+ * Get cookie options for access token with maximum security
+ * @param secure - Whether to use secure cookies (HTTPS only)
+ * @returns Cookie options object with all security measures
+ */
+export const getAccessTokenCookieOptions = (secure: boolean = process.env.NODE_ENV === 'production') => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  return {
+    httpOnly: true, // Prevent XSS attacks - cookie not accessible via JavaScript
+    secure: isProduction, // HTTPS only in production
+    sameSite: 'strict' as const, // Strictest CSRF protection - cookie only sent for same-site requests
+    maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds (matches ACCESS_TOKEN_EXPIRY)
+    path: '/', // Restrict to root path only
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+  };
+};
+
+/**
  * Get cookie options for refresh token with maximum security
  * @param secure - Whether to use secure cookies (HTTPS only)
  * @returns Cookie options object with all security measures
@@ -205,6 +223,23 @@ export const getUserRoleCookieOptions = () => {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
     path: '/', // Restrict to root path only
     domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+  };
+};
+
+/**
+ * Get cookie clearing options for access token
+ * Must match the options used when setting the cookie
+ * @returns Cookie clearing options
+ */
+export const getAccessTokenClearOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'strict' as const,
+    path: '/',
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
   };
 };
 
