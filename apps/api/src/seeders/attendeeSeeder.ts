@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '../lib/prisma.js';
 import type { Account, Department } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 export const seedAttendees = async (): Promise<void> => {
@@ -51,7 +51,9 @@ export const seedAttendees = async (): Promise<void> => {
         phone: faker.phone.number(),
         convocationEligible: true,
         convocationRegistered: faker.datatype.boolean({ probability: 0.8 }),
-        accountId: linkedAccount ? linkedAccount.id : null
+        accountId: linkedAccount ? linkedAccount.id : null,
+        crr: department.id, // Assuming crr is department reference
+        enclosure: faker.helpers.arrayElement(['A', 'B', 'C', 'D']) // Random enclosure
       });
     }
 
@@ -72,7 +74,9 @@ export const seedAttendees = async (): Promise<void> => {
         phone: faker.phone.number(),
         convocationEligible: false,
         convocationRegistered: false,
-        accountId: null
+        accountId: null,
+        crr: department.id,
+        enclosure: faker.helpers.arrayElement(['A', 'B', 'C', 'D'])
       });
     }
 

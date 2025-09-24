@@ -143,6 +143,8 @@ exports.Prisma.AttendeeScalarFieldEnum = {
   convocationRegistered: 'convocationRegistered',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  crr: 'crr',
+  enclosure: 'enclosure',
   accountId: 'accountId'
 };
 
@@ -155,43 +157,11 @@ exports.Prisma.SeatAllocationScalarFieldEnum = {
   attendeeId: 'attendeeId'
 };
 
-exports.Prisma.TransactionScalarFieldEnum = {
-  id: 'id',
-  amount: 'amount',
-  currency: 'currency',
-  status: 'status',
-  paymentMethod: 'paymentMethod',
-  transactionId: 'transactionId',
-  razorpayOrderId: 'razorpayOrderId',
-  razorpayPaymentId: 'razorpayPaymentId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  attendeeId: 'attendeeId',
-  accountId: 'accountId'
-};
-
-exports.Prisma.RemoteConfigScalarFieldEnum = {
-  id: 'id',
-  active: 'active',
-  bannerImageURL: 'bannerImageURL',
-  logoImageURL: 'logoImageURL',
-  countdownEnabled: 'countdownEnabled',
-  countdownTargetDate: 'countdownTargetDate',
-  countdownTitle: 'countdownTitle',
-  countdownDescription: 'countdownDescription',
-  attendeesLocked: 'attendeesLocked',
-  attendeesCSVFile: 'attendeesCSVFile',
-  showInstructions: 'showInstructions',
-  instructions: 'instructions',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.EnclosureScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
   allocatedFor: 'allocatedFor',
-  entryDirection: 'entryDirection',
-  remoteConfigId: 'remoteConfigId'
+  entryDirection: 'entryDirection'
 };
 
 exports.Prisma.RowScalarFieldEnum = {
@@ -271,14 +241,6 @@ exports.AccountState = exports.$Enums.AccountState = {
   PENDING_VERIFICATION: 'PENDING_VERIFICATION'
 };
 
-exports.TransactionStatus = exports.$Enums.TransactionStatus = {
-  PENDING: 'PENDING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED',
-  REFUNDED: 'REFUNDED'
-};
-
 exports.EnclosureType = exports.$Enums.EnclosureType = {
   STUDENTS: 'STUDENTS',
   FACULTY: 'FACULTY',
@@ -302,8 +264,6 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Attendee: 'Attendee',
   SeatAllocation: 'SeatAllocation',
-  Transaction: 'Transaction',
-  RemoteConfig: 'RemoteConfig',
   Enclosure: 'Enclosure',
   Row: 'Row',
   Analytics: 'Analytics',

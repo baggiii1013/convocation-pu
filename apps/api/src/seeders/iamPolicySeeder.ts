@@ -56,21 +56,11 @@ export const seedIAMPolicies = async (): Promise<void> => {
       permissions: ['config:update', 'config:read']
     },
     {
-      name: 'READ_TRANSACTIONS',
-      description: 'Permission to read transaction data',
-      permissions: ['transactions:read', 'transactions:list']
-    },
-    {
-      name: 'WRITE_TRANSACTIONS',
-      description: 'Permission to create and update transactions',
-      permissions: ['transactions:create', 'transactions:update', 'transactions:read']
-    },
-    {
       name: 'SUPER_ADMIN',
       description: 'Full administrative access to all resources',
       permissions: [
         'accounts:*', 'attendees:*', 'seats:*', 'analytics:*', 
-        'config:*', 'transactions:*', 'iam:*', 'departments:*'
+        'iam:*', 'departments:*'
       ]
     }
   ];

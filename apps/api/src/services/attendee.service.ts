@@ -13,6 +13,8 @@ export interface AttendeeCreateInput {
   convocationEligible?: boolean;
   convocationRegistered?: boolean;
   accountId?: string;
+  crr: string;
+  enclosure: string;
 }
 
 export interface AttendeeUpdateInput {
@@ -26,6 +28,8 @@ export interface AttendeeUpdateInput {
   convocationEligible?: boolean;
   convocationRegistered?: boolean;
   accountId?: string;
+  crr?: string;
+  enclosure?: string;
 }
 
 export interface AttendeeFilters {
@@ -73,15 +77,7 @@ export class AttendeeService {
               role: true
             }
           },
-          allocation: true,
-          transactions: {
-            select: {
-              id: true,
-              amount: true,
-              status: true,
-              createdAt: true
-            }
-          }
+          allocation: true
         }
       });
 
@@ -110,16 +106,7 @@ export class AttendeeService {
               role: true
             }
           },
-          allocation: true,
-          transactions: {
-            select: {
-              id: true,
-              amount: true,
-              status: true,
-              createdAt: true
-            },
-            orderBy: { createdAt: 'desc' }
-          }
+          allocation: true
         }
       });
 
@@ -147,16 +134,7 @@ export class AttendeeService {
               role: true
             }
           },
-          allocation: true,
-          transactions: {
-            select: {
-              id: true,
-              amount: true,
-              status: true,
-              createdAt: true
-            },
-            orderBy: { createdAt: 'desc' }
-          }
+          allocation: true
         }
       });
 
@@ -244,17 +222,7 @@ export class AttendeeService {
                 role: true
               }
             },
-            allocation: true,
-            transactions: {
-              select: {
-                id: true,
-                amount: true,
-                status: true,
-                createdAt: true
-              },
-              orderBy: { createdAt: 'desc' },
-              take: 5 // Only latest 5 transactions
-            }
+            allocation: true
           }
         }),
         prisma.attendee.count({ where })
@@ -317,16 +285,7 @@ export class AttendeeService {
               role: true
             }
           },
-          allocation: true,
-          transactions: {
-            select: {
-              id: true,
-              amount: true,
-              status: true,
-              createdAt: true
-            },
-            orderBy: { createdAt: 'desc' }
-          }
+          allocation: true
         }
       });
 

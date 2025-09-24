@@ -29,16 +29,6 @@ export type Attendee = $Result.DefaultSelection<Prisma.$AttendeePayload>
  */
 export type SeatAllocation = $Result.DefaultSelection<Prisma.$SeatAllocationPayload>
 /**
- * Model Transaction
- * 
- */
-export type Transaction = $Result.DefaultSelection<Prisma.$TransactionPayload>
-/**
- * Model RemoteConfig
- * 
- */
-export type RemoteConfig = $Result.DefaultSelection<Prisma.$RemoteConfigPayload>
-/**
  * Model Enclosure
  * 
  */
@@ -263,26 +253,6 @@ export class PrismaClient<
     * ```
     */
   get seatAllocation(): Prisma.SeatAllocationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.transaction`: Exposes CRUD operations for the **Transaction** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Transactions
-    * const transactions = await prisma.transaction.findMany()
-    * ```
-    */
-  get transaction(): Prisma.TransactionDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.remoteConfig`: Exposes CRUD operations for the **RemoteConfig** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RemoteConfigs
-    * const remoteConfigs = await prisma.remoteConfig.findMany()
-    * ```
-    */
-  get remoteConfig(): Prisma.RemoteConfigDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.enclosure`: Exposes CRUD operations for the **Enclosure** model.
@@ -786,8 +756,6 @@ export namespace Prisma {
     Account: 'Account',
     Attendee: 'Attendee',
     SeatAllocation: 'SeatAllocation',
-    Transaction: 'Transaction',
-    RemoteConfig: 'RemoteConfig',
     Enclosure: 'Enclosure',
     Row: 'Row',
     Analytics: 'Analytics',
@@ -812,7 +780,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendee" | "seatAllocation" | "transaction" | "remoteConfig" | "enclosure" | "row" | "analytics" | "iAMPolicy" | "department" | "convocation"
+      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "row" | "analytics" | "iAMPolicy" | "department" | "convocation"
       txIsolationLevel: never
     }
     model: {
@@ -1035,154 +1003,6 @@ export namespace Prisma {
           count: {
             args: Prisma.SeatAllocationCountArgs<ExtArgs>
             result: $Utils.Optional<SeatAllocationCountAggregateOutputType> | number
-          }
-        }
-      }
-      Transaction: {
-        payload: Prisma.$TransactionPayload<ExtArgs>
-        fields: Prisma.TransactionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.TransactionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.TransactionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          findFirst: {
-            args: Prisma.TransactionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.TransactionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          findMany: {
-            args: Prisma.TransactionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>[]
-          }
-          create: {
-            args: Prisma.TransactionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          createMany: {
-            args: Prisma.TransactionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.TransactionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          update: {
-            args: Prisma.TransactionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          deleteMany: {
-            args: Prisma.TransactionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.TransactionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.TransactionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>
-          }
-          aggregate: {
-            args: Prisma.TransactionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTransaction>
-          }
-          groupBy: {
-            args: Prisma.TransactionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TransactionGroupByOutputType>[]
-          }
-          findRaw: {
-            args: Prisma.TransactionFindRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          aggregateRaw: {
-            args: Prisma.TransactionAggregateRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          count: {
-            args: Prisma.TransactionCountArgs<ExtArgs>
-            result: $Utils.Optional<TransactionCountAggregateOutputType> | number
-          }
-        }
-      }
-      RemoteConfig: {
-        payload: Prisma.$RemoteConfigPayload<ExtArgs>
-        fields: Prisma.RemoteConfigFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RemoteConfigFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RemoteConfigFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          findFirst: {
-            args: Prisma.RemoteConfigFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RemoteConfigFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          findMany: {
-            args: Prisma.RemoteConfigFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>[]
-          }
-          create: {
-            args: Prisma.RemoteConfigCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          createMany: {
-            args: Prisma.RemoteConfigCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.RemoteConfigDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          update: {
-            args: Prisma.RemoteConfigUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          deleteMany: {
-            args: Prisma.RemoteConfigDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RemoteConfigUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.RemoteConfigUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RemoteConfigPayload>
-          }
-          aggregate: {
-            args: Prisma.RemoteConfigAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRemoteConfig>
-          }
-          groupBy: {
-            args: Prisma.RemoteConfigGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RemoteConfigGroupByOutputType>[]
-          }
-          findRaw: {
-            args: Prisma.RemoteConfigFindRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          aggregateRaw: {
-            args: Prisma.RemoteConfigAggregateRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          count: {
-            args: Prisma.RemoteConfigCountArgs<ExtArgs>
-            result: $Utils.Optional<RemoteConfigCountAggregateOutputType> | number
           }
         }
       }
@@ -1712,8 +1532,6 @@ export namespace Prisma {
     account?: AccountOmit
     attendee?: AttendeeOmit
     seatAllocation?: SeatAllocationOmit
-    transaction?: TransactionOmit
-    remoteConfig?: RemoteConfigOmit
     enclosure?: EnclosureOmit
     row?: RowOmit
     analytics?: AnalyticsOmit
@@ -1801,12 +1619,10 @@ export namespace Prisma {
 
   export type AccountCountOutputType = {
     attendees: number
-    transactions: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendees?: boolean | AccountCountOutputTypeCountAttendeesArgs
-    transactions?: boolean | AccountCountOutputTypeCountTransactionsArgs
   }
 
   // Custom InputTypes
@@ -1825,75 +1641,6 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountAttendeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AttendeeWhereInput
-  }
-
-  /**
-   * AccountCountOutputType without action
-   */
-  export type AccountCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TransactionWhereInput
-  }
-
-
-  /**
-   * Count Type AttendeeCountOutputType
-   */
-
-  export type AttendeeCountOutputType = {
-    transactions: number
-  }
-
-  export type AttendeeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    transactions?: boolean | AttendeeCountOutputTypeCountTransactionsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * AttendeeCountOutputType without action
-   */
-  export type AttendeeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AttendeeCountOutputType
-     */
-    select?: AttendeeCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * AttendeeCountOutputType without action
-   */
-  export type AttendeeCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TransactionWhereInput
-  }
-
-
-  /**
-   * Count Type RemoteConfigCountOutputType
-   */
-
-  export type RemoteConfigCountOutputType = {
-    enclosures: number
-  }
-
-  export type RemoteConfigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    enclosures?: boolean | RemoteConfigCountOutputTypeCountEnclosuresArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * RemoteConfigCountOutputType without action
-   */
-  export type RemoteConfigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfigCountOutputType
-     */
-    select?: RemoteConfigCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * RemoteConfigCountOutputType without action
-   */
-  export type RemoteConfigCountOutputTypeCountEnclosuresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EnclosureWhereInput
   }
 
 
@@ -2165,7 +1912,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     attendees?: boolean | Account$attendeesArgs<ExtArgs>
-    transactions?: boolean | Account$transactionsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2191,7 +1937,6 @@ export namespace Prisma {
   export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "profileImageURL" | "role" | "assignedIAMPolicies" | "accountState" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendees?: boolean | Account$attendeesArgs<ExtArgs>
-    transactions?: boolean | Account$transactionsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2199,7 +1944,6 @@ export namespace Prisma {
     name: "Account"
     objects: {
       attendees: Prisma.$AttendeePayload<ExtArgs>[]
-      transactions: Prisma.$TransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2580,7 +2324,6 @@ export namespace Prisma {
   export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     attendees<T extends Account$attendeesArgs<ExtArgs> = {}>(args?: Subset<T, Account$attendeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    transactions<T extends Account$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3018,30 +2761,6 @@ export namespace Prisma {
   }
 
   /**
-   * Account.transactions
-   */
-  export type Account$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    where?: TransactionWhereInput
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    cursor?: TransactionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
-  }
-
-  /**
    * Account without action
    */
   export type AccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3083,6 +2802,8 @@ export namespace Prisma {
     convocationRegistered: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    crr: string | null
+    enclosure: string | null
     accountId: string | null
   }
 
@@ -3099,6 +2820,8 @@ export namespace Prisma {
     convocationRegistered: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    crr: string | null
+    enclosure: string | null
     accountId: string | null
   }
 
@@ -3115,6 +2838,8 @@ export namespace Prisma {
     convocationRegistered: number
     createdAt: number
     updatedAt: number
+    crr: number
+    enclosure: number
     accountId: number
     _all: number
   }
@@ -3133,6 +2858,8 @@ export namespace Prisma {
     convocationRegistered?: true
     createdAt?: true
     updatedAt?: true
+    crr?: true
+    enclosure?: true
     accountId?: true
   }
 
@@ -3149,6 +2876,8 @@ export namespace Prisma {
     convocationRegistered?: true
     createdAt?: true
     updatedAt?: true
+    crr?: true
+    enclosure?: true
     accountId?: true
   }
 
@@ -3165,6 +2894,8 @@ export namespace Prisma {
     convocationRegistered?: true
     createdAt?: true
     updatedAt?: true
+    crr?: true
+    enclosure?: true
     accountId?: true
     _all?: true
   }
@@ -3254,6 +2985,8 @@ export namespace Prisma {
     convocationRegistered: boolean
     createdAt: Date
     updatedAt: Date
+    crr: string
+    enclosure: string
     accountId: string | null
     _count: AttendeeCountAggregateOutputType | null
     _min: AttendeeMinAggregateOutputType | null
@@ -3287,11 +3020,11 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    crr?: boolean
+    enclosure?: boolean
     accountId?: boolean
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
-    transactions?: boolean | Attendee$transactionsArgs<ExtArgs>
-    _count?: boolean | AttendeeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attendee"]>
 
 
@@ -3309,15 +3042,15 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    crr?: boolean
+    enclosure?: boolean
     accountId?: boolean
   }
 
-  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "createdAt" | "updatedAt" | "accountId", ExtArgs["result"]["attendee"]>
+  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "createdAt" | "updatedAt" | "crr" | "enclosure" | "accountId", ExtArgs["result"]["attendee"]>
   export type AttendeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
-    transactions?: boolean | Attendee$transactionsArgs<ExtArgs>
-    _count?: boolean | AttendeeCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $AttendeePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3325,7 +3058,6 @@ export namespace Prisma {
     objects: {
       account: Prisma.$AccountPayload<ExtArgs> | null
       allocation: Prisma.$SeatAllocationPayload<ExtArgs> | null
-      transactions: Prisma.$TransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3340,6 +3072,8 @@ export namespace Prisma {
       convocationRegistered: boolean
       createdAt: Date
       updatedAt: Date
+      crr: string
+      enclosure: string
       accountId: string | null
     }, ExtArgs["result"]["attendee"]>
     composites: {}
@@ -3706,7 +3440,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     account<T extends Attendee$accountArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$accountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     allocation<T extends Attendee$allocationArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$allocationArgs<ExtArgs>>): Prisma__SeatAllocationClient<$Result.GetResult<Prisma.$SeatAllocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    transactions<T extends Attendee$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3748,6 +3481,8 @@ export namespace Prisma {
     readonly convocationRegistered: FieldRef<"Attendee", 'Boolean'>
     readonly createdAt: FieldRef<"Attendee", 'DateTime'>
     readonly updatedAt: FieldRef<"Attendee", 'DateTime'>
+    readonly crr: FieldRef<"Attendee", 'String'>
+    readonly enclosure: FieldRef<"Attendee", 'String'>
     readonly accountId: FieldRef<"Attendee", 'String'>
   }
     
@@ -4154,30 +3889,6 @@ export namespace Prisma {
      */
     include?: SeatAllocationInclude<ExtArgs> | null
     where?: SeatAllocationWhereInput
-  }
-
-  /**
-   * Attendee.transactions
-   */
-  export type Attendee$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    where?: TransactionWhereInput
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    cursor?: TransactionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
   }
 
   /**
@@ -5224,2212 +4935,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Transaction
-   */
-
-  export type AggregateTransaction = {
-    _count: TransactionCountAggregateOutputType | null
-    _avg: TransactionAvgAggregateOutputType | null
-    _sum: TransactionSumAggregateOutputType | null
-    _min: TransactionMinAggregateOutputType | null
-    _max: TransactionMaxAggregateOutputType | null
-  }
-
-  export type TransactionAvgAggregateOutputType = {
-    amount: number | null
-  }
-
-  export type TransactionSumAggregateOutputType = {
-    amount: number | null
-  }
-
-  export type TransactionMinAggregateOutputType = {
-    id: string | null
-    amount: number | null
-    currency: string | null
-    status: $Enums.TransactionStatus | null
-    paymentMethod: string | null
-    transactionId: string | null
-    razorpayOrderId: string | null
-    razorpayPaymentId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    attendeeId: string | null
-    accountId: string | null
-  }
-
-  export type TransactionMaxAggregateOutputType = {
-    id: string | null
-    amount: number | null
-    currency: string | null
-    status: $Enums.TransactionStatus | null
-    paymentMethod: string | null
-    transactionId: string | null
-    razorpayOrderId: string | null
-    razorpayPaymentId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    attendeeId: string | null
-    accountId: string | null
-  }
-
-  export type TransactionCountAggregateOutputType = {
-    id: number
-    amount: number
-    currency: number
-    status: number
-    paymentMethod: number
-    transactionId: number
-    razorpayOrderId: number
-    razorpayPaymentId: number
-    createdAt: number
-    updatedAt: number
-    attendeeId: number
-    accountId: number
-    _all: number
-  }
-
-
-  export type TransactionAvgAggregateInputType = {
-    amount?: true
-  }
-
-  export type TransactionSumAggregateInputType = {
-    amount?: true
-  }
-
-  export type TransactionMinAggregateInputType = {
-    id?: true
-    amount?: true
-    currency?: true
-    status?: true
-    paymentMethod?: true
-    transactionId?: true
-    razorpayOrderId?: true
-    razorpayPaymentId?: true
-    createdAt?: true
-    updatedAt?: true
-    attendeeId?: true
-    accountId?: true
-  }
-
-  export type TransactionMaxAggregateInputType = {
-    id?: true
-    amount?: true
-    currency?: true
-    status?: true
-    paymentMethod?: true
-    transactionId?: true
-    razorpayOrderId?: true
-    razorpayPaymentId?: true
-    createdAt?: true
-    updatedAt?: true
-    attendeeId?: true
-    accountId?: true
-  }
-
-  export type TransactionCountAggregateInputType = {
-    id?: true
-    amount?: true
-    currency?: true
-    status?: true
-    paymentMethod?: true
-    transactionId?: true
-    razorpayOrderId?: true
-    razorpayPaymentId?: true
-    createdAt?: true
-    updatedAt?: true
-    attendeeId?: true
-    accountId?: true
-    _all?: true
-  }
-
-  export type TransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Transaction to aggregate.
-     */
-    where?: TransactionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Transactions to fetch.
-     */
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: TransactionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Transactions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Transactions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Transactions
-    **/
-    _count?: true | TransactionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: TransactionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: TransactionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: TransactionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: TransactionMaxAggregateInputType
-  }
-
-  export type GetTransactionAggregateType<T extends TransactionAggregateArgs> = {
-        [P in keyof T & keyof AggregateTransaction]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTransaction[P]>
-      : GetScalarType<T[P], AggregateTransaction[P]>
-  }
-
-
-
-
-  export type TransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TransactionWhereInput
-    orderBy?: TransactionOrderByWithAggregationInput | TransactionOrderByWithAggregationInput[]
-    by: TransactionScalarFieldEnum[] | TransactionScalarFieldEnum
-    having?: TransactionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: TransactionCountAggregateInputType | true
-    _avg?: TransactionAvgAggregateInputType
-    _sum?: TransactionSumAggregateInputType
-    _min?: TransactionMinAggregateInputType
-    _max?: TransactionMaxAggregateInputType
-  }
-
-  export type TransactionGroupByOutputType = {
-    id: string
-    amount: number
-    currency: string
-    status: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId: string | null
-    razorpayPaymentId: string | null
-    createdAt: Date
-    updatedAt: Date
-    attendeeId: string
-    accountId: string | null
-    _count: TransactionCountAggregateOutputType | null
-    _avg: TransactionAvgAggregateOutputType | null
-    _sum: TransactionSumAggregateOutputType | null
-    _min: TransactionMinAggregateOutputType | null
-    _max: TransactionMaxAggregateOutputType | null
-  }
-
-  type GetTransactionGroupByPayload<T extends TransactionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<TransactionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof TransactionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], TransactionGroupByOutputType[P]>
-            : GetScalarType<T[P], TransactionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type TransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    amount?: boolean
-    currency?: boolean
-    status?: boolean
-    paymentMethod?: boolean
-    transactionId?: boolean
-    razorpayOrderId?: boolean
-    razorpayPaymentId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    attendeeId?: boolean
-    accountId?: boolean
-    attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
-    account?: boolean | Transaction$accountArgs<ExtArgs>
-  }, ExtArgs["result"]["transaction"]>
-
-
-
-  export type TransactionSelectScalar = {
-    id?: boolean
-    amount?: boolean
-    currency?: boolean
-    status?: boolean
-    paymentMethod?: boolean
-    transactionId?: boolean
-    razorpayOrderId?: boolean
-    razorpayPaymentId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    attendeeId?: boolean
-    accountId?: boolean
-  }
-
-  export type TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "currency" | "status" | "paymentMethod" | "transactionId" | "razorpayOrderId" | "razorpayPaymentId" | "createdAt" | "updatedAt" | "attendeeId" | "accountId", ExtArgs["result"]["transaction"]>
-  export type TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
-    account?: boolean | Transaction$accountArgs<ExtArgs>
-  }
-
-  export type $TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Transaction"
-    objects: {
-      attendee: Prisma.$AttendeePayload<ExtArgs>
-      account: Prisma.$AccountPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      amount: number
-      currency: string
-      status: $Enums.TransactionStatus
-      paymentMethod: string
-      transactionId: string
-      razorpayOrderId: string | null
-      razorpayPaymentId: string | null
-      createdAt: Date
-      updatedAt: Date
-      attendeeId: string
-      accountId: string | null
-    }, ExtArgs["result"]["transaction"]>
-    composites: {}
-  }
-
-  type TransactionGetPayload<S extends boolean | null | undefined | TransactionDefaultArgs> = $Result.GetResult<Prisma.$TransactionPayload, S>
-
-  type TransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<TransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: TransactionCountAggregateInputType | true
-    }
-
-  export interface TransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Transaction'], meta: { name: 'Transaction' } }
-    /**
-     * Find zero or one Transaction that matches the filter.
-     * @param {TransactionFindUniqueArgs} args - Arguments to find a Transaction
-     * @example
-     * // Get one Transaction
-     * const transaction = await prisma.transaction.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends TransactionFindUniqueArgs>(args: SelectSubset<T, TransactionFindUniqueArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Transaction that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {TransactionFindUniqueOrThrowArgs} args - Arguments to find a Transaction
-     * @example
-     * // Get one Transaction
-     * const transaction = await prisma.transaction.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends TransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, TransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Transaction that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionFindFirstArgs} args - Arguments to find a Transaction
-     * @example
-     * // Get one Transaction
-     * const transaction = await prisma.transaction.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends TransactionFindFirstArgs>(args?: SelectSubset<T, TransactionFindFirstArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Transaction that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionFindFirstOrThrowArgs} args - Arguments to find a Transaction
-     * @example
-     * // Get one Transaction
-     * const transaction = await prisma.transaction.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends TransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, TransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Transactions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Transactions
-     * const transactions = await prisma.transaction.findMany()
-     * 
-     * // Get first 10 Transactions
-     * const transactions = await prisma.transaction.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const transactionWithIdOnly = await prisma.transaction.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends TransactionFindManyArgs>(args?: SelectSubset<T, TransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Transaction.
-     * @param {TransactionCreateArgs} args - Arguments to create a Transaction.
-     * @example
-     * // Create one Transaction
-     * const Transaction = await prisma.transaction.create({
-     *   data: {
-     *     // ... data to create a Transaction
-     *   }
-     * })
-     * 
-     */
-    create<T extends TransactionCreateArgs>(args: SelectSubset<T, TransactionCreateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Transactions.
-     * @param {TransactionCreateManyArgs} args - Arguments to create many Transactions.
-     * @example
-     * // Create many Transactions
-     * const transaction = await prisma.transaction.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends TransactionCreateManyArgs>(args?: SelectSubset<T, TransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Transaction.
-     * @param {TransactionDeleteArgs} args - Arguments to delete one Transaction.
-     * @example
-     * // Delete one Transaction
-     * const Transaction = await prisma.transaction.delete({
-     *   where: {
-     *     // ... filter to delete one Transaction
-     *   }
-     * })
-     * 
-     */
-    delete<T extends TransactionDeleteArgs>(args: SelectSubset<T, TransactionDeleteArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Transaction.
-     * @param {TransactionUpdateArgs} args - Arguments to update one Transaction.
-     * @example
-     * // Update one Transaction
-     * const transaction = await prisma.transaction.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends TransactionUpdateArgs>(args: SelectSubset<T, TransactionUpdateArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Transactions.
-     * @param {TransactionDeleteManyArgs} args - Arguments to filter Transactions to delete.
-     * @example
-     * // Delete a few Transactions
-     * const { count } = await prisma.transaction.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends TransactionDeleteManyArgs>(args?: SelectSubset<T, TransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Transactions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Transactions
-     * const transaction = await prisma.transaction.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends TransactionUpdateManyArgs>(args: SelectSubset<T, TransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Transaction.
-     * @param {TransactionUpsertArgs} args - Arguments to update or create a Transaction.
-     * @example
-     * // Update or create a Transaction
-     * const transaction = await prisma.transaction.upsert({
-     *   create: {
-     *     // ... data to create a Transaction
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Transaction we want to update
-     *   }
-     * })
-     */
-    upsert<T extends TransactionUpsertArgs>(args: SelectSubset<T, TransactionUpsertArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Transactions that matches the filter.
-     * @param {TransactionFindRawArgs} args - Select which filters you would like to apply.
-     * @example
-     * const transaction = await prisma.transaction.findRaw({
-     *   filter: { age: { $gt: 25 } }
-     * })
-     */
-    findRaw(args?: TransactionFindRawArgs): Prisma.PrismaPromise<JsonObject>
-
-    /**
-     * Perform aggregation operations on a Transaction.
-     * @param {TransactionAggregateRawArgs} args - Select which aggregations you would like to apply.
-     * @example
-     * const transaction = await prisma.transaction.aggregateRaw({
-     *   pipeline: [
-     *     { $match: { status: "registered" } },
-     *     { $group: { _id: "$country", total: { $sum: 1 } } }
-     *   ]
-     * })
-     */
-    aggregateRaw(args?: TransactionAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
-
-
-    /**
-     * Count the number of Transactions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionCountArgs} args - Arguments to filter Transactions to count.
-     * @example
-     * // Count the number of Transactions
-     * const count = await prisma.transaction.count({
-     *   where: {
-     *     // ... the filter for the Transactions we want to count
-     *   }
-     * })
-    **/
-    count<T extends TransactionCountArgs>(
-      args?: Subset<T, TransactionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], TransactionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Transaction.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends TransactionAggregateArgs>(args: Subset<T, TransactionAggregateArgs>): Prisma.PrismaPromise<GetTransactionAggregateType<T>>
-
-    /**
-     * Group by Transaction.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends TransactionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: TransactionGroupByArgs['orderBy'] }
-        : { orderBy?: TransactionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, TransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Transaction model
-   */
-  readonly fields: TransactionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Transaction.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    attendee<T extends AttendeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttendeeDefaultArgs<ExtArgs>>): Prisma__AttendeeClient<$Result.GetResult<Prisma.$AttendeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    account<T extends Transaction$accountArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$accountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Transaction model
-   */
-  interface TransactionFieldRefs {
-    readonly id: FieldRef<"Transaction", 'String'>
-    readonly amount: FieldRef<"Transaction", 'Float'>
-    readonly currency: FieldRef<"Transaction", 'String'>
-    readonly status: FieldRef<"Transaction", 'TransactionStatus'>
-    readonly paymentMethod: FieldRef<"Transaction", 'String'>
-    readonly transactionId: FieldRef<"Transaction", 'String'>
-    readonly razorpayOrderId: FieldRef<"Transaction", 'String'>
-    readonly razorpayPaymentId: FieldRef<"Transaction", 'String'>
-    readonly createdAt: FieldRef<"Transaction", 'DateTime'>
-    readonly updatedAt: FieldRef<"Transaction", 'DateTime'>
-    readonly attendeeId: FieldRef<"Transaction", 'String'>
-    readonly accountId: FieldRef<"Transaction", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Transaction findUnique
-   */
-  export type TransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter, which Transaction to fetch.
-     */
-    where: TransactionWhereUniqueInput
-  }
-
-  /**
-   * Transaction findUniqueOrThrow
-   */
-  export type TransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter, which Transaction to fetch.
-     */
-    where: TransactionWhereUniqueInput
-  }
-
-  /**
-   * Transaction findFirst
-   */
-  export type TransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter, which Transaction to fetch.
-     */
-    where?: TransactionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Transactions to fetch.
-     */
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Transactions.
-     */
-    cursor?: TransactionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Transactions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Transactions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Transactions.
-     */
-    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
-  }
-
-  /**
-   * Transaction findFirstOrThrow
-   */
-  export type TransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter, which Transaction to fetch.
-     */
-    where?: TransactionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Transactions to fetch.
-     */
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Transactions.
-     */
-    cursor?: TransactionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Transactions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Transactions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Transactions.
-     */
-    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
-  }
-
-  /**
-   * Transaction findMany
-   */
-  export type TransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter, which Transactions to fetch.
-     */
-    where?: TransactionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Transactions to fetch.
-     */
-    orderBy?: TransactionOrderByWithRelationInput | TransactionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Transactions.
-     */
-    cursor?: TransactionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Transactions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Transactions.
-     */
-    skip?: number
-    distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
-  }
-
-  /**
-   * Transaction create
-   */
-  export type TransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Transaction.
-     */
-    data: XOR<TransactionCreateInput, TransactionUncheckedCreateInput>
-  }
-
-  /**
-   * Transaction createMany
-   */
-  export type TransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Transactions.
-     */
-    data: TransactionCreateManyInput | TransactionCreateManyInput[]
-  }
-
-  /**
-   * Transaction update
-   */
-  export type TransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Transaction.
-     */
-    data: XOR<TransactionUpdateInput, TransactionUncheckedUpdateInput>
-    /**
-     * Choose, which Transaction to update.
-     */
-    where: TransactionWhereUniqueInput
-  }
-
-  /**
-   * Transaction updateMany
-   */
-  export type TransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Transactions.
-     */
-    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyInput>
-    /**
-     * Filter which Transactions to update
-     */
-    where?: TransactionWhereInput
-    /**
-     * Limit how many Transactions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Transaction upsert
-   */
-  export type TransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Transaction to update in case it exists.
-     */
-    where: TransactionWhereUniqueInput
-    /**
-     * In case the Transaction found by the `where` argument doesn't exist, create a new Transaction with this data.
-     */
-    create: XOR<TransactionCreateInput, TransactionUncheckedCreateInput>
-    /**
-     * In case the Transaction was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<TransactionUpdateInput, TransactionUncheckedUpdateInput>
-  }
-
-  /**
-   * Transaction delete
-   */
-  export type TransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-    /**
-     * Filter which Transaction to delete.
-     */
-    where: TransactionWhereUniqueInput
-  }
-
-  /**
-   * Transaction deleteMany
-   */
-  export type TransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Transactions to delete
-     */
-    where?: TransactionWhereInput
-    /**
-     * Limit how many Transactions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Transaction findRaw
-   */
-  export type TransactionFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     */
-    filter?: InputJsonValue
-    /**
-     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * Transaction aggregateRaw
-   */
-  export type TransactionAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     */
-    pipeline?: InputJsonValue[]
-    /**
-     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * Transaction.account
-   */
-  export type Transaction$accountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountInclude<ExtArgs> | null
-    where?: AccountWhereInput
-  }
-
-  /**
-   * Transaction without action
-   */
-  export type TransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Transaction
-     */
-    select?: TransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transaction
-     */
-    omit?: TransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model RemoteConfig
-   */
-
-  export type AggregateRemoteConfig = {
-    _count: RemoteConfigCountAggregateOutputType | null
-    _min: RemoteConfigMinAggregateOutputType | null
-    _max: RemoteConfigMaxAggregateOutputType | null
-  }
-
-  export type RemoteConfigMinAggregateOutputType = {
-    id: string | null
-    active: boolean | null
-    bannerImageURL: string | null
-    logoImageURL: string | null
-    countdownEnabled: boolean | null
-    countdownTargetDate: Date | null
-    countdownTitle: string | null
-    countdownDescription: string | null
-    attendeesLocked: boolean | null
-    attendeesCSVFile: string | null
-    showInstructions: boolean | null
-    instructions: string | null
-    updatedAt: Date | null
-  }
-
-  export type RemoteConfigMaxAggregateOutputType = {
-    id: string | null
-    active: boolean | null
-    bannerImageURL: string | null
-    logoImageURL: string | null
-    countdownEnabled: boolean | null
-    countdownTargetDate: Date | null
-    countdownTitle: string | null
-    countdownDescription: string | null
-    attendeesLocked: boolean | null
-    attendeesCSVFile: string | null
-    showInstructions: boolean | null
-    instructions: string | null
-    updatedAt: Date | null
-  }
-
-  export type RemoteConfigCountAggregateOutputType = {
-    id: number
-    active: number
-    bannerImageURL: number
-    logoImageURL: number
-    countdownEnabled: number
-    countdownTargetDate: number
-    countdownTitle: number
-    countdownDescription: number
-    attendeesLocked: number
-    attendeesCSVFile: number
-    showInstructions: number
-    instructions: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type RemoteConfigMinAggregateInputType = {
-    id?: true
-    active?: true
-    bannerImageURL?: true
-    logoImageURL?: true
-    countdownEnabled?: true
-    countdownTargetDate?: true
-    countdownTitle?: true
-    countdownDescription?: true
-    attendeesLocked?: true
-    attendeesCSVFile?: true
-    showInstructions?: true
-    instructions?: true
-    updatedAt?: true
-  }
-
-  export type RemoteConfigMaxAggregateInputType = {
-    id?: true
-    active?: true
-    bannerImageURL?: true
-    logoImageURL?: true
-    countdownEnabled?: true
-    countdownTargetDate?: true
-    countdownTitle?: true
-    countdownDescription?: true
-    attendeesLocked?: true
-    attendeesCSVFile?: true
-    showInstructions?: true
-    instructions?: true
-    updatedAt?: true
-  }
-
-  export type RemoteConfigCountAggregateInputType = {
-    id?: true
-    active?: true
-    bannerImageURL?: true
-    logoImageURL?: true
-    countdownEnabled?: true
-    countdownTargetDate?: true
-    countdownTitle?: true
-    countdownDescription?: true
-    attendeesLocked?: true
-    attendeesCSVFile?: true
-    showInstructions?: true
-    instructions?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type RemoteConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RemoteConfig to aggregate.
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RemoteConfigs to fetch.
-     */
-    orderBy?: RemoteConfigOrderByWithRelationInput | RemoteConfigOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: RemoteConfigWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RemoteConfigs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RemoteConfigs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned RemoteConfigs
-    **/
-    _count?: true | RemoteConfigCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: RemoteConfigMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: RemoteConfigMaxAggregateInputType
-  }
-
-  export type GetRemoteConfigAggregateType<T extends RemoteConfigAggregateArgs> = {
-        [P in keyof T & keyof AggregateRemoteConfig]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRemoteConfig[P]>
-      : GetScalarType<T[P], AggregateRemoteConfig[P]>
-  }
-
-
-
-
-  export type RemoteConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RemoteConfigWhereInput
-    orderBy?: RemoteConfigOrderByWithAggregationInput | RemoteConfigOrderByWithAggregationInput[]
-    by: RemoteConfigScalarFieldEnum[] | RemoteConfigScalarFieldEnum
-    having?: RemoteConfigScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: RemoteConfigCountAggregateInputType | true
-    _min?: RemoteConfigMinAggregateInputType
-    _max?: RemoteConfigMaxAggregateInputType
-  }
-
-  export type RemoteConfigGroupByOutputType = {
-    id: string
-    active: boolean
-    bannerImageURL: string | null
-    logoImageURL: string | null
-    countdownEnabled: boolean
-    countdownTargetDate: Date | null
-    countdownTitle: string | null
-    countdownDescription: string | null
-    attendeesLocked: boolean
-    attendeesCSVFile: string | null
-    showInstructions: boolean
-    instructions: string | null
-    updatedAt: Date
-    _count: RemoteConfigCountAggregateOutputType | null
-    _min: RemoteConfigMinAggregateOutputType | null
-    _max: RemoteConfigMaxAggregateOutputType | null
-  }
-
-  type GetRemoteConfigGroupByPayload<T extends RemoteConfigGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<RemoteConfigGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof RemoteConfigGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], RemoteConfigGroupByOutputType[P]>
-            : GetScalarType<T[P], RemoteConfigGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type RemoteConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    active?: boolean
-    bannerImageURL?: boolean
-    logoImageURL?: boolean
-    countdownEnabled?: boolean
-    countdownTargetDate?: boolean
-    countdownTitle?: boolean
-    countdownDescription?: boolean
-    attendeesLocked?: boolean
-    attendeesCSVFile?: boolean
-    showInstructions?: boolean
-    instructions?: boolean
-    updatedAt?: boolean
-    enclosures?: boolean | RemoteConfig$enclosuresArgs<ExtArgs>
-    _count?: boolean | RemoteConfigCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["remoteConfig"]>
-
-
-
-  export type RemoteConfigSelectScalar = {
-    id?: boolean
-    active?: boolean
-    bannerImageURL?: boolean
-    logoImageURL?: boolean
-    countdownEnabled?: boolean
-    countdownTargetDate?: boolean
-    countdownTitle?: boolean
-    countdownDescription?: boolean
-    attendeesLocked?: boolean
-    attendeesCSVFile?: boolean
-    showInstructions?: boolean
-    instructions?: boolean
-    updatedAt?: boolean
-  }
-
-  export type RemoteConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "active" | "bannerImageURL" | "logoImageURL" | "countdownEnabled" | "countdownTargetDate" | "countdownTitle" | "countdownDescription" | "attendeesLocked" | "attendeesCSVFile" | "showInstructions" | "instructions" | "updatedAt", ExtArgs["result"]["remoteConfig"]>
-  export type RemoteConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    enclosures?: boolean | RemoteConfig$enclosuresArgs<ExtArgs>
-    _count?: boolean | RemoteConfigCountOutputTypeDefaultArgs<ExtArgs>
-  }
-
-  export type $RemoteConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RemoteConfig"
-    objects: {
-      enclosures: Prisma.$EnclosurePayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      active: boolean
-      bannerImageURL: string | null
-      logoImageURL: string | null
-      countdownEnabled: boolean
-      countdownTargetDate: Date | null
-      countdownTitle: string | null
-      countdownDescription: string | null
-      attendeesLocked: boolean
-      attendeesCSVFile: string | null
-      showInstructions: boolean
-      instructions: string | null
-      updatedAt: Date
-    }, ExtArgs["result"]["remoteConfig"]>
-    composites: {}
-  }
-
-  type RemoteConfigGetPayload<S extends boolean | null | undefined | RemoteConfigDefaultArgs> = $Result.GetResult<Prisma.$RemoteConfigPayload, S>
-
-  type RemoteConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RemoteConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RemoteConfigCountAggregateInputType | true
-    }
-
-  export interface RemoteConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RemoteConfig'], meta: { name: 'RemoteConfig' } }
-    /**
-     * Find zero or one RemoteConfig that matches the filter.
-     * @param {RemoteConfigFindUniqueArgs} args - Arguments to find a RemoteConfig
-     * @example
-     * // Get one RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends RemoteConfigFindUniqueArgs>(args: SelectSubset<T, RemoteConfigFindUniqueArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one RemoteConfig that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {RemoteConfigFindUniqueOrThrowArgs} args - Arguments to find a RemoteConfig
-     * @example
-     * // Get one RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends RemoteConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, RemoteConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RemoteConfig that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigFindFirstArgs} args - Arguments to find a RemoteConfig
-     * @example
-     * // Get one RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends RemoteConfigFindFirstArgs>(args?: SelectSubset<T, RemoteConfigFindFirstArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RemoteConfig that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigFindFirstOrThrowArgs} args - Arguments to find a RemoteConfig
-     * @example
-     * // Get one RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends RemoteConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, RemoteConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more RemoteConfigs that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all RemoteConfigs
-     * const remoteConfigs = await prisma.remoteConfig.findMany()
-     * 
-     * // Get first 10 RemoteConfigs
-     * const remoteConfigs = await prisma.remoteConfig.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const remoteConfigWithIdOnly = await prisma.remoteConfig.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends RemoteConfigFindManyArgs>(args?: SelectSubset<T, RemoteConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a RemoteConfig.
-     * @param {RemoteConfigCreateArgs} args - Arguments to create a RemoteConfig.
-     * @example
-     * // Create one RemoteConfig
-     * const RemoteConfig = await prisma.remoteConfig.create({
-     *   data: {
-     *     // ... data to create a RemoteConfig
-     *   }
-     * })
-     * 
-     */
-    create<T extends RemoteConfigCreateArgs>(args: SelectSubset<T, RemoteConfigCreateArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many RemoteConfigs.
-     * @param {RemoteConfigCreateManyArgs} args - Arguments to create many RemoteConfigs.
-     * @example
-     * // Create many RemoteConfigs
-     * const remoteConfig = await prisma.remoteConfig.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends RemoteConfigCreateManyArgs>(args?: SelectSubset<T, RemoteConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a RemoteConfig.
-     * @param {RemoteConfigDeleteArgs} args - Arguments to delete one RemoteConfig.
-     * @example
-     * // Delete one RemoteConfig
-     * const RemoteConfig = await prisma.remoteConfig.delete({
-     *   where: {
-     *     // ... filter to delete one RemoteConfig
-     *   }
-     * })
-     * 
-     */
-    delete<T extends RemoteConfigDeleteArgs>(args: SelectSubset<T, RemoteConfigDeleteArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one RemoteConfig.
-     * @param {RemoteConfigUpdateArgs} args - Arguments to update one RemoteConfig.
-     * @example
-     * // Update one RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends RemoteConfigUpdateArgs>(args: SelectSubset<T, RemoteConfigUpdateArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more RemoteConfigs.
-     * @param {RemoteConfigDeleteManyArgs} args - Arguments to filter RemoteConfigs to delete.
-     * @example
-     * // Delete a few RemoteConfigs
-     * const { count } = await prisma.remoteConfig.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends RemoteConfigDeleteManyArgs>(args?: SelectSubset<T, RemoteConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RemoteConfigs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many RemoteConfigs
-     * const remoteConfig = await prisma.remoteConfig.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends RemoteConfigUpdateManyArgs>(args: SelectSubset<T, RemoteConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one RemoteConfig.
-     * @param {RemoteConfigUpsertArgs} args - Arguments to update or create a RemoteConfig.
-     * @example
-     * // Update or create a RemoteConfig
-     * const remoteConfig = await prisma.remoteConfig.upsert({
-     *   create: {
-     *     // ... data to create a RemoteConfig
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the RemoteConfig we want to update
-     *   }
-     * })
-     */
-    upsert<T extends RemoteConfigUpsertArgs>(args: SelectSubset<T, RemoteConfigUpsertArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more RemoteConfigs that matches the filter.
-     * @param {RemoteConfigFindRawArgs} args - Select which filters you would like to apply.
-     * @example
-     * const remoteConfig = await prisma.remoteConfig.findRaw({
-     *   filter: { age: { $gt: 25 } }
-     * })
-     */
-    findRaw(args?: RemoteConfigFindRawArgs): Prisma.PrismaPromise<JsonObject>
-
-    /**
-     * Perform aggregation operations on a RemoteConfig.
-     * @param {RemoteConfigAggregateRawArgs} args - Select which aggregations you would like to apply.
-     * @example
-     * const remoteConfig = await prisma.remoteConfig.aggregateRaw({
-     *   pipeline: [
-     *     { $match: { status: "registered" } },
-     *     { $group: { _id: "$country", total: { $sum: 1 } } }
-     *   ]
-     * })
-     */
-    aggregateRaw(args?: RemoteConfigAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
-
-
-    /**
-     * Count the number of RemoteConfigs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigCountArgs} args - Arguments to filter RemoteConfigs to count.
-     * @example
-     * // Count the number of RemoteConfigs
-     * const count = await prisma.remoteConfig.count({
-     *   where: {
-     *     // ... the filter for the RemoteConfigs we want to count
-     *   }
-     * })
-    **/
-    count<T extends RemoteConfigCountArgs>(
-      args?: Subset<T, RemoteConfigCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], RemoteConfigCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a RemoteConfig.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends RemoteConfigAggregateArgs>(args: Subset<T, RemoteConfigAggregateArgs>): Prisma.PrismaPromise<GetRemoteConfigAggregateType<T>>
-
-    /**
-     * Group by RemoteConfig.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RemoteConfigGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends RemoteConfigGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RemoteConfigGroupByArgs['orderBy'] }
-        : { orderBy?: RemoteConfigGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, RemoteConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRemoteConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the RemoteConfig model
-   */
-  readonly fields: RemoteConfigFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for RemoteConfig.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__RemoteConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    enclosures<T extends RemoteConfig$enclosuresArgs<ExtArgs> = {}>(args?: Subset<T, RemoteConfig$enclosuresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnclosurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the RemoteConfig model
-   */
-  interface RemoteConfigFieldRefs {
-    readonly id: FieldRef<"RemoteConfig", 'String'>
-    readonly active: FieldRef<"RemoteConfig", 'Boolean'>
-    readonly bannerImageURL: FieldRef<"RemoteConfig", 'String'>
-    readonly logoImageURL: FieldRef<"RemoteConfig", 'String'>
-    readonly countdownEnabled: FieldRef<"RemoteConfig", 'Boolean'>
-    readonly countdownTargetDate: FieldRef<"RemoteConfig", 'DateTime'>
-    readonly countdownTitle: FieldRef<"RemoteConfig", 'String'>
-    readonly countdownDescription: FieldRef<"RemoteConfig", 'String'>
-    readonly attendeesLocked: FieldRef<"RemoteConfig", 'Boolean'>
-    readonly attendeesCSVFile: FieldRef<"RemoteConfig", 'String'>
-    readonly showInstructions: FieldRef<"RemoteConfig", 'Boolean'>
-    readonly instructions: FieldRef<"RemoteConfig", 'String'>
-    readonly updatedAt: FieldRef<"RemoteConfig", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * RemoteConfig findUnique
-   */
-  export type RemoteConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter, which RemoteConfig to fetch.
-     */
-    where: RemoteConfigWhereUniqueInput
-  }
-
-  /**
-   * RemoteConfig findUniqueOrThrow
-   */
-  export type RemoteConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter, which RemoteConfig to fetch.
-     */
-    where: RemoteConfigWhereUniqueInput
-  }
-
-  /**
-   * RemoteConfig findFirst
-   */
-  export type RemoteConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter, which RemoteConfig to fetch.
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RemoteConfigs to fetch.
-     */
-    orderBy?: RemoteConfigOrderByWithRelationInput | RemoteConfigOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RemoteConfigs.
-     */
-    cursor?: RemoteConfigWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RemoteConfigs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RemoteConfigs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RemoteConfigs.
-     */
-    distinct?: RemoteConfigScalarFieldEnum | RemoteConfigScalarFieldEnum[]
-  }
-
-  /**
-   * RemoteConfig findFirstOrThrow
-   */
-  export type RemoteConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter, which RemoteConfig to fetch.
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RemoteConfigs to fetch.
-     */
-    orderBy?: RemoteConfigOrderByWithRelationInput | RemoteConfigOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RemoteConfigs.
-     */
-    cursor?: RemoteConfigWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RemoteConfigs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RemoteConfigs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RemoteConfigs.
-     */
-    distinct?: RemoteConfigScalarFieldEnum | RemoteConfigScalarFieldEnum[]
-  }
-
-  /**
-   * RemoteConfig findMany
-   */
-  export type RemoteConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter, which RemoteConfigs to fetch.
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RemoteConfigs to fetch.
-     */
-    orderBy?: RemoteConfigOrderByWithRelationInput | RemoteConfigOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing RemoteConfigs.
-     */
-    cursor?: RemoteConfigWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RemoteConfigs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RemoteConfigs.
-     */
-    skip?: number
-    distinct?: RemoteConfigScalarFieldEnum | RemoteConfigScalarFieldEnum[]
-  }
-
-  /**
-   * RemoteConfig create
-   */
-  export type RemoteConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * The data needed to create a RemoteConfig.
-     */
-    data: XOR<RemoteConfigCreateInput, RemoteConfigUncheckedCreateInput>
-  }
-
-  /**
-   * RemoteConfig createMany
-   */
-  export type RemoteConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many RemoteConfigs.
-     */
-    data: RemoteConfigCreateManyInput | RemoteConfigCreateManyInput[]
-  }
-
-  /**
-   * RemoteConfig update
-   */
-  export type RemoteConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * The data needed to update a RemoteConfig.
-     */
-    data: XOR<RemoteConfigUpdateInput, RemoteConfigUncheckedUpdateInput>
-    /**
-     * Choose, which RemoteConfig to update.
-     */
-    where: RemoteConfigWhereUniqueInput
-  }
-
-  /**
-   * RemoteConfig updateMany
-   */
-  export type RemoteConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update RemoteConfigs.
-     */
-    data: XOR<RemoteConfigUpdateManyMutationInput, RemoteConfigUncheckedUpdateManyInput>
-    /**
-     * Filter which RemoteConfigs to update
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * Limit how many RemoteConfigs to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * RemoteConfig upsert
-   */
-  export type RemoteConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * The filter to search for the RemoteConfig to update in case it exists.
-     */
-    where: RemoteConfigWhereUniqueInput
-    /**
-     * In case the RemoteConfig found by the `where` argument doesn't exist, create a new RemoteConfig with this data.
-     */
-    create: XOR<RemoteConfigCreateInput, RemoteConfigUncheckedCreateInput>
-    /**
-     * In case the RemoteConfig was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<RemoteConfigUpdateInput, RemoteConfigUncheckedUpdateInput>
-  }
-
-  /**
-   * RemoteConfig delete
-   */
-  export type RemoteConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-    /**
-     * Filter which RemoteConfig to delete.
-     */
-    where: RemoteConfigWhereUniqueInput
-  }
-
-  /**
-   * RemoteConfig deleteMany
-   */
-  export type RemoteConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RemoteConfigs to delete
-     */
-    where?: RemoteConfigWhereInput
-    /**
-     * Limit how many RemoteConfigs to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * RemoteConfig findRaw
-   */
-  export type RemoteConfigFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     */
-    filter?: InputJsonValue
-    /**
-     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * RemoteConfig aggregateRaw
-   */
-  export type RemoteConfigAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     */
-    pipeline?: InputJsonValue[]
-    /**
-     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * RemoteConfig.enclosures
-   */
-  export type RemoteConfig$enclosuresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Enclosure
-     */
-    select?: EnclosureSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Enclosure
-     */
-    omit?: EnclosureOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EnclosureInclude<ExtArgs> | null
-    where?: EnclosureWhereInput
-    orderBy?: EnclosureOrderByWithRelationInput | EnclosureOrderByWithRelationInput[]
-    cursor?: EnclosureWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EnclosureScalarFieldEnum | EnclosureScalarFieldEnum[]
-  }
-
-  /**
-   * RemoteConfig without action
-   */
-  export type RemoteConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RemoteConfig
-     */
-    select?: RemoteConfigSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RemoteConfig
-     */
-    omit?: RemoteConfigOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RemoteConfigInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Enclosure
    */
 
@@ -7444,7 +4949,6 @@ export namespace Prisma {
     letter: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
-    remoteConfigId: string | null
   }
 
   export type EnclosureMaxAggregateOutputType = {
@@ -7452,7 +4956,6 @@ export namespace Prisma {
     letter: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
-    remoteConfigId: string | null
   }
 
   export type EnclosureCountAggregateOutputType = {
@@ -7460,7 +4963,6 @@ export namespace Prisma {
     letter: number
     allocatedFor: number
     entryDirection: number
-    remoteConfigId: number
     _all: number
   }
 
@@ -7470,7 +4972,6 @@ export namespace Prisma {
     letter?: true
     allocatedFor?: true
     entryDirection?: true
-    remoteConfigId?: true
   }
 
   export type EnclosureMaxAggregateInputType = {
@@ -7478,7 +4979,6 @@ export namespace Prisma {
     letter?: true
     allocatedFor?: true
     entryDirection?: true
-    remoteConfigId?: true
   }
 
   export type EnclosureCountAggregateInputType = {
@@ -7486,7 +4986,6 @@ export namespace Prisma {
     letter?: true
     allocatedFor?: true
     entryDirection?: true
-    remoteConfigId?: true
     _all?: true
   }
 
@@ -7567,7 +5066,6 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfigId: string
     _count: EnclosureCountAggregateOutputType | null
     _min: EnclosureMinAggregateOutputType | null
     _max: EnclosureMaxAggregateOutputType | null
@@ -7592,8 +5090,6 @@ export namespace Prisma {
     letter?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
-    remoteConfigId?: boolean
-    remoteConfig?: boolean | RemoteConfigDefaultArgs<ExtArgs>
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["enclosure"]>
@@ -7605,12 +5101,10 @@ export namespace Prisma {
     letter?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
-    remoteConfigId?: boolean
   }
 
-  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "allocatedFor" | "entryDirection" | "remoteConfigId", ExtArgs["result"]["enclosure"]>
+  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "allocatedFor" | "entryDirection", ExtArgs["result"]["enclosure"]>
   export type EnclosureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    remoteConfig?: boolean | RemoteConfigDefaultArgs<ExtArgs>
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -7618,7 +5112,6 @@ export namespace Prisma {
   export type $EnclosurePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Enclosure"
     objects: {
-      remoteConfig: Prisma.$RemoteConfigPayload<ExtArgs>
       rows: Prisma.$RowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7626,7 +5119,6 @@ export namespace Prisma {
       letter: string
       allocatedFor: $Enums.EnclosureType
       entryDirection: $Enums.Direction
-      remoteConfigId: string
     }, ExtArgs["result"]["enclosure"]>
     composites: {}
   }
@@ -7990,7 +5482,6 @@ export namespace Prisma {
    */
   export interface Prisma__EnclosureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    remoteConfig<T extends RemoteConfigDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RemoteConfigDefaultArgs<ExtArgs>>): Prisma__RemoteConfigClient<$Result.GetResult<Prisma.$RemoteConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     rows<T extends Enclosure$rowsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8025,7 +5516,6 @@ export namespace Prisma {
     readonly letter: FieldRef<"Enclosure", 'String'>
     readonly allocatedFor: FieldRef<"Enclosure", 'EnclosureType'>
     readonly entryDirection: FieldRef<"Enclosure", 'Direction'>
-    readonly remoteConfigId: FieldRef<"Enclosure", 'String'>
   }
     
 
@@ -13445,6 +10935,8 @@ export namespace Prisma {
     convocationRegistered: 'convocationRegistered',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    crr: 'crr',
+    enclosure: 'enclosure',
     accountId: 'accountId'
   };
 
@@ -13463,49 +10955,11 @@ export namespace Prisma {
   export type SeatAllocationScalarFieldEnum = (typeof SeatAllocationScalarFieldEnum)[keyof typeof SeatAllocationScalarFieldEnum]
 
 
-  export const TransactionScalarFieldEnum: {
-    id: 'id',
-    amount: 'amount',
-    currency: 'currency',
-    status: 'status',
-    paymentMethod: 'paymentMethod',
-    transactionId: 'transactionId',
-    razorpayOrderId: 'razorpayOrderId',
-    razorpayPaymentId: 'razorpayPaymentId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    attendeeId: 'attendeeId',
-    accountId: 'accountId'
-  };
-
-  export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
-
-
-  export const RemoteConfigScalarFieldEnum: {
-    id: 'id',
-    active: 'active',
-    bannerImageURL: 'bannerImageURL',
-    logoImageURL: 'logoImageURL',
-    countdownEnabled: 'countdownEnabled',
-    countdownTargetDate: 'countdownTargetDate',
-    countdownTitle: 'countdownTitle',
-    countdownDescription: 'countdownDescription',
-    attendeesLocked: 'attendeesLocked',
-    attendeesCSVFile: 'attendeesCSVFile',
-    showInstructions: 'showInstructions',
-    instructions: 'instructions',
-    updatedAt: 'updatedAt'
-  };
-
-  export type RemoteConfigScalarFieldEnum = (typeof RemoteConfigScalarFieldEnum)[keyof typeof RemoteConfigScalarFieldEnum]
-
-
   export const EnclosureScalarFieldEnum: {
     id: 'id',
     letter: 'letter',
     allocatedFor: 'allocatedFor',
-    entryDirection: 'entryDirection',
-    remoteConfigId: 'remoteConfigId'
+    entryDirection: 'entryDirection'
   };
 
   export type EnclosureScalarFieldEnum = (typeof EnclosureScalarFieldEnum)[keyof typeof EnclosureScalarFieldEnum]
@@ -13680,34 +11134,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'TransactionStatus'
-   */
-  export type EnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'TransactionStatus[]'
-   */
-  export type ListEnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'EnclosureType'
    */
   export type EnumEnclosureTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EnclosureType'>
@@ -13740,6 +11166,20 @@ export namespace Prisma {
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
     
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
@@ -13764,7 +11204,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     attendees?: AttendeeListRelationFilter
-    transactions?: TransactionListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -13783,7 +11222,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     attendees?: AttendeeOrderByRelationAggregateInput
-    transactions?: TransactionOrderByRelationAggregateInput
   }
 
   export type AccountWhereUniqueInput = Prisma.AtLeast<{
@@ -13805,7 +11243,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     attendees?: AttendeeListRelationFilter
-    transactions?: TransactionListRelationFilter
   }, "id" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -13864,10 +11301,11 @@ export namespace Prisma {
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
+    crr?: StringFilter<"Attendee"> | string
+    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
-    transactions?: TransactionListRelationFilter
   }
 
   export type AttendeeOrderByWithRelationInput = {
@@ -13883,10 +11321,11 @@ export namespace Prisma {
     convocationRegistered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    crr?: SortOrder
+    enclosure?: SortOrder
     accountId?: SortOrder
     account?: AccountOrderByWithRelationInput
     allocation?: SeatAllocationOrderByWithRelationInput
-    transactions?: TransactionOrderByRelationAggregateInput
   }
 
   export type AttendeeWhereUniqueInput = Prisma.AtLeast<{
@@ -13905,10 +11344,11 @@ export namespace Prisma {
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
+    crr?: StringFilter<"Attendee"> | string
+    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
-    transactions?: TransactionListRelationFilter
   }, "id" | "enrollmentId">
 
   export type AttendeeOrderByWithAggregationInput = {
@@ -13924,6 +11364,8 @@ export namespace Prisma {
     convocationRegistered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    crr?: SortOrder
+    enclosure?: SortOrder
     accountId?: SortOrder
     _count?: AttendeeCountOrderByAggregateInput
     _max?: AttendeeMaxOrderByAggregateInput
@@ -13946,6 +11388,8 @@ export namespace Prisma {
     convocationRegistered?: BoolWithAggregatesFilter<"Attendee"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
+    crr?: StringWithAggregatesFilter<"Attendee"> | string
+    enclosure?: StringWithAggregatesFilter<"Attendee"> | string
     accountId?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
   }
 
@@ -14011,196 +11455,6 @@ export namespace Prisma {
     attendeeId?: StringWithAggregatesFilter<"SeatAllocation"> | string
   }
 
-  export type TransactionWhereInput = {
-    AND?: TransactionWhereInput | TransactionWhereInput[]
-    OR?: TransactionWhereInput[]
-    NOT?: TransactionWhereInput | TransactionWhereInput[]
-    id?: StringFilter<"Transaction"> | string
-    amount?: FloatFilter<"Transaction"> | number
-    currency?: StringFilter<"Transaction"> | string
-    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
-    paymentMethod?: StringFilter<"Transaction"> | string
-    transactionId?: StringFilter<"Transaction"> | string
-    razorpayOrderId?: StringNullableFilter<"Transaction"> | string | null
-    razorpayPaymentId?: StringNullableFilter<"Transaction"> | string | null
-    createdAt?: DateTimeFilter<"Transaction"> | Date | string
-    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
-    attendeeId?: StringFilter<"Transaction"> | string
-    accountId?: StringNullableFilter<"Transaction"> | string | null
-    attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
-    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }
-
-  export type TransactionOrderByWithRelationInput = {
-    id?: SortOrder
-    amount?: SortOrder
-    currency?: SortOrder
-    status?: SortOrder
-    paymentMethod?: SortOrder
-    transactionId?: SortOrder
-    razorpayOrderId?: SortOrder
-    razorpayPaymentId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    attendeeId?: SortOrder
-    accountId?: SortOrder
-    attendee?: AttendeeOrderByWithRelationInput
-    account?: AccountOrderByWithRelationInput
-  }
-
-  export type TransactionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    transactionId?: string
-    AND?: TransactionWhereInput | TransactionWhereInput[]
-    OR?: TransactionWhereInput[]
-    NOT?: TransactionWhereInput | TransactionWhereInput[]
-    amount?: FloatFilter<"Transaction"> | number
-    currency?: StringFilter<"Transaction"> | string
-    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
-    paymentMethod?: StringFilter<"Transaction"> | string
-    razorpayOrderId?: StringNullableFilter<"Transaction"> | string | null
-    razorpayPaymentId?: StringNullableFilter<"Transaction"> | string | null
-    createdAt?: DateTimeFilter<"Transaction"> | Date | string
-    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
-    attendeeId?: StringFilter<"Transaction"> | string
-    accountId?: StringNullableFilter<"Transaction"> | string | null
-    attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
-    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }, "id" | "transactionId">
-
-  export type TransactionOrderByWithAggregationInput = {
-    id?: SortOrder
-    amount?: SortOrder
-    currency?: SortOrder
-    status?: SortOrder
-    paymentMethod?: SortOrder
-    transactionId?: SortOrder
-    razorpayOrderId?: SortOrder
-    razorpayPaymentId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    attendeeId?: SortOrder
-    accountId?: SortOrder
-    _count?: TransactionCountOrderByAggregateInput
-    _avg?: TransactionAvgOrderByAggregateInput
-    _max?: TransactionMaxOrderByAggregateInput
-    _min?: TransactionMinOrderByAggregateInput
-    _sum?: TransactionSumOrderByAggregateInput
-  }
-
-  export type TransactionScalarWhereWithAggregatesInput = {
-    AND?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
-    OR?: TransactionScalarWhereWithAggregatesInput[]
-    NOT?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Transaction"> | string
-    amount?: FloatWithAggregatesFilter<"Transaction"> | number
-    currency?: StringWithAggregatesFilter<"Transaction"> | string
-    status?: EnumTransactionStatusWithAggregatesFilter<"Transaction"> | $Enums.TransactionStatus
-    paymentMethod?: StringWithAggregatesFilter<"Transaction"> | string
-    transactionId?: StringWithAggregatesFilter<"Transaction"> | string
-    razorpayOrderId?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
-    razorpayPaymentId?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
-    attendeeId?: StringWithAggregatesFilter<"Transaction"> | string
-    accountId?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  }
-
-  export type RemoteConfigWhereInput = {
-    AND?: RemoteConfigWhereInput | RemoteConfigWhereInput[]
-    OR?: RemoteConfigWhereInput[]
-    NOT?: RemoteConfigWhereInput | RemoteConfigWhereInput[]
-    id?: StringFilter<"RemoteConfig"> | string
-    active?: BoolFilter<"RemoteConfig"> | boolean
-    bannerImageURL?: StringNullableFilter<"RemoteConfig"> | string | null
-    logoImageURL?: StringNullableFilter<"RemoteConfig"> | string | null
-    countdownEnabled?: BoolFilter<"RemoteConfig"> | boolean
-    countdownTargetDate?: DateTimeNullableFilter<"RemoteConfig"> | Date | string | null
-    countdownTitle?: StringNullableFilter<"RemoteConfig"> | string | null
-    countdownDescription?: StringNullableFilter<"RemoteConfig"> | string | null
-    attendeesLocked?: BoolFilter<"RemoteConfig"> | boolean
-    attendeesCSVFile?: StringNullableFilter<"RemoteConfig"> | string | null
-    showInstructions?: BoolFilter<"RemoteConfig"> | boolean
-    instructions?: StringNullableFilter<"RemoteConfig"> | string | null
-    updatedAt?: DateTimeFilter<"RemoteConfig"> | Date | string
-    enclosures?: EnclosureListRelationFilter
-  }
-
-  export type RemoteConfigOrderByWithRelationInput = {
-    id?: SortOrder
-    active?: SortOrder
-    bannerImageURL?: SortOrder
-    logoImageURL?: SortOrder
-    countdownEnabled?: SortOrder
-    countdownTargetDate?: SortOrder
-    countdownTitle?: SortOrder
-    countdownDescription?: SortOrder
-    attendeesLocked?: SortOrder
-    attendeesCSVFile?: SortOrder
-    showInstructions?: SortOrder
-    instructions?: SortOrder
-    updatedAt?: SortOrder
-    enclosures?: EnclosureOrderByRelationAggregateInput
-  }
-
-  export type RemoteConfigWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: RemoteConfigWhereInput | RemoteConfigWhereInput[]
-    OR?: RemoteConfigWhereInput[]
-    NOT?: RemoteConfigWhereInput | RemoteConfigWhereInput[]
-    active?: BoolFilter<"RemoteConfig"> | boolean
-    bannerImageURL?: StringNullableFilter<"RemoteConfig"> | string | null
-    logoImageURL?: StringNullableFilter<"RemoteConfig"> | string | null
-    countdownEnabled?: BoolFilter<"RemoteConfig"> | boolean
-    countdownTargetDate?: DateTimeNullableFilter<"RemoteConfig"> | Date | string | null
-    countdownTitle?: StringNullableFilter<"RemoteConfig"> | string | null
-    countdownDescription?: StringNullableFilter<"RemoteConfig"> | string | null
-    attendeesLocked?: BoolFilter<"RemoteConfig"> | boolean
-    attendeesCSVFile?: StringNullableFilter<"RemoteConfig"> | string | null
-    showInstructions?: BoolFilter<"RemoteConfig"> | boolean
-    instructions?: StringNullableFilter<"RemoteConfig"> | string | null
-    updatedAt?: DateTimeFilter<"RemoteConfig"> | Date | string
-    enclosures?: EnclosureListRelationFilter
-  }, "id">
-
-  export type RemoteConfigOrderByWithAggregationInput = {
-    id?: SortOrder
-    active?: SortOrder
-    bannerImageURL?: SortOrder
-    logoImageURL?: SortOrder
-    countdownEnabled?: SortOrder
-    countdownTargetDate?: SortOrder
-    countdownTitle?: SortOrder
-    countdownDescription?: SortOrder
-    attendeesLocked?: SortOrder
-    attendeesCSVFile?: SortOrder
-    showInstructions?: SortOrder
-    instructions?: SortOrder
-    updatedAt?: SortOrder
-    _count?: RemoteConfigCountOrderByAggregateInput
-    _max?: RemoteConfigMaxOrderByAggregateInput
-    _min?: RemoteConfigMinOrderByAggregateInput
-  }
-
-  export type RemoteConfigScalarWhereWithAggregatesInput = {
-    AND?: RemoteConfigScalarWhereWithAggregatesInput | RemoteConfigScalarWhereWithAggregatesInput[]
-    OR?: RemoteConfigScalarWhereWithAggregatesInput[]
-    NOT?: RemoteConfigScalarWhereWithAggregatesInput | RemoteConfigScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"RemoteConfig"> | string
-    active?: BoolWithAggregatesFilter<"RemoteConfig"> | boolean
-    bannerImageURL?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    logoImageURL?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    countdownEnabled?: BoolWithAggregatesFilter<"RemoteConfig"> | boolean
-    countdownTargetDate?: DateTimeNullableWithAggregatesFilter<"RemoteConfig"> | Date | string | null
-    countdownTitle?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    countdownDescription?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    attendeesLocked?: BoolWithAggregatesFilter<"RemoteConfig"> | boolean
-    attendeesCSVFile?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    showInstructions?: BoolWithAggregatesFilter<"RemoteConfig"> | boolean
-    instructions?: StringNullableWithAggregatesFilter<"RemoteConfig"> | string | null
-    updatedAt?: DateTimeWithAggregatesFilter<"RemoteConfig"> | Date | string
-  }
-
   export type EnclosureWhereInput = {
     AND?: EnclosureWhereInput | EnclosureWhereInput[]
     OR?: EnclosureWhereInput[]
@@ -14209,8 +11463,6 @@ export namespace Prisma {
     letter?: StringFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
-    remoteConfigId?: StringFilter<"Enclosure"> | string
-    remoteConfig?: XOR<RemoteConfigScalarRelationFilter, RemoteConfigWhereInput>
     rows?: RowListRelationFilter
   }
 
@@ -14219,8 +11471,6 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
-    remoteConfigId?: SortOrder
-    remoteConfig?: RemoteConfigOrderByWithRelationInput
     rows?: RowOrderByRelationAggregateInput
   }
 
@@ -14232,8 +11482,6 @@ export namespace Prisma {
     letter?: StringFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
-    remoteConfigId?: StringFilter<"Enclosure"> | string
-    remoteConfig?: XOR<RemoteConfigScalarRelationFilter, RemoteConfigWhereInput>
     rows?: RowListRelationFilter
   }, "id">
 
@@ -14242,7 +11490,6 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
-    remoteConfigId?: SortOrder
     _count?: EnclosureCountOrderByAggregateInput
     _max?: EnclosureMaxOrderByAggregateInput
     _min?: EnclosureMinOrderByAggregateInput
@@ -14256,7 +11503,6 @@ export namespace Prisma {
     letter?: StringWithAggregatesFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeWithAggregatesFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionWithAggregatesFilter<"Enclosure"> | $Enums.Direction
-    remoteConfigId?: StringWithAggregatesFilter<"Enclosure"> | string
   }
 
   export type RowWhereInput = {
@@ -14619,7 +11865,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendees?: AttendeeCreateNestedManyWithoutAccountInput
-    transactions?: TransactionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -14638,7 +11883,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendees?: AttendeeUncheckedCreateNestedManyWithoutAccountInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUpdateInput = {
@@ -14656,7 +11900,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendees?: AttendeeUpdateManyWithoutAccountNestedInput
-    transactions?: TransactionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -14674,7 +11917,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendees?: AttendeeUncheckedUpdateManyWithoutAccountNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -14739,9 +11981,10 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
-    transactions?: TransactionCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateInput = {
@@ -14757,9 +12000,10 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     accountId?: string | null
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUpdateInput = {
@@ -14774,9 +12018,10 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
-    transactions?: TransactionUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateInput = {
@@ -14791,9 +12036,10 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeCreateManyInput = {
@@ -14809,6 +12055,8 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     accountId?: string | null
   }
 
@@ -14824,6 +12072,8 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttendeeUncheckedUpdateManyInput = {
@@ -14838,6 +12088,8 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -14899,223 +12151,11 @@ export namespace Prisma {
     attendeeId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type TransactionCreateInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendee: AttendeeCreateNestedOneWithoutTransactionsInput
-    account?: AccountCreateNestedOneWithoutTransactionsInput
-  }
-
-  export type TransactionUncheckedCreateInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendeeId: string
-    accountId?: string | null
-  }
-
-  export type TransactionUpdateInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendee?: AttendeeUpdateOneRequiredWithoutTransactionsNestedInput
-    account?: AccountUpdateOneWithoutTransactionsNestedInput
-  }
-
-  export type TransactionUncheckedUpdateInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendeeId?: StringFieldUpdateOperationsInput | string
-    accountId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type TransactionCreateManyInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendeeId: string
-    accountId?: string | null
-  }
-
-  export type TransactionUpdateManyMutationInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TransactionUncheckedUpdateManyInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendeeId?: StringFieldUpdateOperationsInput | string
-    accountId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type RemoteConfigCreateInput = {
-    id?: string
-    active?: boolean
-    bannerImageURL?: string | null
-    logoImageURL?: string | null
-    countdownEnabled?: boolean
-    countdownTargetDate?: Date | string | null
-    countdownTitle?: string | null
-    countdownDescription?: string | null
-    attendeesLocked?: boolean
-    attendeesCSVFile?: string | null
-    showInstructions?: boolean
-    instructions?: string | null
-    updatedAt?: Date | string
-    enclosures?: EnclosureCreateNestedManyWithoutRemoteConfigInput
-  }
-
-  export type RemoteConfigUncheckedCreateInput = {
-    id?: string
-    active?: boolean
-    bannerImageURL?: string | null
-    logoImageURL?: string | null
-    countdownEnabled?: boolean
-    countdownTargetDate?: Date | string | null
-    countdownTitle?: string | null
-    countdownDescription?: string | null
-    attendeesLocked?: boolean
-    attendeesCSVFile?: string | null
-    showInstructions?: boolean
-    instructions?: string | null
-    updatedAt?: Date | string
-    enclosures?: EnclosureUncheckedCreateNestedManyWithoutRemoteConfigInput
-  }
-
-  export type RemoteConfigUpdateInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    enclosures?: EnclosureUpdateManyWithoutRemoteConfigNestedInput
-  }
-
-  export type RemoteConfigUncheckedUpdateInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    enclosures?: EnclosureUncheckedUpdateManyWithoutRemoteConfigNestedInput
-  }
-
-  export type RemoteConfigCreateManyInput = {
-    id?: string
-    active?: boolean
-    bannerImageURL?: string | null
-    logoImageURL?: string | null
-    countdownEnabled?: boolean
-    countdownTargetDate?: Date | string | null
-    countdownTitle?: string | null
-    countdownDescription?: string | null
-    attendeesLocked?: boolean
-    attendeesCSVFile?: string | null
-    showInstructions?: boolean
-    instructions?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type RemoteConfigUpdateManyMutationInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RemoteConfigUncheckedUpdateManyInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type EnclosureCreateInput = {
     id?: string
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfig: RemoteConfigCreateNestedOneWithoutEnclosuresInput
     rows?: RowCreateNestedManyWithoutEnclosureInput
   }
 
@@ -15124,7 +12164,6 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfigId: string
     rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
   }
 
@@ -15132,7 +12171,6 @@ export namespace Prisma {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    remoteConfig?: RemoteConfigUpdateOneRequiredWithoutEnclosuresNestedInput
     rows?: RowUpdateManyWithoutEnclosureNestedInput
   }
 
@@ -15140,7 +12178,6 @@ export namespace Prisma {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    remoteConfigId?: StringFieldUpdateOperationsInput | string
     rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
@@ -15149,7 +12186,6 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfigId: string
   }
 
   export type EnclosureUpdateManyMutationInput = {
@@ -15162,7 +12198,6 @@ export namespace Prisma {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    remoteConfigId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateInput = {
@@ -15616,17 +12651,7 @@ export namespace Prisma {
     none?: AttendeeWhereInput
   }
 
-  export type TransactionListRelationFilter = {
-    every?: TransactionWhereInput
-    some?: TransactionWhereInput
-    none?: TransactionWhereInput
-  }
-
   export type AttendeeOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type TransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15796,6 +12821,8 @@ export namespace Prisma {
     convocationRegistered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    crr?: SortOrder
+    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -15812,6 +12839,8 @@ export namespace Prisma {
     convocationRegistered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    crr?: SortOrder
+    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -15828,6 +12857,8 @@ export namespace Prisma {
     convocationRegistered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    crr?: SortOrder
+    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -15898,161 +12929,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type EnumTransactionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
-  }
-
-  export type TransactionCountOrderByAggregateInput = {
-    id?: SortOrder
-    amount?: SortOrder
-    currency?: SortOrder
-    status?: SortOrder
-    paymentMethod?: SortOrder
-    transactionId?: SortOrder
-    razorpayOrderId?: SortOrder
-    razorpayPaymentId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    attendeeId?: SortOrder
-    accountId?: SortOrder
-  }
-
-  export type TransactionAvgOrderByAggregateInput = {
-    amount?: SortOrder
-  }
-
-  export type TransactionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    amount?: SortOrder
-    currency?: SortOrder
-    status?: SortOrder
-    paymentMethod?: SortOrder
-    transactionId?: SortOrder
-    razorpayOrderId?: SortOrder
-    razorpayPaymentId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    attendeeId?: SortOrder
-    accountId?: SortOrder
-  }
-
-  export type TransactionMinOrderByAggregateInput = {
-    id?: SortOrder
-    amount?: SortOrder
-    currency?: SortOrder
-    status?: SortOrder
-    paymentMethod?: SortOrder
-    transactionId?: SortOrder
-    razorpayOrderId?: SortOrder
-    razorpayPaymentId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    attendeeId?: SortOrder
-    accountId?: SortOrder
-  }
-
-  export type TransactionSumOrderByAggregateInput = {
-    amount?: SortOrder
-  }
-
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type EnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
-    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
-  }
-
-  export type EnclosureListRelationFilter = {
-    every?: EnclosureWhereInput
-    some?: EnclosureWhereInput
-    none?: EnclosureWhereInput
-  }
-
-  export type EnclosureOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RemoteConfigCountOrderByAggregateInput = {
-    id?: SortOrder
-    active?: SortOrder
-    bannerImageURL?: SortOrder
-    logoImageURL?: SortOrder
-    countdownEnabled?: SortOrder
-    countdownTargetDate?: SortOrder
-    countdownTitle?: SortOrder
-    countdownDescription?: SortOrder
-    attendeesLocked?: SortOrder
-    attendeesCSVFile?: SortOrder
-    showInstructions?: SortOrder
-    instructions?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type RemoteConfigMaxOrderByAggregateInput = {
-    id?: SortOrder
-    active?: SortOrder
-    bannerImageURL?: SortOrder
-    logoImageURL?: SortOrder
-    countdownEnabled?: SortOrder
-    countdownTargetDate?: SortOrder
-    countdownTitle?: SortOrder
-    countdownDescription?: SortOrder
-    attendeesLocked?: SortOrder
-    attendeesCSVFile?: SortOrder
-    showInstructions?: SortOrder
-    instructions?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type RemoteConfigMinOrderByAggregateInput = {
-    id?: SortOrder
-    active?: SortOrder
-    bannerImageURL?: SortOrder
-    logoImageURL?: SortOrder
-    countdownEnabled?: SortOrder
-    countdownTargetDate?: SortOrder
-    countdownTitle?: SortOrder
-    countdownDescription?: SortOrder
-    attendeesLocked?: SortOrder
-    attendeesCSVFile?: SortOrder
-    showInstructions?: SortOrder
-    instructions?: SortOrder
-    updatedAt?: SortOrder
-  }
-
   export type EnumEnclosureTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.EnclosureType | EnumEnclosureTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EnclosureType[] | ListEnumEnclosureTypeFieldRefInput<$PrismaModel>
@@ -16065,11 +12941,6 @@ export namespace Prisma {
     in?: $Enums.Direction[] | ListEnumDirectionFieldRefInput<$PrismaModel>
     notIn?: $Enums.Direction[] | ListEnumDirectionFieldRefInput<$PrismaModel>
     not?: NestedEnumDirectionFilter<$PrismaModel> | $Enums.Direction
-  }
-
-  export type RemoteConfigScalarRelationFilter = {
-    is?: RemoteConfigWhereInput
-    isNot?: RemoteConfigWhereInput
   }
 
   export type RowListRelationFilter = {
@@ -16087,7 +12958,6 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
-    remoteConfigId?: SortOrder
   }
 
   export type EnclosureMaxOrderByAggregateInput = {
@@ -16095,7 +12965,6 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
-    remoteConfigId?: SortOrder
   }
 
   export type EnclosureMinOrderByAggregateInput = {
@@ -16103,7 +12972,6 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
-    remoteConfigId?: SortOrder
   }
 
   export type EnumEnclosureTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -16383,25 +13251,11 @@ export namespace Prisma {
     connect?: AttendeeWhereUniqueInput | AttendeeWhereUniqueInput[]
   }
 
-  export type TransactionCreateNestedManyWithoutAccountInput = {
-    create?: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput> | TransactionCreateWithoutAccountInput[] | TransactionUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAccountInput | TransactionCreateOrConnectWithoutAccountInput[]
-    createMany?: TransactionCreateManyAccountInputEnvelope
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-  }
-
   export type AttendeeUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<AttendeeCreateWithoutAccountInput, AttendeeUncheckedCreateWithoutAccountInput> | AttendeeCreateWithoutAccountInput[] | AttendeeUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AttendeeCreateOrConnectWithoutAccountInput | AttendeeCreateOrConnectWithoutAccountInput[]
     createMany?: AttendeeCreateManyAccountInputEnvelope
     connect?: AttendeeWhereUniqueInput | AttendeeWhereUniqueInput[]
-  }
-
-  export type TransactionUncheckedCreateNestedManyWithoutAccountInput = {
-    create?: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput> | TransactionCreateWithoutAccountInput[] | TransactionUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAccountInput | TransactionCreateOrConnectWithoutAccountInput[]
-    createMany?: TransactionCreateManyAccountInputEnvelope
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -16453,20 +13307,6 @@ export namespace Prisma {
     deleteMany?: AttendeeScalarWhereInput | AttendeeScalarWhereInput[]
   }
 
-  export type TransactionUpdateManyWithoutAccountNestedInput = {
-    create?: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput> | TransactionCreateWithoutAccountInput[] | TransactionUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAccountInput | TransactionCreateOrConnectWithoutAccountInput[]
-    upsert?: TransactionUpsertWithWhereUniqueWithoutAccountInput | TransactionUpsertWithWhereUniqueWithoutAccountInput[]
-    createMany?: TransactionCreateManyAccountInputEnvelope
-    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    update?: TransactionUpdateWithWhereUniqueWithoutAccountInput | TransactionUpdateWithWhereUniqueWithoutAccountInput[]
-    updateMany?: TransactionUpdateManyWithWhereWithoutAccountInput | TransactionUpdateManyWithWhereWithoutAccountInput[]
-    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-  }
-
   export type AttendeeUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<AttendeeCreateWithoutAccountInput, AttendeeUncheckedCreateWithoutAccountInput> | AttendeeCreateWithoutAccountInput[] | AttendeeUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AttendeeCreateOrConnectWithoutAccountInput | AttendeeCreateOrConnectWithoutAccountInput[]
@@ -16481,20 +13321,6 @@ export namespace Prisma {
     deleteMany?: AttendeeScalarWhereInput | AttendeeScalarWhereInput[]
   }
 
-  export type TransactionUncheckedUpdateManyWithoutAccountNestedInput = {
-    create?: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput> | TransactionCreateWithoutAccountInput[] | TransactionUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAccountInput | TransactionCreateOrConnectWithoutAccountInput[]
-    upsert?: TransactionUpsertWithWhereUniqueWithoutAccountInput | TransactionUpsertWithWhereUniqueWithoutAccountInput[]
-    createMany?: TransactionCreateManyAccountInputEnvelope
-    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    update?: TransactionUpdateWithWhereUniqueWithoutAccountInput | TransactionUpdateWithWhereUniqueWithoutAccountInput[]
-    updateMany?: TransactionUpdateManyWithWhereWithoutAccountInput | TransactionUpdateManyWithWhereWithoutAccountInput[]
-    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-  }
-
   export type AccountCreateNestedOneWithoutAttendeesInput = {
     create?: XOR<AccountCreateWithoutAttendeesInput, AccountUncheckedCreateWithoutAttendeesInput>
     connectOrCreate?: AccountCreateOrConnectWithoutAttendeesInput
@@ -16507,24 +13333,10 @@ export namespace Prisma {
     connect?: SeatAllocationWhereUniqueInput
   }
 
-  export type TransactionCreateNestedManyWithoutAttendeeInput = {
-    create?: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput> | TransactionCreateWithoutAttendeeInput[] | TransactionUncheckedCreateWithoutAttendeeInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAttendeeInput | TransactionCreateOrConnectWithoutAttendeeInput[]
-    createMany?: TransactionCreateManyAttendeeInputEnvelope
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-  }
-
   export type SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput = {
     create?: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
     connectOrCreate?: SeatAllocationCreateOrConnectWithoutAttendeeInput
     connect?: SeatAllocationWhereUniqueInput
-  }
-
-  export type TransactionUncheckedCreateNestedManyWithoutAttendeeInput = {
-    create?: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput> | TransactionCreateWithoutAttendeeInput[] | TransactionUncheckedCreateWithoutAttendeeInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAttendeeInput | TransactionCreateOrConnectWithoutAttendeeInput[]
-    createMany?: TransactionCreateManyAttendeeInputEnvelope
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
   export type AccountUpdateOneWithoutAttendeesNestedInput = {
@@ -16547,20 +13359,6 @@ export namespace Prisma {
     update?: XOR<XOR<SeatAllocationUpdateToOneWithWhereWithoutAttendeeInput, SeatAllocationUpdateWithoutAttendeeInput>, SeatAllocationUncheckedUpdateWithoutAttendeeInput>
   }
 
-  export type TransactionUpdateManyWithoutAttendeeNestedInput = {
-    create?: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput> | TransactionCreateWithoutAttendeeInput[] | TransactionUncheckedCreateWithoutAttendeeInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAttendeeInput | TransactionCreateOrConnectWithoutAttendeeInput[]
-    upsert?: TransactionUpsertWithWhereUniqueWithoutAttendeeInput | TransactionUpsertWithWhereUniqueWithoutAttendeeInput[]
-    createMany?: TransactionCreateManyAttendeeInputEnvelope
-    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    update?: TransactionUpdateWithWhereUniqueWithoutAttendeeInput | TransactionUpdateWithWhereUniqueWithoutAttendeeInput[]
-    updateMany?: TransactionUpdateManyWithWhereWithoutAttendeeInput | TransactionUpdateManyWithWhereWithoutAttendeeInput[]
-    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-  }
-
   export type SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput = {
     create?: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
     connectOrCreate?: SeatAllocationCreateOrConnectWithoutAttendeeInput
@@ -16569,20 +13367,6 @@ export namespace Prisma {
     delete?: SeatAllocationWhereInput | boolean
     connect?: SeatAllocationWhereUniqueInput
     update?: XOR<XOR<SeatAllocationUpdateToOneWithWhereWithoutAttendeeInput, SeatAllocationUpdateWithoutAttendeeInput>, SeatAllocationUncheckedUpdateWithoutAttendeeInput>
-  }
-
-  export type TransactionUncheckedUpdateManyWithoutAttendeeNestedInput = {
-    create?: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput> | TransactionCreateWithoutAttendeeInput[] | TransactionUncheckedCreateWithoutAttendeeInput[]
-    connectOrCreate?: TransactionCreateOrConnectWithoutAttendeeInput | TransactionCreateOrConnectWithoutAttendeeInput[]
-    upsert?: TransactionUpsertWithWhereUniqueWithoutAttendeeInput | TransactionUpsertWithWhereUniqueWithoutAttendeeInput[]
-    createMany?: TransactionCreateManyAttendeeInputEnvelope
-    set?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    disconnect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    delete?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-    update?: TransactionUpdateWithWhereUniqueWithoutAttendeeInput | TransactionUpdateWithWhereUniqueWithoutAttendeeInput[]
-    updateMany?: TransactionUpdateManyWithWhereWithoutAttendeeInput | TransactionUpdateManyWithWhereWithoutAttendeeInput[]
-    deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
   }
 
   export type AttendeeCreateNestedOneWithoutAllocationInput = {
@@ -16607,96 +13391,6 @@ export namespace Prisma {
     update?: XOR<XOR<AttendeeUpdateToOneWithWhereWithoutAllocationInput, AttendeeUpdateWithoutAllocationInput>, AttendeeUncheckedUpdateWithoutAllocationInput>
   }
 
-  export type AttendeeCreateNestedOneWithoutTransactionsInput = {
-    create?: XOR<AttendeeCreateWithoutTransactionsInput, AttendeeUncheckedCreateWithoutTransactionsInput>
-    connectOrCreate?: AttendeeCreateOrConnectWithoutTransactionsInput
-    connect?: AttendeeWhereUniqueInput
-  }
-
-  export type AccountCreateNestedOneWithoutTransactionsInput = {
-    create?: XOR<AccountCreateWithoutTransactionsInput, AccountUncheckedCreateWithoutTransactionsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutTransactionsInput
-    connect?: AccountWhereUniqueInput
-  }
-
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type EnumTransactionStatusFieldUpdateOperationsInput = {
-    set?: $Enums.TransactionStatus
-  }
-
-  export type AttendeeUpdateOneRequiredWithoutTransactionsNestedInput = {
-    create?: XOR<AttendeeCreateWithoutTransactionsInput, AttendeeUncheckedCreateWithoutTransactionsInput>
-    connectOrCreate?: AttendeeCreateOrConnectWithoutTransactionsInput
-    upsert?: AttendeeUpsertWithoutTransactionsInput
-    connect?: AttendeeWhereUniqueInput
-    update?: XOR<XOR<AttendeeUpdateToOneWithWhereWithoutTransactionsInput, AttendeeUpdateWithoutTransactionsInput>, AttendeeUncheckedUpdateWithoutTransactionsInput>
-  }
-
-  export type AccountUpdateOneWithoutTransactionsNestedInput = {
-    create?: XOR<AccountCreateWithoutTransactionsInput, AccountUncheckedCreateWithoutTransactionsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutTransactionsInput
-    upsert?: AccountUpsertWithoutTransactionsInput
-    disconnect?: boolean
-    delete?: AccountWhereInput | boolean
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutTransactionsInput, AccountUpdateWithoutTransactionsInput>, AccountUncheckedUpdateWithoutTransactionsInput>
-  }
-
-  export type EnclosureCreateNestedManyWithoutRemoteConfigInput = {
-    create?: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput> | EnclosureCreateWithoutRemoteConfigInput[] | EnclosureUncheckedCreateWithoutRemoteConfigInput[]
-    connectOrCreate?: EnclosureCreateOrConnectWithoutRemoteConfigInput | EnclosureCreateOrConnectWithoutRemoteConfigInput[]
-    createMany?: EnclosureCreateManyRemoteConfigInputEnvelope
-    connect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-  }
-
-  export type EnclosureUncheckedCreateNestedManyWithoutRemoteConfigInput = {
-    create?: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput> | EnclosureCreateWithoutRemoteConfigInput[] | EnclosureUncheckedCreateWithoutRemoteConfigInput[]
-    connectOrCreate?: EnclosureCreateOrConnectWithoutRemoteConfigInput | EnclosureCreateOrConnectWithoutRemoteConfigInput[]
-    createMany?: EnclosureCreateManyRemoteConfigInputEnvelope
-    connect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-  }
-
-  export type EnclosureUpdateManyWithoutRemoteConfigNestedInput = {
-    create?: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput> | EnclosureCreateWithoutRemoteConfigInput[] | EnclosureUncheckedCreateWithoutRemoteConfigInput[]
-    connectOrCreate?: EnclosureCreateOrConnectWithoutRemoteConfigInput | EnclosureCreateOrConnectWithoutRemoteConfigInput[]
-    upsert?: EnclosureUpsertWithWhereUniqueWithoutRemoteConfigInput | EnclosureUpsertWithWhereUniqueWithoutRemoteConfigInput[]
-    createMany?: EnclosureCreateManyRemoteConfigInputEnvelope
-    set?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    disconnect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    delete?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    connect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    update?: EnclosureUpdateWithWhereUniqueWithoutRemoteConfigInput | EnclosureUpdateWithWhereUniqueWithoutRemoteConfigInput[]
-    updateMany?: EnclosureUpdateManyWithWhereWithoutRemoteConfigInput | EnclosureUpdateManyWithWhereWithoutRemoteConfigInput[]
-    deleteMany?: EnclosureScalarWhereInput | EnclosureScalarWhereInput[]
-  }
-
-  export type EnclosureUncheckedUpdateManyWithoutRemoteConfigNestedInput = {
-    create?: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput> | EnclosureCreateWithoutRemoteConfigInput[] | EnclosureUncheckedCreateWithoutRemoteConfigInput[]
-    connectOrCreate?: EnclosureCreateOrConnectWithoutRemoteConfigInput | EnclosureCreateOrConnectWithoutRemoteConfigInput[]
-    upsert?: EnclosureUpsertWithWhereUniqueWithoutRemoteConfigInput | EnclosureUpsertWithWhereUniqueWithoutRemoteConfigInput[]
-    createMany?: EnclosureCreateManyRemoteConfigInputEnvelope
-    set?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    disconnect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    delete?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    connect?: EnclosureWhereUniqueInput | EnclosureWhereUniqueInput[]
-    update?: EnclosureUpdateWithWhereUniqueWithoutRemoteConfigInput | EnclosureUpdateWithWhereUniqueWithoutRemoteConfigInput[]
-    updateMany?: EnclosureUpdateManyWithWhereWithoutRemoteConfigInput | EnclosureUpdateManyWithWhereWithoutRemoteConfigInput[]
-    deleteMany?: EnclosureScalarWhereInput | EnclosureScalarWhereInput[]
-  }
-
-  export type RemoteConfigCreateNestedOneWithoutEnclosuresInput = {
-    create?: XOR<RemoteConfigCreateWithoutEnclosuresInput, RemoteConfigUncheckedCreateWithoutEnclosuresInput>
-    connectOrCreate?: RemoteConfigCreateOrConnectWithoutEnclosuresInput
-    connect?: RemoteConfigWhereUniqueInput
-  }
-
   export type RowCreateNestedManyWithoutEnclosureInput = {
     create?: XOR<RowCreateWithoutEnclosureInput, RowUncheckedCreateWithoutEnclosureInput> | RowCreateWithoutEnclosureInput[] | RowUncheckedCreateWithoutEnclosureInput[]
     connectOrCreate?: RowCreateOrConnectWithoutEnclosureInput | RowCreateOrConnectWithoutEnclosureInput[]
@@ -16717,14 +13411,6 @@ export namespace Prisma {
 
   export type EnumDirectionFieldUpdateOperationsInput = {
     set?: $Enums.Direction
-  }
-
-  export type RemoteConfigUpdateOneRequiredWithoutEnclosuresNestedInput = {
-    create?: XOR<RemoteConfigCreateWithoutEnclosuresInput, RemoteConfigUncheckedCreateWithoutEnclosuresInput>
-    connectOrCreate?: RemoteConfigCreateOrConnectWithoutEnclosuresInput
-    upsert?: RemoteConfigUpsertWithoutEnclosuresInput
-    connect?: RemoteConfigWhereUniqueInput
-    update?: XOR<XOR<RemoteConfigUpdateToOneWithWhereWithoutEnclosuresInput, RemoteConfigUpdateWithoutEnclosuresInput>, RemoteConfigUncheckedUpdateWithoutEnclosuresInput>
   }
 
   export type RowUpdateManyWithoutEnclosureNestedInput = {
@@ -17000,39 +13686,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumTransactionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
-    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
-  }
-
   export type NestedEnumEnclosureTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.EnclosureType | EnumEnclosureTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EnclosureType[] | ListEnumEnclosureTypeFieldRefInput<$PrismaModel>
@@ -17120,8 +13773,9 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
-    transactions?: TransactionCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateWithoutAccountInput = {
@@ -17137,8 +13791,9 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeCreateOrConnectWithoutAccountInput = {
@@ -17148,43 +13803,6 @@ export namespace Prisma {
 
   export type AttendeeCreateManyAccountInputEnvelope = {
     data: AttendeeCreateManyAccountInput | AttendeeCreateManyAccountInput[]
-  }
-
-  export type TransactionCreateWithoutAccountInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendee: AttendeeCreateNestedOneWithoutTransactionsInput
-  }
-
-  export type TransactionUncheckedCreateWithoutAccountInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendeeId: string
-  }
-
-  export type TransactionCreateOrConnectWithoutAccountInput = {
-    where: TransactionWhereUniqueInput
-    create: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput>
-  }
-
-  export type TransactionCreateManyAccountInputEnvelope = {
-    data: TransactionCreateManyAccountInput | TransactionCreateManyAccountInput[]
   }
 
   export type AttendeeUpsertWithWhereUniqueWithoutAccountInput = {
@@ -17219,41 +13837,9 @@ export namespace Prisma {
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
+    crr?: StringFilter<"Attendee"> | string
+    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
-  }
-
-  export type TransactionUpsertWithWhereUniqueWithoutAccountInput = {
-    where: TransactionWhereUniqueInput
-    update: XOR<TransactionUpdateWithoutAccountInput, TransactionUncheckedUpdateWithoutAccountInput>
-    create: XOR<TransactionCreateWithoutAccountInput, TransactionUncheckedCreateWithoutAccountInput>
-  }
-
-  export type TransactionUpdateWithWhereUniqueWithoutAccountInput = {
-    where: TransactionWhereUniqueInput
-    data: XOR<TransactionUpdateWithoutAccountInput, TransactionUncheckedUpdateWithoutAccountInput>
-  }
-
-  export type TransactionUpdateManyWithWhereWithoutAccountInput = {
-    where: TransactionScalarWhereInput
-    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyWithoutAccountInput>
-  }
-
-  export type TransactionScalarWhereInput = {
-    AND?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-    OR?: TransactionScalarWhereInput[]
-    NOT?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-    id?: StringFilter<"Transaction"> | string
-    amount?: FloatFilter<"Transaction"> | number
-    currency?: StringFilter<"Transaction"> | string
-    status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
-    paymentMethod?: StringFilter<"Transaction"> | string
-    transactionId?: StringFilter<"Transaction"> | string
-    razorpayOrderId?: StringNullableFilter<"Transaction"> | string | null
-    razorpayPaymentId?: StringNullableFilter<"Transaction"> | string | null
-    createdAt?: DateTimeFilter<"Transaction"> | Date | string
-    updatedAt?: DateTimeFilter<"Transaction"> | Date | string
-    attendeeId?: StringFilter<"Transaction"> | string
-    accountId?: StringNullableFilter<"Transaction"> | string | null
   }
 
   export type AccountCreateWithoutAttendeesInput = {
@@ -17271,7 +13857,6 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    transactions?: TransactionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutAttendeesInput = {
@@ -17289,7 +13874,6 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    transactions?: TransactionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutAttendeesInput = {
@@ -17318,43 +13902,6 @@ export namespace Prisma {
     create: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
   }
 
-  export type TransactionCreateWithoutAttendeeInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    account?: AccountCreateNestedOneWithoutTransactionsInput
-  }
-
-  export type TransactionUncheckedCreateWithoutAttendeeInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accountId?: string | null
-  }
-
-  export type TransactionCreateOrConnectWithoutAttendeeInput = {
-    where: TransactionWhereUniqueInput
-    create: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput>
-  }
-
-  export type TransactionCreateManyAttendeeInputEnvelope = {
-    data: TransactionCreateManyAttendeeInput | TransactionCreateManyAttendeeInput[]
-  }
-
   export type AccountUpsertWithoutAttendeesInput = {
     update: XOR<AccountUpdateWithoutAttendeesInput, AccountUncheckedUpdateWithoutAttendeesInput>
     create: XOR<AccountCreateWithoutAttendeesInput, AccountUncheckedCreateWithoutAttendeesInput>
@@ -17380,7 +13927,6 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactions?: TransactionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAttendeesInput = {
@@ -17397,7 +13943,6 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactions?: TransactionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type SeatAllocationUpsertWithoutAttendeeInput = {
@@ -17425,22 +13970,6 @@ export namespace Prisma {
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TransactionUpsertWithWhereUniqueWithoutAttendeeInput = {
-    where: TransactionWhereUniqueInput
-    update: XOR<TransactionUpdateWithoutAttendeeInput, TransactionUncheckedUpdateWithoutAttendeeInput>
-    create: XOR<TransactionCreateWithoutAttendeeInput, TransactionUncheckedCreateWithoutAttendeeInput>
-  }
-
-  export type TransactionUpdateWithWhereUniqueWithoutAttendeeInput = {
-    where: TransactionWhereUniqueInput
-    data: XOR<TransactionUpdateWithoutAttendeeInput, TransactionUncheckedUpdateWithoutAttendeeInput>
-  }
-
-  export type TransactionUpdateManyWithWhereWithoutAttendeeInput = {
-    where: TransactionScalarWhereInput
-    data: XOR<TransactionUpdateManyMutationInput, TransactionUncheckedUpdateManyWithoutAttendeeInput>
-  }
-
   export type AttendeeCreateWithoutAllocationInput = {
     id?: string
     enrollmentId: string
@@ -17454,8 +13983,9 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
-    transactions?: TransactionCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateWithoutAllocationInput = {
@@ -17471,8 +14001,9 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    crr: string
+    enclosure: string
     accountId?: string | null
-    transactions?: TransactionUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeCreateOrConnectWithoutAllocationInput = {
@@ -17503,8 +14034,9 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
-    transactions?: TransactionUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateWithoutAllocationInput = {
@@ -17519,265 +14051,9 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
-    transactions?: TransactionUncheckedUpdateManyWithoutAttendeeNestedInput
-  }
-
-  export type AttendeeCreateWithoutTransactionsInput = {
-    id?: string
-    enrollmentId: string
-    name: string
-    course: string
-    school: string
-    degree: string
-    email?: string | null
-    phone?: string | null
-    convocationEligible?: boolean
-    convocationRegistered?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    account?: AccountCreateNestedOneWithoutAttendeesInput
-    allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
-  }
-
-  export type AttendeeUncheckedCreateWithoutTransactionsInput = {
-    id?: string
-    enrollmentId: string
-    name: string
-    course: string
-    school: string
-    degree: string
-    email?: string | null
-    phone?: string | null
-    convocationEligible?: boolean
-    convocationRegistered?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accountId?: string | null
-    allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
-  }
-
-  export type AttendeeCreateOrConnectWithoutTransactionsInput = {
-    where: AttendeeWhereUniqueInput
-    create: XOR<AttendeeCreateWithoutTransactionsInput, AttendeeUncheckedCreateWithoutTransactionsInput>
-  }
-
-  export type AccountCreateWithoutTransactionsInput = {
-    id?: string
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    displayName: string
-    profileImageURL?: string | null
-    role?: $Enums.UserRole
-    assignedIAMPolicies?: AccountCreateassignedIAMPoliciesInput | string[]
-    accountState?: $Enums.AccountState
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendees?: AttendeeCreateNestedManyWithoutAccountInput
-  }
-
-  export type AccountUncheckedCreateWithoutTransactionsInput = {
-    id?: string
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    displayName: string
-    profileImageURL?: string | null
-    role?: $Enums.UserRole
-    assignedIAMPolicies?: AccountCreateassignedIAMPoliciesInput | string[]
-    accountState?: $Enums.AccountState
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendees?: AttendeeUncheckedCreateNestedManyWithoutAccountInput
-  }
-
-  export type AccountCreateOrConnectWithoutTransactionsInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutTransactionsInput, AccountUncheckedCreateWithoutTransactionsInput>
-  }
-
-  export type AttendeeUpsertWithoutTransactionsInput = {
-    update: XOR<AttendeeUpdateWithoutTransactionsInput, AttendeeUncheckedUpdateWithoutTransactionsInput>
-    create: XOR<AttendeeCreateWithoutTransactionsInput, AttendeeUncheckedCreateWithoutTransactionsInput>
-    where?: AttendeeWhereInput
-  }
-
-  export type AttendeeUpdateToOneWithWhereWithoutTransactionsInput = {
-    where?: AttendeeWhereInput
-    data: XOR<AttendeeUpdateWithoutTransactionsInput, AttendeeUncheckedUpdateWithoutTransactionsInput>
-  }
-
-  export type AttendeeUpdateWithoutTransactionsInput = {
-    enrollmentId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
-    school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    convocationEligible?: BoolFieldUpdateOperationsInput | boolean
-    convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    account?: AccountUpdateOneWithoutAttendeesNestedInput
-    allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
-  }
-
-  export type AttendeeUncheckedUpdateWithoutTransactionsInput = {
-    enrollmentId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
-    school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    convocationEligible?: BoolFieldUpdateOperationsInput | boolean
-    convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountId?: NullableStringFieldUpdateOperationsInput | string | null
-    allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
-  }
-
-  export type AccountUpsertWithoutTransactionsInput = {
-    update: XOR<AccountUpdateWithoutTransactionsInput, AccountUncheckedUpdateWithoutTransactionsInput>
-    create: XOR<AccountCreateWithoutTransactionsInput, AccountUncheckedCreateWithoutTransactionsInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutTransactionsInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutTransactionsInput, AccountUncheckedUpdateWithoutTransactionsInput>
-  }
-
-  export type AccountUpdateWithoutTransactionsInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    displayName?: StringFieldUpdateOperationsInput | string
-    profileImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    assignedIAMPolicies?: AccountUpdateassignedIAMPoliciesInput | string[]
-    accountState?: EnumAccountStateFieldUpdateOperationsInput | $Enums.AccountState
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendees?: AttendeeUpdateManyWithoutAccountNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutTransactionsInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    displayName?: StringFieldUpdateOperationsInput | string
-    profileImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    assignedIAMPolicies?: AccountUpdateassignedIAMPoliciesInput | string[]
-    accountState?: EnumAccountStateFieldUpdateOperationsInput | $Enums.AccountState
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendees?: AttendeeUncheckedUpdateManyWithoutAccountNestedInput
-  }
-
-  export type EnclosureCreateWithoutRemoteConfigInput = {
-    id?: string
-    letter: string
-    allocatedFor: $Enums.EnclosureType
-    entryDirection: $Enums.Direction
-    rows?: RowCreateNestedManyWithoutEnclosureInput
-  }
-
-  export type EnclosureUncheckedCreateWithoutRemoteConfigInput = {
-    id?: string
-    letter: string
-    allocatedFor: $Enums.EnclosureType
-    entryDirection: $Enums.Direction
-    rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
-  }
-
-  export type EnclosureCreateOrConnectWithoutRemoteConfigInput = {
-    where: EnclosureWhereUniqueInput
-    create: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput>
-  }
-
-  export type EnclosureCreateManyRemoteConfigInputEnvelope = {
-    data: EnclosureCreateManyRemoteConfigInput | EnclosureCreateManyRemoteConfigInput[]
-  }
-
-  export type EnclosureUpsertWithWhereUniqueWithoutRemoteConfigInput = {
-    where: EnclosureWhereUniqueInput
-    update: XOR<EnclosureUpdateWithoutRemoteConfigInput, EnclosureUncheckedUpdateWithoutRemoteConfigInput>
-    create: XOR<EnclosureCreateWithoutRemoteConfigInput, EnclosureUncheckedCreateWithoutRemoteConfigInput>
-  }
-
-  export type EnclosureUpdateWithWhereUniqueWithoutRemoteConfigInput = {
-    where: EnclosureWhereUniqueInput
-    data: XOR<EnclosureUpdateWithoutRemoteConfigInput, EnclosureUncheckedUpdateWithoutRemoteConfigInput>
-  }
-
-  export type EnclosureUpdateManyWithWhereWithoutRemoteConfigInput = {
-    where: EnclosureScalarWhereInput
-    data: XOR<EnclosureUpdateManyMutationInput, EnclosureUncheckedUpdateManyWithoutRemoteConfigInput>
-  }
-
-  export type EnclosureScalarWhereInput = {
-    AND?: EnclosureScalarWhereInput | EnclosureScalarWhereInput[]
-    OR?: EnclosureScalarWhereInput[]
-    NOT?: EnclosureScalarWhereInput | EnclosureScalarWhereInput[]
-    id?: StringFilter<"Enclosure"> | string
-    letter?: StringFilter<"Enclosure"> | string
-    allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
-    remoteConfigId?: StringFilter<"Enclosure"> | string
-  }
-
-  export type RemoteConfigCreateWithoutEnclosuresInput = {
-    id?: string
-    active?: boolean
-    bannerImageURL?: string | null
-    logoImageURL?: string | null
-    countdownEnabled?: boolean
-    countdownTargetDate?: Date | string | null
-    countdownTitle?: string | null
-    countdownDescription?: string | null
-    attendeesLocked?: boolean
-    attendeesCSVFile?: string | null
-    showInstructions?: boolean
-    instructions?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type RemoteConfigUncheckedCreateWithoutEnclosuresInput = {
-    id?: string
-    active?: boolean
-    bannerImageURL?: string | null
-    logoImageURL?: string | null
-    countdownEnabled?: boolean
-    countdownTargetDate?: Date | string | null
-    countdownTitle?: string | null
-    countdownDescription?: string | null
-    attendeesLocked?: boolean
-    attendeesCSVFile?: string | null
-    showInstructions?: boolean
-    instructions?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type RemoteConfigCreateOrConnectWithoutEnclosuresInput = {
-    where: RemoteConfigWhereUniqueInput
-    create: XOR<RemoteConfigCreateWithoutEnclosuresInput, RemoteConfigUncheckedCreateWithoutEnclosuresInput>
   }
 
   export type RowCreateWithoutEnclosureInput = {
@@ -17803,47 +14079,6 @@ export namespace Prisma {
 
   export type RowCreateManyEnclosureInputEnvelope = {
     data: RowCreateManyEnclosureInput | RowCreateManyEnclosureInput[]
-  }
-
-  export type RemoteConfigUpsertWithoutEnclosuresInput = {
-    update: XOR<RemoteConfigUpdateWithoutEnclosuresInput, RemoteConfigUncheckedUpdateWithoutEnclosuresInput>
-    create: XOR<RemoteConfigCreateWithoutEnclosuresInput, RemoteConfigUncheckedCreateWithoutEnclosuresInput>
-    where?: RemoteConfigWhereInput
-  }
-
-  export type RemoteConfigUpdateToOneWithWhereWithoutEnclosuresInput = {
-    where?: RemoteConfigWhereInput
-    data: XOR<RemoteConfigUpdateWithoutEnclosuresInput, RemoteConfigUncheckedUpdateWithoutEnclosuresInput>
-  }
-
-  export type RemoteConfigUpdateWithoutEnclosuresInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RemoteConfigUncheckedUpdateWithoutEnclosuresInput = {
-    active?: BoolFieldUpdateOperationsInput | boolean
-    bannerImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    logoImageURL?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownEnabled?: BoolFieldUpdateOperationsInput | boolean
-    countdownTargetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    countdownTitle?: NullableStringFieldUpdateOperationsInput | string | null
-    countdownDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    attendeesLocked?: BoolFieldUpdateOperationsInput | boolean
-    attendeesCSVFile?: NullableStringFieldUpdateOperationsInput | string | null
-    showInstructions?: BoolFieldUpdateOperationsInput | boolean
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RowUpsertWithWhereUniqueWithoutEnclosureInput = {
@@ -17879,7 +14114,6 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfig: RemoteConfigCreateNestedOneWithoutEnclosuresInput
   }
 
   export type EnclosureUncheckedCreateWithoutRowsInput = {
@@ -17887,7 +14121,6 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    remoteConfigId: string
   }
 
   export type EnclosureCreateOrConnectWithoutRowsInput = {
@@ -17910,14 +14143,12 @@ export namespace Prisma {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    remoteConfig?: RemoteConfigUpdateOneRequiredWithoutEnclosuresNestedInput
   }
 
   export type EnclosureUncheckedUpdateWithoutRowsInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    remoteConfigId?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttendeeCreateManyAccountInput = {
@@ -17933,20 +14164,8 @@ export namespace Prisma {
     convocationRegistered?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type TransactionCreateManyAccountInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    attendeeId: string
+    crr: string
+    enclosure: string
   }
 
   export type AttendeeUpdateWithoutAccountInput = {
@@ -17961,8 +14180,9 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
-    transactions?: TransactionUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateWithoutAccountInput = {
@@ -17977,8 +14197,9 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateManyWithoutAccountInput = {
@@ -17993,125 +14214,8 @@ export namespace Prisma {
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TransactionUpdateWithoutAccountInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendee?: AttendeeUpdateOneRequiredWithoutTransactionsNestedInput
-  }
-
-  export type TransactionUncheckedUpdateWithoutAccountInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendeeId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type TransactionUncheckedUpdateManyWithoutAccountInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    attendeeId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type TransactionCreateManyAttendeeInput = {
-    id?: string
-    amount: number
-    currency?: string
-    status?: $Enums.TransactionStatus
-    paymentMethod: string
-    transactionId: string
-    razorpayOrderId?: string | null
-    razorpayPaymentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accountId?: string | null
-  }
-
-  export type TransactionUpdateWithoutAttendeeInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    account?: AccountUpdateOneWithoutTransactionsNestedInput
-  }
-
-  export type TransactionUncheckedUpdateWithoutAttendeeInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type TransactionUncheckedUpdateManyWithoutAttendeeInput = {
-    amount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    paymentMethod?: StringFieldUpdateOperationsInput | string
-    transactionId?: StringFieldUpdateOperationsInput | string
-    razorpayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    razorpayPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type EnclosureCreateManyRemoteConfigInput = {
-    id?: string
-    letter: string
-    allocatedFor: $Enums.EnclosureType
-    entryDirection: $Enums.Direction
-  }
-
-  export type EnclosureUpdateWithoutRemoteConfigInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    rows?: RowUpdateManyWithoutEnclosureNestedInput
-  }
-
-  export type EnclosureUncheckedUpdateWithoutRemoteConfigInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
-  }
-
-  export type EnclosureUncheckedUpdateManyWithoutRemoteConfigInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    crr?: StringFieldUpdateOperationsInput | string
+    enclosure?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateManyEnclosureInput = {

@@ -30,7 +30,6 @@ model Account {
   
   // Relations
   attendees             Attendee[]
-  transactions          Transaction[]
   
   @@map("accounts")
 }
@@ -49,12 +48,13 @@ model Attendee {
   convocationRegistered Boolean  @default(false)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+  crr                   String   @db.ObjectId
+  enclosure            String
   
   // Relations
   account               Account? @relation(fields: [accountId], references: [id])
   accountId             String?  @db.ObjectId
   allocation            SeatAllocation?
-  transactions          Transaction[]
   
   @@map("attendees")
 }
@@ -74,49 +74,6 @@ model SeatAllocation {
   @@map("seat_allocations")
 }
 
-// Transaction Model
-model Transaction {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  amount                Float
-  currency              String   @default("INR")
-  status                TransactionStatus @default(PENDING)
-  paymentMethod         String
-  transactionId         String   @unique
-  razorpayOrderId       String?
-  razorpayPaymentId     String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
-  // Relations
-  attendee              Attendee @relation(fields: [attendeeId], references: [id])
-  attendeeId            String   @db.ObjectId
-  account               Account? @relation(fields: [accountId], references: [id])
-  accountId             String?  @db.ObjectId
-  
-  @@map("transactions")
-}
-
-// Remote Configuration Model
-model RemoteConfig {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  active                Boolean  @default(true)
-  bannerImageURL        String?
-  logoImageURL          String?
-  countdownEnabled      Boolean  @default(false)
-  countdownTargetDate   DateTime?
-  countdownTitle        String?
-  countdownDescription  String?
-  attendeesLocked       Boolean  @default(false)
-  attendeesCSVFile      String?
-  showInstructions      Boolean  @default(true)
-  instructions          String?
-  updatedAt             DateTime @updatedAt
-  
-  // Relations
-  enclosures            Enclosure[]
-  
-  @@map("remote_config")
-}
 
 // Enclosure/Venue Mapping Model
 model Enclosure {
@@ -126,8 +83,6 @@ model Enclosure {
   entryDirection        Direction
   
   // Relations
-  remoteConfig          RemoteConfig @relation(fields: [remoteConfigId], references: [id], onDelete: Cascade)
-  remoteConfigId        String       @db.ObjectId
   rows                  Row[]
   
   @@map("enclosures")

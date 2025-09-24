@@ -6,7 +6,6 @@ import { seedAttendees } from './attendeeSeeder.js';
 import { seedConvocations } from './convocationSeeder.js';
 import { seedDepartments } from './departmentSeeder.js';
 import { seedIAMPolicies } from './iamPolicySeeder.js';
-import { seedRemoteConfig } from './remoteConfigSeeder.js';
 
 const isResetMode = process.argv.includes('--reset');
 
@@ -25,9 +24,7 @@ async function seedDatabase() {
       // Clear all data in correct order (respecting foreign key constraints)
       await prisma.row.deleteMany({});
       await prisma.enclosure.deleteMany({});
-      await prisma.remoteConfig.deleteMany({});
       await prisma.seatAllocation.deleteMany({});
-      await prisma.transaction.deleteMany({});
       await prisma.attendee.deleteMany({});
       await prisma.account.deleteMany({});
       await prisma.analytics.deleteMany({});
@@ -51,9 +48,6 @@ async function seedDatabase() {
     logger.info('🎓 Seeding Attendees...');
     await seedAttendees();
 
-    logger.info('⚙️ Seeding Remote Configuration...');
-    await seedRemoteConfig();
-
     logger.info('🎪 Seeding Convocation Events...');
     await seedConvocations();
 
@@ -67,7 +61,6 @@ async function seedDatabase() {
       departments: await prisma.department.count(),
       iamPolicies: await prisma.iAMPolicy.count(),
       convocations: await prisma.convocation.count(),
-      remoteConfigs: await prisma.remoteConfig.count(),
       enclosures: await prisma.enclosure.count(),
       rows: await prisma.row.count(),
       analytics: await prisma.analytics.count()
@@ -80,7 +73,6 @@ async function seedDatabase() {
     logger.info(`   • Departments: ${counts.departments}`);
     logger.info(`   • IAM Policies: ${counts.iamPolicies}`);
     logger.info(`   • Convocations: ${counts.convocations}`);
-    logger.info(`   • Remote Configs: ${counts.remoteConfigs}`);
     logger.info(`   • Enclosures: ${counts.enclosures}`);
     logger.info(`   • Rows: ${counts.rows}`);
     logger.info(`   • Analytics Records: ${counts.analytics}`);
