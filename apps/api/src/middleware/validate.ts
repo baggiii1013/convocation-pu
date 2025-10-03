@@ -38,6 +38,7 @@ export const validate = (schema: ZodSchema) => {
       const result = schema.parse(validationData) as any;
       
       // Update request with validated and transformed data
+      // Note: We only update body and params since query is readonly
       if (result.body) {
         req.body = result.body;
       }
@@ -46,9 +47,8 @@ export const validate = (schema: ZodSchema) => {
         req.params = result.params;
       }
       
-      if (result.query) {
-        req.query = result.query;
-      }
+      // Skip updating req.query as it's readonly in Express
+      // Query parameters should be parsed in controllers instead of transformed in validation
       
       if (result.cookies) {
         req.cookies = result.cookies;

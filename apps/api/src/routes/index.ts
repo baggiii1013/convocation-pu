@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
+import accountRoutes from './account.routes.js';
 import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
 
@@ -27,11 +28,13 @@ router.get('/version', (req: Request, res: Response) => {
 // Authentication routes
 router.use('/auth', authRoutes);
 
+// Account management routes (Admin only)
+router.use('/accounts', accountRoutes);
+
 // Attendee management routes
 router.use('/attendees', attendeeRoutes);
 
 // TODO: Add route modules here as they are created
-// router.use('/accounts', accountRoutes);
 // router.use('/config', configRoutes);
 // router.use('/analytics', analyticsRoutes);
 // router.use('/transactions', transactionRoutes);

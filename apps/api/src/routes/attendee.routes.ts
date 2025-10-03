@@ -32,7 +32,7 @@ const createAttendeeSchema = z.object({
 
 const updateAttendeeSchema = z.object({
   params: z.object({
-    id: z.string().uuid()
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid attendee ID format')
   }),
   body: z.object({
     enrollmentId: z.string().min(1).max(50).optional(),
@@ -55,9 +55,10 @@ const updateAttendeeSchema = z.object({
   })
 });
 
+// MongoDB ObjectId validation (24-character hexadecimal string)
 const idParamSchema = z.object({
   params: z.object({
-    id: z.string().uuid()
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid attendee ID format')
   })
 });
 
@@ -69,8 +70,8 @@ const enrollmentIdParamSchema = z.object({
 
 const getAllQuerySchema = z.object({
   query: z.object({
-    page: z.string().regex(/^\d+$/).transform(Number).optional(),
-    limit: z.string().regex(/^\d+$/).transform(Number).refine(val => val <= 100).optional(),
+    page: z.string().regex(/^\d+$/).optional(),
+    limit: z.string().regex(/^\d+$/).optional(),
     sortBy: z.enum(['name', 'enrollmentId', 'email', 'school', 'course', 'degree', 'batchYear', 'cgpa', 'createdAt', 'updatedAt']).optional(),
     sortOrder: z.enum(['asc', 'desc']).optional(),
     school: z.string().min(1).max(100).optional(),
