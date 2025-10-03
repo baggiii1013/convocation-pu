@@ -28,9 +28,9 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Link href="/register">
+          <Link href="/login">
             <Button className="hidden sm:inline-flex bg-gradient-gold text-black border-0 shadow-gold hover:shadow-gold-intense hover:scale-105 transition-all duration-300 font-semibold">
-              Register Now
+              Sign In
             </Button>
           </Link>
           <Sheet>
@@ -47,9 +47,9 @@ const Header = () => {
                     {link.label}
                   </Link>
                 ))}
-                <Link href="/register">
+                <Link href="/login">
                   <Button className="w-full bg-gradient-gold text-black border-0 shadow-gold hover:shadow-gold-intense">
-                    Register Now
+                    Sign In
                   </Button>
                 </Link>
               </div>

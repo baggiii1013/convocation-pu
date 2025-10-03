@@ -32,12 +32,12 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/register">
+            <Link href="/login">
               <Button 
                 size="lg" 
                 className="bg-gradient-gold text-black border-0 shadow-gold-intense hover:shadow-gold-intense hover:scale-105 transition-all duration-300 font-semibold"
               >
-                Register for Ceremony
+                Sign In to Portal
               </Button>
             </Link>
             <Button 

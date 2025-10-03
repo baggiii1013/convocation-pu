@@ -174,17 +174,7 @@ function LoginForm() {
                   )}
                 </Button>
 
-                <div className="text-center">
-                  <span className="text-sm text-muted-foreground">
-                    Don&apos;t have an account?{' '}
-                    <Link
-                      href="/register"
-                      className="font-semibold text-gold hover:text-gold-dark transition-colors duration-300"
-                    >
-                      Create account
-                    </Link>
-                  </span>
-                </div>
+                {/* Removed registration link - accounts are created by admins only */}
               </CardFooter>
             </form>
           </Card>

@@ -1,28 +1,29 @@
 import { Router } from 'express';
 import {
-    changePassword,
-    login,
-    logout,
-    profile,
-    refresh,
-    register
+  changePassword,
+  createAccount,
+  login,
+  logout,
+  profile,
+  refresh,
+  register
 } from '../controllers/auth.controller.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, authorize } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
-    changePasswordSchema,
-    loginSchema,
-    registerSchema
+  changePasswordSchema,
+  loginSchema,
+  registerSchema
 } from '../validations/auth.validation.js';
 
 const router = Router();
 
 /**
  * @route   POST /api/auth/register
- * @desc    Register a new user account
- * @access  Public
+ * @desc    Register a new user account (DISABLED - Admin-only account creation)
+ * @access  Disabled
  */
-router.post('/register', validate(registerSchema), register);
+// router.post('/register', validate(registerSchema), register); // Disabled public registration
 
 /**
  * @route   POST /api/auth/login
@@ -61,6 +62,18 @@ router.put('/change-password',
   authenticate, 
   validate(changePasswordSchema), 
   changePassword
+);
+
+/**
+ * @route   POST /api/auth/admin/create-account
+ * @desc    Create a new user account (Admin only)
+ * @access  Admin
+ */
+router.post('/admin/create-account',
+  authenticate,
+  authorize('ADMIN'), // Only ADMIN role can create accounts
+  validate(registerSchema),
+  createAccount
 );
 
 export default router;

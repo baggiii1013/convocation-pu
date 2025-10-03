@@ -409,3 +409,76 @@ export const changePassword = async (req: Request, res: Response): Promise<void>
     });
   }
 };
+
+/**
+ * Create a new user account (Admin only)
+ * Similar to register but without auto-login and with admin permissions check
+ */
+export const createAccount = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const admin = req.user as AccessTokenPayload;
+    const { email, password, firstName, lastName, role = 'student' } = req.body;
+
+    // Check if user already exists
+    const existingUser = await prisma.account.findUnique({
+      where: { email }
+    });
+
+    if (existingUser) {
+      res.status(400).json({
+        success: false,
+        message: 'Email already registered',
+        code: 'EMAIL_EXISTS'
+      });
+      return;
+    }
+
+    // Hash password
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create user account
+    const user = await prisma.account.create({
+      data: {
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        displayName: `${firstName} ${lastName}`,
+        role,
+        isActive: true
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        displayName: true,
+        role: true,
+        profileImageURL: true,
+        accountState: true,
+        isActive: true,
+        createdAt: true
+      }
+    });
+
+    logger.info(`New account created by admin ${admin.email}: ${email} with role ${role}`);
+
+    res.status(201).json({
+      success: true,
+      message: 'Account created successfully',
+      data: {
+        user
+      }
+    });
+
+  } catch (error) {
+    logger.error('Account creation error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error during account creation',
+      code: 'ACCOUNT_CREATION_ERROR'
+    });
+  }
+};
+
