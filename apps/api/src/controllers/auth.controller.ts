@@ -2,15 +2,15 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import {
-    generateTokenPair,
-    getAccessTokenClearOptions,
-    getAccessTokenCookieOptions,
-    getRefreshTokenClearOptions,
-    getRefreshTokenCookieOptions,
-    getUserRoleClearOptions,
-    getUserRoleCookieOptions,
-    verifyRefreshToken,
-    type AccessTokenPayload
+  generateTokenPair,
+  getAccessTokenClearOptions,
+  getAccessTokenCookieOptions,
+  getRefreshTokenClearOptions,
+  getRefreshTokenCookieOptions,
+  getUserRoleClearOptions,
+  getUserRoleCookieOptions,
+  verifyRefreshToken,
+  type AccessTokenPayload
 } from '../utils/auth.js';
 import { logger } from '../utils/logger.js';
 
@@ -57,6 +57,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         lastName: true,
         displayName: true,
         role: true,
+        profileImageURL: true,
+        accountState: true,
+        isActive: true,
         createdAt: true
       }
     });
@@ -165,7 +168,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          displayName: user.displayName,
+          role: user.role,
+          profileImageURL: user.profileImageURL,
+          accountState: user.accountState,
+          isActive: user.isActive
         }
       }
     });
@@ -236,7 +243,11 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          displayName: user.displayName,
+          role: user.role,
+          profileImageURL: user.profileImageURL,
+          accountState: user.accountState,
+          isActive: user.isActive
         }
       }
     });
@@ -305,6 +316,8 @@ export const profile = async (req: Request, res: Response): Promise<void> => {
         lastName: true,
         displayName: true,
         role: true,
+        profileImageURL: true,
+        accountState: true,
         isActive: true,
         createdAt: true,
         lastLoginAt: true
@@ -323,7 +336,7 @@ export const profile = async (req: Request, res: Response): Promise<void> => {
     res.json({
       success: true,
       message: 'Profile retrieved successfully',
-      data: { user: userData }
+      data: userData
     });
 
   } catch (error) {
