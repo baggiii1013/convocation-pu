@@ -325,38 +325,104 @@ export class AttendeeService {
   }
 
   /**
-   * Bulk create attendees from CSV import
+   * Bulk create attendees from Excel upload
    */
-  static async bulkCreate(attendees: AttendeeCreateInput[]): Promise<{
-    created: number;
-    errors: Array<{ enrollmentId: string; error: string }>;
-  }> {
-    try {
-      logger.info(`Bulk creating ${attendees.length} attendees`);
-
-      const results = {
-        created: 0,
-        errors: [] as Array<{ enrollmentId: string; error: string }>
-      };
-
-      for (const attendeeData of attendees) {
-        try {
-          await this.create(attendeeData);
-          results.created++;
-        } catch (error) {
-          results.errors.push({
-            enrollmentId: attendeeData.enrollmentId,
-            error: error instanceof Error ? error.message : 'Unknown error'
-          });
-        }
-      }
-
-      logger.info(`Bulk create completed: ${results.created} created, ${results.errors.length} errors`);
-      return results;
-    } catch (error) {
-      logger.error('Error in bulk create:', error);
-      throw error;
+  static async bulkCreate(
+    data: AttendeeCreateInput[],
+    options: {
+      skipDuplicates: boolean;
+      updateExisting: boolean;
     }
+  ): Promise<{
+    summary: {
+      totalRows: number;
+      successful: number;
+      skipped: number;
+      failed: number;
+    };
+    results: {
+      imported: Attendee[];
+      errors: {
+        row: number;
+        data: any;
+        error: string;
+      }[];
+    };
+  }> {
+    const results = {
+      summary: {
+        totalRows: data.length,
+        successful: 0,
+        skipped: 0,
+        failed: 0
+      },
+      results: {
+        imported: [] as Attendee[],
+        errors: [] as any[]
+      }
+    };
+    
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      if (!row) continue;
+      
+      const rowNumber = i + 2; // +2 for header and 0-indexing
+      
+      try {
+        // Check for existing attendee
+        const existing = await prisma.attendee.findUnique({
+          where: { enrollmentId: row.enrollmentId }
+        });
+        
+        if (existing) {
+          if (options.updateExisting) {
+            // Update existing record
+            const updated = await prisma.attendee.update({
+              where: { enrollmentId: row.enrollmentId },
+              data: row,
+              include: {
+                account: true,
+                allocation: true
+              }
+            });
+            results.results.imported.push(updated);
+            results.summary.successful++;
+          } else if (options.skipDuplicates) {
+            // Skip duplicate
+            results.summary.skipped++;
+          } else {
+            // Report as error
+            results.results.errors.push({
+              row: rowNumber,
+              data: row,
+              error: `Duplicate enrollment ID: ${row.enrollmentId}`
+            });
+            results.summary.failed++;
+          }
+        } else {
+          // Create new record
+          const created = await prisma.attendee.create({
+            data: row,
+            include: {
+              account: true,
+              allocation: true
+            }
+          });
+          results.results.imported.push(created);
+          results.summary.successful++;
+        }
+      } catch (error) {
+        results.results.errors.push({
+          row: rowNumber,
+          data: row,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
+        results.summary.failed++;
+      }
+    }
+    
+    logger.info(`Bulk create completed: ${JSON.stringify(results.summary)}`);
+    return results;
   }
 
   /**

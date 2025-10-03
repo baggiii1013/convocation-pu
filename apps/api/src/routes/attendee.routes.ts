@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { AttendeeController } from '../controllers/attendee.controller.js';
 import { authenticate, authorize } from '../middleware/auth.js';
+import { uploadExcel } from '../middleware/upload.js';
 import { validate } from '../middleware/validate.js';
 
 const router = Router();
@@ -172,6 +173,22 @@ router.delete(
   authorize('admin'),
   validate(idParamSchema),
   AttendeeController.delete
+);
+
+// Excel upload routes
+router.post(
+  '/upload',
+  authenticate,
+  authorize('admin', 'staff'),
+  uploadExcel.single('file'),
+  AttendeeController.uploadExcel
+);
+
+router.get(
+  '/upload/template',
+  authenticate,
+  authorize('admin', 'staff'),
+  AttendeeController.downloadTemplate
 );
 
 export default router;

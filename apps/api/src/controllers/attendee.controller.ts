@@ -1,6 +1,9 @@
 import type { Request, Response } from 'express';
 import { AttendeeService } from '../services/attendee.service.js';
+import { ExcelService } from '../services/excel.service.js';
 import type { AccessTokenPayload } from '../utils/auth.js';
+import { ExcelParser } from '../utils/excel-parser.js';
+import { ExcelValidator } from '../utils/excel-validator.js';
 import { logger } from '../utils/logger.js';
 
 export class AttendeeController {
@@ -278,13 +281,16 @@ export class AttendeeController {
         return;
       }
 
-      const result = await AttendeeService.bulkCreate(attendees);
+      const result = await AttendeeService.bulkCreate(attendees, {
+        skipDuplicates: false,
+        updateExisting: false
+      });
 
-      logger.info(`Bulk attendee creation by user ${user.email}: ${result.created} created, ${result.errors.length} errors`);
+      logger.info(`Bulk attendee creation by user ${user.email}: ${result.summary.successful} created, ${result.results.errors.length} errors`);
 
       res.status(201).json({
         success: true,
-        message: `Bulk creation completed: ${result.created} attendees created`,
+        message: `Bulk creation completed: ${result.summary.successful} attendees created`,
         data: result
       });
     } catch (error) {
@@ -316,6 +322,112 @@ export class AttendeeController {
         success: false,
         message: 'Failed to retrieve attendee statistics',
         code: 'STATISTICS_ERROR'
+      });
+    }
+  }
+
+  /**
+   * Upload Excel file with attendee data
+   * POST /api/attendees/upload
+   */
+  static async uploadExcel(req: Request, res: Response): Promise<void> {
+    try {
+      const user = req.user as AccessTokenPayload;
+      const file = req.file;
+      const options = {
+        skipDuplicates: req.body.skipDuplicates === 'true',
+        updateExisting: req.body.updateExisting === 'true',
+        validateOnly: req.body.validateOnly === 'true'
+      };
+      
+      if (!file) {
+        res.status(400).json({
+          success: false,
+          message: 'No file uploaded',
+          code: 'NO_FILE'
+        });
+        return;
+      }
+      
+      // Parse Excel file
+      const parsedData = ExcelParser.parse(file.buffer);
+      
+      // Validate data
+      const validation = ExcelValidator.validate(parsedData);
+      
+      if (!validation.valid) {
+        res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          data: { errors: validation.errors }
+        });
+        return;
+      }
+      
+      // If validation only, return here
+      if (options.validateOnly) {
+        res.json({
+          success: true,
+          message: 'Validation successful',
+          data: {
+            rowCount: parsedData.length,
+            validRows: parsedData.length - validation.errors.length
+          }
+        });
+        return;
+      }
+      
+      // Process upload
+      const result = await AttendeeService.bulkCreate(
+        parsedData,
+        options
+      );
+      
+      logger.info(
+        `Bulk upload by ${user.email}: ${result.summary.successful} successful, ${result.summary.failed} failed`
+      );
+      
+      res.json({
+        success: true,
+        message: 'Upload processed successfully',
+        data: result
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.uploadExcel:', error);
+      
+      res.status(500).json({
+        success: false,
+        message: 'Failed to process upload',
+        code: 'UPLOAD_ERROR'
+      });
+    }
+  }
+
+  /**
+   * Download Excel template
+   * GET /api/attendees/upload/template
+   */
+  static async downloadTemplate(req: Request, res: Response): Promise<void> {
+    try {
+      const buffer = await ExcelService.generateTemplate();
+      
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=student_upload_template.xlsx'
+      );
+      
+      res.send(buffer);
+    } catch (error) {
+      logger.error('Error in AttendeeController.downloadTemplate:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to generate template',
+        code: 'TEMPLATE_ERROR'
       });
     }
   }

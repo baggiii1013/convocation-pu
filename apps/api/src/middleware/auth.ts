@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import {
-    extractBearerToken,
-    extractTokenFromCookie,
-    verifyAccessToken,
-    type AccessTokenPayload
+  extractBearerToken,
+  extractTokenFromCookie,
+  verifyAccessToken,
+  type AccessTokenPayload
 } from '../utils/auth.js';
 import { logger } from '../utils/logger.js';
 
@@ -45,7 +45,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     // Add user info to request object
     req.user = payload;
     
-    logger.info(`User authenticated: ${payload.email} (${payload.role})`);
     next();
     
   } catch (error) {
@@ -74,7 +73,11 @@ export const authorize = (...allowedRoles: string[]) => {
 
     const userRole = req.user.role;
     
-    if (!allowedRoles.includes(userRole)) {
+    // Case-insensitive role comparison - convert to uppercase
+    const userRoleUpper = userRole.toUpperCase();
+    const allowedRolesUpper = allowedRoles.map(role => role.toUpperCase());
+    
+    if (!allowedRolesUpper.includes(userRoleUpper)) {
       logger.warn(`Access denied for user ${req.user.email}: required roles [${allowedRoles.join(', ')}], user has '${userRole}'`);
       
       res.status(403).json({
@@ -89,7 +92,6 @@ export const authorize = (...allowedRoles: string[]) => {
       return;
     }
 
-    logger.info(`Access granted for user ${req.user.email} with role '${userRole}'`);
     next();
   };
 };

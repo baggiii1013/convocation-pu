@@ -42,7 +42,7 @@ model Attendee {
   course                String
   school                String
   degree                String
-  email                 String?
+  email                 String
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
