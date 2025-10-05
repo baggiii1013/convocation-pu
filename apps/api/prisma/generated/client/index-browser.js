@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.15.0
- * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.15.0",
-  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -152,7 +152,7 @@ exports.Prisma.SeatAllocationScalarFieldEnum = {
   id: 'id',
   enclosure: 'enclosure',
   row: 'row',
-  seat: 'seat',
+  column: 'column',
   allocatedAt: 'allocatedAt',
   attendeeId: 'attendeeId'
 };
@@ -161,14 +161,22 @@ exports.Prisma.EnclosureScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
   allocatedFor: 'allocatedFor',
-  entryDirection: 'entryDirection'
+  entryDirection: 'entryDirection',
+  totalSeats: 'totalSeats'
+};
+
+exports.Prisma.ColumnScalarFieldEnum = {
+  id: 'id',
+  letter: 'letter',
+  startSeat: 'startSeat',
+  endSeat: 'endSeat',
+  enclosureId: 'enclosureId'
 };
 
 exports.Prisma.RowScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
-  startSeat: 'startSeat',
-  endSeat: 'endSeat',
+  endLetter: 'endLetter',
   reserved: 'reserved',
   enclosureId: 'enclosureId'
 };
@@ -246,7 +254,8 @@ exports.EnclosureType = exports.$Enums.EnclosureType = {
   FACULTY: 'FACULTY',
   STAFF: 'STAFF',
   GUESTS: 'GUESTS',
-  VIP: 'VIP'
+  VIP: 'VIP',
+  MIXED: 'MIXED'
 };
 
 exports.Direction = exports.$Enums.Direction = {
@@ -265,6 +274,7 @@ exports.Prisma.ModelName = {
   Attendee: 'Attendee',
   SeatAllocation: 'SeatAllocation',
   Enclosure: 'Enclosure',
+  Column: 'Column',
   Row: 'Row',
   Analytics: 'Analytics',
   IAMPolicy: 'IAMPolicy',

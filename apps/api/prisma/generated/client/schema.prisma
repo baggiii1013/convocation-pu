@@ -42,7 +42,7 @@ model Attendee {
   course                String
   school                String
   degree                String
-  email                 String?
+  email                 String
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
@@ -64,7 +64,7 @@ model SeatAllocation {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   enclosure   String
   row         String
-  seat        Int
+  column      Int
   allocatedAt DateTime @default(now())
 
   // Relations
@@ -80,20 +80,35 @@ model Enclosure {
   letter         String
   allocatedFor   EnclosureType
   entryDirection Direction
+  totalSeats     Int
 
   // Relations
-  rows Row[]
+  rows   Row[]
+  colums Column[]
 
   @@map("enclosures")
 }
 
-// Row Configuration Model
-model Row {
+// column Configuration Model
+model Column {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   letter    String
   startSeat Int
   endSeat   Int
-  reserved  String @default("")
+
+  // Relations
+  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
+  enclosureId String    @db.ObjectId
+
+  @@map("colums")
+}
+
+// Row Configuration Model
+model Row {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  letter    String
+  endLetter String
+  reserved  EnclosureType
 
   // Relations
   enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
@@ -188,6 +203,7 @@ enum EnclosureType {
   STAFF
   GUESTS
   VIP
+  MIXED
 }
 
 enum Direction {

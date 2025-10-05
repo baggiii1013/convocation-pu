@@ -5,13 +5,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientRustPanicError,
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+  getPrismaClient,
+  sqltag,
+  empty,
+  join,
+  raw,
+  skip,
   Decimal,
+  Debug,
   objectEnumValues,
   makeStrictEnum,
+  Extensions,
+  warnOnce,
+  defineDmmfProperty,
   Public,
   getRuntime,
-  skip
-} = require('./runtime/index-browser.js')
+  createParam,
+} = require('./runtime/wasm-engine-edge.js')
 
 
 const Prisma = {}
@@ -20,79 +35,35 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.15.0
- * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.15.0",
-  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
-Prisma.PrismaClientKnownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)};
-Prisma.PrismaClientUnknownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientRustPanicError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientInitializationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientValidationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
+Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
+Prisma.PrismaClientInitializationError = PrismaClientInitializationError
+Prisma.PrismaClientValidationError = PrismaClientValidationError
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.empty = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.join = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.raw = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.sql = sqltag
+Prisma.empty = empty
+Prisma.join = join
+Prisma.raw = raw
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.defineExtension = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.getExtensionContext = Extensions.getExtensionContext
+Prisma.defineExtension = Extensions.defineExtension
 
 /**
  * Shorthand utilities for JSON filtering
@@ -109,10 +80,11 @@ Prisma.NullTypes = {
 
 
 
+
+
 /**
  * Enums
  */
-
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -152,7 +124,7 @@ exports.Prisma.SeatAllocationScalarFieldEnum = {
   id: 'id',
   enclosure: 'enclosure',
   row: 'row',
-  seat: 'seat',
+  column: 'column',
   allocatedAt: 'allocatedAt',
   attendeeId: 'attendeeId'
 };
@@ -161,14 +133,22 @@ exports.Prisma.EnclosureScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
   allocatedFor: 'allocatedFor',
-  entryDirection: 'entryDirection'
+  entryDirection: 'entryDirection',
+  totalSeats: 'totalSeats'
+};
+
+exports.Prisma.ColumnScalarFieldEnum = {
+  id: 'id',
+  letter: 'letter',
+  startSeat: 'startSeat',
+  endSeat: 'endSeat',
+  enclosureId: 'enclosureId'
 };
 
 exports.Prisma.RowScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
-  startSeat: 'startSeat',
-  endSeat: 'endSeat',
+  endLetter: 'endLetter',
   reserved: 'reserved',
   enclosureId: 'enclosureId'
 };
@@ -241,12 +221,21 @@ exports.AccountState = exports.$Enums.AccountState = {
   PENDING_VERIFICATION: 'PENDING_VERIFICATION'
 };
 
+exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED'
+};
+
 exports.EnclosureType = exports.$Enums.EnclosureType = {
   STUDENTS: 'STUDENTS',
   FACULTY: 'FACULTY',
   STAFF: 'STAFF',
   GUESTS: 'GUESTS',
-  VIP: 'VIP'
+  VIP: 'VIP',
+  MIXED: 'MIXED'
 };
 
 exports.Direction = exports.$Enums.Direction = {
@@ -265,40 +254,90 @@ exports.Prisma.ModelName = {
   Attendee: 'Attendee',
   SeatAllocation: 'SeatAllocation',
   Enclosure: 'Enclosure',
+  Column: 'Column',
   Row: 'Row',
   Analytics: 'Analytics',
   IAMPolicy: 'IAMPolicy',
   Department: 'Department',
   Convocation: 'Convocation'
 };
-
 /**
- * This is a stub Prisma Client that will error at runtime if called.
+ * Create the Client
  */
-class PrismaClient {
-  constructor() {
-    return new Proxy(this, {
-      get(target, prop) {
-        let message
-        const runtime = getRuntime()
-        if (runtime.isEdge) {
-          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
-- Use Prisma Accelerate: https://pris.ly/d/accelerate
-- Use Driver Adapters: https://pris.ly/d/driver-adapters
-`;
-        } else {
-          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
-        }
-
-        message += `
-If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
-
-        throw new Error(message)
+const config = {
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "/mnt/240GB_SATA/Development/Parul/convocation-pu/apps/api/prisma/generated/client",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x",
+        "native": true
       }
-    })
+    ],
+    "previewFeatures": [],
+    "sourceFilePath": "/mnt/240GB_SATA/Development/Parul/convocation-pu/apps/api/prisma/schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
+  },
+  "relativePath": "../..",
+  "clientVersion": "6.16.3",
+  "engineVersion": "bb420e667c1820a8c05a38023385f6cc7ef8e83a",
+  "datasourceNames": [
+    "db"
+  ],
+  "activeProvider": "mongodb",
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "// This is your Prisma schema file for Vercel deployment\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Core User Account Model\nmodel Account {\n  id                  String       @id @default(auto()) @map(\"_id\") @db.ObjectId\n  email               String       @unique\n  password            String // Hashed password for authentication\n  firstName           String // User's first name\n  lastName            String // User's last name\n  displayName         String // Full display name (computed or set)\n  profileImageURL     String?\n  role                UserRole     @default(STUDENT) // User role for authorization\n  assignedIAMPolicies String[] // Array of IAM policy IDs\n  accountState        AccountState @default(ACTIVE)\n  isActive            Boolean      @default(true) // Account active status\n  lastLoginAt         DateTime? // Last login timestamp\n  createdAt           DateTime     @default(now())\n  updatedAt           DateTime     @updatedAt\n\n  // Relations\n  attendees Attendee[]\n\n  @@map(\"accounts\")\n}\n\n// Attendee/Student Model\nmodel Attendee {\n  id                    String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  enrollmentId          String   @unique\n  name                  String\n  course                String\n  school                String\n  degree                String\n  email                 String\n  phone                 String?\n  convocationEligible   Boolean  @default(false)\n  convocationRegistered Boolean  @default(false)\n  createdAt             DateTime @default(now())\n  updatedAt             DateTime @updatedAt\n  crr                   String   @db.ObjectId\n  enclosure             String\n\n  // Relations\n  account    Account?        @relation(fields: [accountId], references: [id])\n  accountId  String?         @db.ObjectId\n  allocation SeatAllocation?\n\n  @@map(\"attendees\")\n}\n\n// Seat Allocation Model\nmodel SeatAllocation {\n  id          String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  enclosure   String\n  row         String\n  column      Int\n  allocatedAt DateTime @default(now())\n\n  // Relations\n  attendee   Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)\n  attendeeId String   @unique @db.ObjectId\n\n  @@map(\"seat_allocations\")\n}\n\n// Enclosure/Venue Mapping Model\nmodel Enclosure {\n  id             String        @id @default(auto()) @map(\"_id\") @db.ObjectId\n  letter         String\n  allocatedFor   EnclosureType\n  entryDirection Direction\n  totalSeats     Int\n\n  // Relations\n  rows   Row[]\n  colums Column[]\n\n  @@map(\"enclosures\")\n}\n\n// column Configuration Model\nmodel Column {\n  id        String @id @default(auto()) @map(\"_id\") @db.ObjectId\n  letter    String\n  startSeat Int\n  endSeat   Int\n\n  // Relations\n  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)\n  enclosureId String    @db.ObjectId\n\n  @@map(\"colums\")\n}\n\n// Row Configuration Model\nmodel Row {\n  id        String        @id @default(auto()) @map(\"_id\") @db.ObjectId\n  letter    String\n  endLetter String\n  reserved  EnclosureType\n\n  // Relations\n  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)\n  enclosureId String    @db.ObjectId\n\n  @@map(\"rows\")\n}\n\n// Analytics Model\nmodel Analytics {\n  id             String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  date           DateTime @unique\n  visitors       Int      @default(0)\n  pageViews      Int      @default(0)\n  uniqueVisitors Int      @default(0)\n  countries      Json     @default(\"{}\")\n  languages      Json     @default(\"{}\")\n  devices        Json     @default(\"{}\")\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @updatedAt\n\n  @@map(\"analytics\")\n}\n\n// IAM Policy Model\nmodel IAMPolicy {\n  id          String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name        String   @unique\n  description String\n  permissions String[]\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n\n  @@map(\"iam_policies\")\n}\n\n// Department Model\nmodel Department {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  name      String   @unique\n  code      String   @unique\n  school    String\n  isActive  Boolean  @default(true)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map(\"departments\")\n}\n\n// Convocation Event Model\nmodel Convocation {\n  id                    String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  title                 String\n  description           String?\n  eventDate             DateTime\n  registrationStartDate DateTime\n  registrationEndDate   DateTime\n  venue                 String\n  isActive              Boolean  @default(true)\n  maxAttendees          Int?\n  createdAt             DateTime @default(now())\n  updatedAt             DateTime @updatedAt\n\n  @@map(\"convocations\")\n}\n\n// Enums\nenum UserRole {\n  ADMIN\n  STAFF\n  STUDENT\n}\n\nenum AccountState {\n  ACTIVE\n  INACTIVE\n  SUSPENDED\n  PENDING_VERIFICATION\n}\n\nenum TransactionStatus {\n  PENDING\n  COMPLETED\n  FAILED\n  CANCELLED\n  REFUNDED\n}\n\nenum EnclosureType {\n  STUDENTS\n  FACULTY\n  STAFF\n  GUESTS\n  VIP\n  MIXED\n}\n\nenum Direction {\n  NORTH\n  SOUTH\n  EAST\n  WEST\n  NORTHEAST\n  NORTHWEST\n  SOUTHEAST\n  SOUTHWEST\n}\n",
+  "inlineSchemaHash": "70c53918ed7d54f0204d0f1c2a5242fe883e25482b3aa1c6775d7c5d3dbee989",
+  "copyEngine": true
+}
+config.dirname = '/'
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"displayName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileImageURL\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"assignedIAMPolicies\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountState\",\"kind\":\"enum\",\"type\":\"AccountState\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"lastLoginAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"attendees\",\"kind\":\"object\",\"type\":\"Attendee\",\"relationName\":\"AccountToAttendee\"}],\"dbName\":\"accounts\"},\"Attendee\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"enrollmentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"course\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"school\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"degree\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"convocationEligible\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"convocationRegistered\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"crr\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"enclosure\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToAttendee\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allocation\",\"kind\":\"object\",\"type\":\"SeatAllocation\",\"relationName\":\"AttendeeToSeatAllocation\"}],\"dbName\":\"attendees\"},\"SeatAllocation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"enclosure\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"row\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"column\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"allocatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"attendee\",\"kind\":\"object\",\"type\":\"Attendee\",\"relationName\":\"AttendeeToSeatAllocation\"},{\"name\":\"attendeeId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"seat_allocations\"},\"Enclosure\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"letter\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allocatedFor\",\"kind\":\"enum\",\"type\":\"EnclosureType\"},{\"name\":\"entryDirection\",\"kind\":\"enum\",\"type\":\"Direction\"},{\"name\":\"totalSeats\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"rows\",\"kind\":\"object\",\"type\":\"Row\",\"relationName\":\"EnclosureToRow\"},{\"name\":\"colums\",\"kind\":\"object\",\"type\":\"Column\",\"relationName\":\"ColumnToEnclosure\"}],\"dbName\":\"enclosures\"},\"Column\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"letter\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startSeat\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"endSeat\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"enclosure\",\"kind\":\"object\",\"type\":\"Enclosure\",\"relationName\":\"ColumnToEnclosure\"},{\"name\":\"enclosureId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"colums\"},\"Row\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"letter\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"endLetter\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reserved\",\"kind\":\"enum\",\"type\":\"EnclosureType\"},{\"name\":\"enclosure\",\"kind\":\"object\",\"type\":\"Enclosure\",\"relationName\":\"EnclosureToRow\"},{\"name\":\"enclosureId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"rows\"},\"Analytics\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"visitors\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"pageViews\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"uniqueVisitors\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"countries\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"languages\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"devices\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"analytics\"},\"IAMPolicy\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"permissions\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"iam_policies\"},\"Department\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"school\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"departments\"},\"Convocation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eventDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"registrationStartDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"registrationEndDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"venue\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"maxAttendees\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"convocations\"}},\"enums\":{},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = {
+  getRuntime: async () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine
   }
 }
+config.compilerWasm = undefined
 
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+  }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+}
+
+const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-
 Object.assign(exports, Prisma)
+

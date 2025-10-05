@@ -34,6 +34,11 @@ export type SeatAllocation = $Result.DefaultSelection<Prisma.$SeatAllocationPayl
  */
 export type Enclosure = $Result.DefaultSelection<Prisma.$EnclosurePayload>
 /**
+ * Model Column
+ * 
+ */
+export type Column = $Result.DefaultSelection<Prisma.$ColumnPayload>
+/**
  * Model Row
  * 
  */
@@ -98,7 +103,8 @@ export const EnclosureType: {
   FACULTY: 'FACULTY',
   STAFF: 'STAFF',
   GUESTS: 'GUESTS',
-  VIP: 'VIP'
+  VIP: 'VIP',
+  MIXED: 'MIXED'
 };
 
 export type EnclosureType = (typeof EnclosureType)[keyof typeof EnclosureType]
@@ -265,6 +271,16 @@ export class PrismaClient<
   get enclosure(): Prisma.EnclosureDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.column`: Exposes CRUD operations for the **Column** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Columns
+    * const columns = await prisma.column.findMany()
+    * ```
+    */
+  get column(): Prisma.ColumnDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.row`: Exposes CRUD operations for the **Row** model.
     * Example usage:
     * ```ts
@@ -371,8 +387,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.15.0
-   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+   * Prisma Client JS version: 6.16.3
+   * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
    */
   export type PrismaVersion = {
     client: string
@@ -757,6 +773,7 @@ export namespace Prisma {
     Attendee: 'Attendee',
     SeatAllocation: 'SeatAllocation',
     Enclosure: 'Enclosure',
+    Column: 'Column',
     Row: 'Row',
     Analytics: 'Analytics',
     IAMPolicy: 'IAMPolicy',
@@ -780,7 +797,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "row" | "analytics" | "iAMPolicy" | "department" | "convocation"
+      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "column" | "row" | "analytics" | "iAMPolicy" | "department" | "convocation"
       txIsolationLevel: never
     }
     model: {
@@ -1077,6 +1094,80 @@ export namespace Prisma {
           count: {
             args: Prisma.EnclosureCountArgs<ExtArgs>
             result: $Utils.Optional<EnclosureCountAggregateOutputType> | number
+          }
+        }
+      }
+      Column: {
+        payload: Prisma.$ColumnPayload<ExtArgs>
+        fields: Prisma.ColumnFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ColumnFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ColumnFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          findFirst: {
+            args: Prisma.ColumnFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ColumnFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          findMany: {
+            args: Prisma.ColumnFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>[]
+          }
+          create: {
+            args: Prisma.ColumnCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          createMany: {
+            args: Prisma.ColumnCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ColumnDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          update: {
+            args: Prisma.ColumnUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          deleteMany: {
+            args: Prisma.ColumnDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ColumnUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ColumnUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
+          }
+          aggregate: {
+            args: Prisma.ColumnAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateColumn>
+          }
+          groupBy: {
+            args: Prisma.ColumnGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ColumnGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.ColumnFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.ColumnAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.ColumnCountArgs<ExtArgs>
+            result: $Utils.Optional<ColumnCountAggregateOutputType> | number
           }
         }
       }
@@ -1533,6 +1624,7 @@ export namespace Prisma {
     attendee?: AttendeeOmit
     seatAllocation?: SeatAllocationOmit
     enclosure?: EnclosureOmit
+    column?: ColumnOmit
     row?: RowOmit
     analytics?: AnalyticsOmit
     iAMPolicy?: IAMPolicyOmit
@@ -1650,10 +1742,12 @@ export namespace Prisma {
 
   export type EnclosureCountOutputType = {
     rows: number
+    colums: number
   }
 
   export type EnclosureCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rows?: boolean | EnclosureCountOutputTypeCountRowsArgs
+    colums?: boolean | EnclosureCountOutputTypeCountColumsArgs
   }
 
   // Custom InputTypes
@@ -1672,6 +1766,13 @@ export namespace Prisma {
    */
   export type EnclosureCountOutputTypeCountRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RowWhereInput
+  }
+
+  /**
+   * EnclosureCountOutputType without action
+   */
+  export type EnclosureCountOutputTypeCountColumsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ColumnWhereInput
   }
 
 
@@ -2979,7 +3080,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email: string | null
+    email: string
     phone: string | null
     convocationEligible: boolean
     convocationRegistered: boolean
@@ -3066,7 +3167,7 @@ export namespace Prisma {
       course: string
       school: string
       degree: string
-      email: string | null
+      email: string
       phone: string | null
       convocationEligible: boolean
       convocationRegistered: boolean
@@ -3923,18 +4024,18 @@ export namespace Prisma {
   }
 
   export type SeatAllocationAvgAggregateOutputType = {
-    seat: number | null
+    column: number | null
   }
 
   export type SeatAllocationSumAggregateOutputType = {
-    seat: number | null
+    column: number | null
   }
 
   export type SeatAllocationMinAggregateOutputType = {
     id: string | null
     enclosure: string | null
     row: string | null
-    seat: number | null
+    column: number | null
     allocatedAt: Date | null
     attendeeId: string | null
   }
@@ -3943,7 +4044,7 @@ export namespace Prisma {
     id: string | null
     enclosure: string | null
     row: string | null
-    seat: number | null
+    column: number | null
     allocatedAt: Date | null
     attendeeId: string | null
   }
@@ -3952,7 +4053,7 @@ export namespace Prisma {
     id: number
     enclosure: number
     row: number
-    seat: number
+    column: number
     allocatedAt: number
     attendeeId: number
     _all: number
@@ -3960,18 +4061,18 @@ export namespace Prisma {
 
 
   export type SeatAllocationAvgAggregateInputType = {
-    seat?: true
+    column?: true
   }
 
   export type SeatAllocationSumAggregateInputType = {
-    seat?: true
+    column?: true
   }
 
   export type SeatAllocationMinAggregateInputType = {
     id?: true
     enclosure?: true
     row?: true
-    seat?: true
+    column?: true
     allocatedAt?: true
     attendeeId?: true
   }
@@ -3980,7 +4081,7 @@ export namespace Prisma {
     id?: true
     enclosure?: true
     row?: true
-    seat?: true
+    column?: true
     allocatedAt?: true
     attendeeId?: true
   }
@@ -3989,7 +4090,7 @@ export namespace Prisma {
     id?: true
     enclosure?: true
     row?: true
-    seat?: true
+    column?: true
     allocatedAt?: true
     attendeeId?: true
     _all?: true
@@ -4085,7 +4186,7 @@ export namespace Prisma {
     id: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt: Date
     attendeeId: string
     _count: SeatAllocationCountAggregateOutputType | null
@@ -4113,7 +4214,7 @@ export namespace Prisma {
     id?: boolean
     enclosure?: boolean
     row?: boolean
-    seat?: boolean
+    column?: boolean
     allocatedAt?: boolean
     attendeeId?: boolean
     attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
@@ -4125,12 +4226,12 @@ export namespace Prisma {
     id?: boolean
     enclosure?: boolean
     row?: boolean
-    seat?: boolean
+    column?: boolean
     allocatedAt?: boolean
     attendeeId?: boolean
   }
 
-  export type SeatAllocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enclosure" | "row" | "seat" | "allocatedAt" | "attendeeId", ExtArgs["result"]["seatAllocation"]>
+  export type SeatAllocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enclosure" | "row" | "column" | "allocatedAt" | "attendeeId", ExtArgs["result"]["seatAllocation"]>
   export type SeatAllocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
   }
@@ -4144,7 +4245,7 @@ export namespace Prisma {
       id: string
       enclosure: string
       row: string
-      seat: number
+      column: number
       allocatedAt: Date
       attendeeId: string
     }, ExtArgs["result"]["seatAllocation"]>
@@ -4543,7 +4644,7 @@ export namespace Prisma {
     readonly id: FieldRef<"SeatAllocation", 'String'>
     readonly enclosure: FieldRef<"SeatAllocation", 'String'>
     readonly row: FieldRef<"SeatAllocation", 'String'>
-    readonly seat: FieldRef<"SeatAllocation", 'Int'>
+    readonly column: FieldRef<"SeatAllocation", 'Int'>
     readonly allocatedAt: FieldRef<"SeatAllocation", 'DateTime'>
     readonly attendeeId: FieldRef<"SeatAllocation", 'String'>
   }
@@ -4940,8 +5041,18 @@ export namespace Prisma {
 
   export type AggregateEnclosure = {
     _count: EnclosureCountAggregateOutputType | null
+    _avg: EnclosureAvgAggregateOutputType | null
+    _sum: EnclosureSumAggregateOutputType | null
     _min: EnclosureMinAggregateOutputType | null
     _max: EnclosureMaxAggregateOutputType | null
+  }
+
+  export type EnclosureAvgAggregateOutputType = {
+    totalSeats: number | null
+  }
+
+  export type EnclosureSumAggregateOutputType = {
+    totalSeats: number | null
   }
 
   export type EnclosureMinAggregateOutputType = {
@@ -4949,6 +5060,7 @@ export namespace Prisma {
     letter: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
+    totalSeats: number | null
   }
 
   export type EnclosureMaxAggregateOutputType = {
@@ -4956,6 +5068,7 @@ export namespace Prisma {
     letter: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
+    totalSeats: number | null
   }
 
   export type EnclosureCountAggregateOutputType = {
@@ -4963,15 +5076,25 @@ export namespace Prisma {
     letter: number
     allocatedFor: number
     entryDirection: number
+    totalSeats: number
     _all: number
   }
 
+
+  export type EnclosureAvgAggregateInputType = {
+    totalSeats?: true
+  }
+
+  export type EnclosureSumAggregateInputType = {
+    totalSeats?: true
+  }
 
   export type EnclosureMinAggregateInputType = {
     id?: true
     letter?: true
     allocatedFor?: true
     entryDirection?: true
+    totalSeats?: true
   }
 
   export type EnclosureMaxAggregateInputType = {
@@ -4979,6 +5102,7 @@ export namespace Prisma {
     letter?: true
     allocatedFor?: true
     entryDirection?: true
+    totalSeats?: true
   }
 
   export type EnclosureCountAggregateInputType = {
@@ -4986,6 +5110,7 @@ export namespace Prisma {
     letter?: true
     allocatedFor?: true
     entryDirection?: true
+    totalSeats?: true
     _all?: true
   }
 
@@ -5027,6 +5152,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: EnclosureAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EnclosureSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: EnclosureMinAggregateInputType
@@ -5057,6 +5194,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: EnclosureCountAggregateInputType | true
+    _avg?: EnclosureAvgAggregateInputType
+    _sum?: EnclosureSumAggregateInputType
     _min?: EnclosureMinAggregateInputType
     _max?: EnclosureMaxAggregateInputType
   }
@@ -5066,7 +5205,10 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
     _count: EnclosureCountAggregateOutputType | null
+    _avg: EnclosureAvgAggregateOutputType | null
+    _sum: EnclosureSumAggregateOutputType | null
     _min: EnclosureMinAggregateOutputType | null
     _max: EnclosureMaxAggregateOutputType | null
   }
@@ -5090,7 +5232,9 @@ export namespace Prisma {
     letter?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
+    totalSeats?: boolean
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
+    colums?: boolean | Enclosure$columsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["enclosure"]>
 
@@ -5101,11 +5245,13 @@ export namespace Prisma {
     letter?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
+    totalSeats?: boolean
   }
 
-  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "allocatedFor" | "entryDirection", ExtArgs["result"]["enclosure"]>
+  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "allocatedFor" | "entryDirection" | "totalSeats", ExtArgs["result"]["enclosure"]>
   export type EnclosureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
+    colums?: boolean | Enclosure$columsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -5113,12 +5259,14 @@ export namespace Prisma {
     name: "Enclosure"
     objects: {
       rows: Prisma.$RowPayload<ExtArgs>[]
+      colums: Prisma.$ColumnPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       letter: string
       allocatedFor: $Enums.EnclosureType
       entryDirection: $Enums.Direction
+      totalSeats: number
     }, ExtArgs["result"]["enclosure"]>
     composites: {}
   }
@@ -5483,6 +5631,7 @@ export namespace Prisma {
   export interface Prisma__EnclosureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rows<T extends Enclosure$rowsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    colums<T extends Enclosure$columsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$columsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5516,6 +5665,7 @@ export namespace Prisma {
     readonly letter: FieldRef<"Enclosure", 'String'>
     readonly allocatedFor: FieldRef<"Enclosure", 'EnclosureType'>
     readonly entryDirection: FieldRef<"Enclosure", 'Direction'>
+    readonly totalSeats: FieldRef<"Enclosure", 'Int'>
   }
     
 
@@ -5910,6 +6060,30 @@ export namespace Prisma {
   }
 
   /**
+   * Enclosure.colums
+   */
+  export type Enclosure$columsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    where?: ColumnWhereInput
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    cursor?: ColumnWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
+  }
+
+  /**
    * Enclosure without action
    */
   export type EnclosureDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5929,71 +6103,1062 @@ export namespace Prisma {
 
 
   /**
+   * Model Column
+   */
+
+  export type AggregateColumn = {
+    _count: ColumnCountAggregateOutputType | null
+    _avg: ColumnAvgAggregateOutputType | null
+    _sum: ColumnSumAggregateOutputType | null
+    _min: ColumnMinAggregateOutputType | null
+    _max: ColumnMaxAggregateOutputType | null
+  }
+
+  export type ColumnAvgAggregateOutputType = {
+    startSeat: number | null
+    endSeat: number | null
+  }
+
+  export type ColumnSumAggregateOutputType = {
+    startSeat: number | null
+    endSeat: number | null
+  }
+
+  export type ColumnMinAggregateOutputType = {
+    id: string | null
+    letter: string | null
+    startSeat: number | null
+    endSeat: number | null
+    enclosureId: string | null
+  }
+
+  export type ColumnMaxAggregateOutputType = {
+    id: string | null
+    letter: string | null
+    startSeat: number | null
+    endSeat: number | null
+    enclosureId: string | null
+  }
+
+  export type ColumnCountAggregateOutputType = {
+    id: number
+    letter: number
+    startSeat: number
+    endSeat: number
+    enclosureId: number
+    _all: number
+  }
+
+
+  export type ColumnAvgAggregateInputType = {
+    startSeat?: true
+    endSeat?: true
+  }
+
+  export type ColumnSumAggregateInputType = {
+    startSeat?: true
+    endSeat?: true
+  }
+
+  export type ColumnMinAggregateInputType = {
+    id?: true
+    letter?: true
+    startSeat?: true
+    endSeat?: true
+    enclosureId?: true
+  }
+
+  export type ColumnMaxAggregateInputType = {
+    id?: true
+    letter?: true
+    startSeat?: true
+    endSeat?: true
+    enclosureId?: true
+  }
+
+  export type ColumnCountAggregateInputType = {
+    id?: true
+    letter?: true
+    startSeat?: true
+    endSeat?: true
+    enclosureId?: true
+    _all?: true
+  }
+
+  export type ColumnAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Column to aggregate.
+     */
+    where?: ColumnWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Columns to fetch.
+     */
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ColumnWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Columns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Columns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Columns
+    **/
+    _count?: true | ColumnCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ColumnAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ColumnSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ColumnMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ColumnMaxAggregateInputType
+  }
+
+  export type GetColumnAggregateType<T extends ColumnAggregateArgs> = {
+        [P in keyof T & keyof AggregateColumn]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateColumn[P]>
+      : GetScalarType<T[P], AggregateColumn[P]>
+  }
+
+
+
+
+  export type ColumnGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ColumnWhereInput
+    orderBy?: ColumnOrderByWithAggregationInput | ColumnOrderByWithAggregationInput[]
+    by: ColumnScalarFieldEnum[] | ColumnScalarFieldEnum
+    having?: ColumnScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ColumnCountAggregateInputType | true
+    _avg?: ColumnAvgAggregateInputType
+    _sum?: ColumnSumAggregateInputType
+    _min?: ColumnMinAggregateInputType
+    _max?: ColumnMaxAggregateInputType
+  }
+
+  export type ColumnGroupByOutputType = {
+    id: string
+    letter: string
+    startSeat: number
+    endSeat: number
+    enclosureId: string
+    _count: ColumnCountAggregateOutputType | null
+    _avg: ColumnAvgAggregateOutputType | null
+    _sum: ColumnSumAggregateOutputType | null
+    _min: ColumnMinAggregateOutputType | null
+    _max: ColumnMaxAggregateOutputType | null
+  }
+
+  type GetColumnGroupByPayload<T extends ColumnGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ColumnGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ColumnGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ColumnGroupByOutputType[P]>
+            : GetScalarType<T[P], ColumnGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ColumnSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    letter?: boolean
+    startSeat?: boolean
+    endSeat?: boolean
+    enclosureId?: boolean
+    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["column"]>
+
+
+
+  export type ColumnSelectScalar = {
+    id?: boolean
+    letter?: boolean
+    startSeat?: boolean
+    endSeat?: boolean
+    enclosureId?: boolean
+  }
+
+  export type ColumnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "startSeat" | "endSeat" | "enclosureId", ExtArgs["result"]["column"]>
+  export type ColumnInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
+  }
+
+  export type $ColumnPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Column"
+    objects: {
+      enclosure: Prisma.$EnclosurePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      letter: string
+      startSeat: number
+      endSeat: number
+      enclosureId: string
+    }, ExtArgs["result"]["column"]>
+    composites: {}
+  }
+
+  type ColumnGetPayload<S extends boolean | null | undefined | ColumnDefaultArgs> = $Result.GetResult<Prisma.$ColumnPayload, S>
+
+  type ColumnCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ColumnFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ColumnCountAggregateInputType | true
+    }
+
+  export interface ColumnDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Column'], meta: { name: 'Column' } }
+    /**
+     * Find zero or one Column that matches the filter.
+     * @param {ColumnFindUniqueArgs} args - Arguments to find a Column
+     * @example
+     * // Get one Column
+     * const column = await prisma.column.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ColumnFindUniqueArgs>(args: SelectSubset<T, ColumnFindUniqueArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Column that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ColumnFindUniqueOrThrowArgs} args - Arguments to find a Column
+     * @example
+     * // Get one Column
+     * const column = await prisma.column.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ColumnFindUniqueOrThrowArgs>(args: SelectSubset<T, ColumnFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Column that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnFindFirstArgs} args - Arguments to find a Column
+     * @example
+     * // Get one Column
+     * const column = await prisma.column.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ColumnFindFirstArgs>(args?: SelectSubset<T, ColumnFindFirstArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Column that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnFindFirstOrThrowArgs} args - Arguments to find a Column
+     * @example
+     * // Get one Column
+     * const column = await prisma.column.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ColumnFindFirstOrThrowArgs>(args?: SelectSubset<T, ColumnFindFirstOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Columns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Columns
+     * const columns = await prisma.column.findMany()
+     * 
+     * // Get first 10 Columns
+     * const columns = await prisma.column.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const columnWithIdOnly = await prisma.column.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ColumnFindManyArgs>(args?: SelectSubset<T, ColumnFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Column.
+     * @param {ColumnCreateArgs} args - Arguments to create a Column.
+     * @example
+     * // Create one Column
+     * const Column = await prisma.column.create({
+     *   data: {
+     *     // ... data to create a Column
+     *   }
+     * })
+     * 
+     */
+    create<T extends ColumnCreateArgs>(args: SelectSubset<T, ColumnCreateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Columns.
+     * @param {ColumnCreateManyArgs} args - Arguments to create many Columns.
+     * @example
+     * // Create many Columns
+     * const column = await prisma.column.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ColumnCreateManyArgs>(args?: SelectSubset<T, ColumnCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Column.
+     * @param {ColumnDeleteArgs} args - Arguments to delete one Column.
+     * @example
+     * // Delete one Column
+     * const Column = await prisma.column.delete({
+     *   where: {
+     *     // ... filter to delete one Column
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ColumnDeleteArgs>(args: SelectSubset<T, ColumnDeleteArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Column.
+     * @param {ColumnUpdateArgs} args - Arguments to update one Column.
+     * @example
+     * // Update one Column
+     * const column = await prisma.column.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ColumnUpdateArgs>(args: SelectSubset<T, ColumnUpdateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Columns.
+     * @param {ColumnDeleteManyArgs} args - Arguments to filter Columns to delete.
+     * @example
+     * // Delete a few Columns
+     * const { count } = await prisma.column.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ColumnDeleteManyArgs>(args?: SelectSubset<T, ColumnDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Columns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Columns
+     * const column = await prisma.column.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ColumnUpdateManyArgs>(args: SelectSubset<T, ColumnUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Column.
+     * @param {ColumnUpsertArgs} args - Arguments to update or create a Column.
+     * @example
+     * // Update or create a Column
+     * const column = await prisma.column.upsert({
+     *   create: {
+     *     // ... data to create a Column
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Column we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ColumnUpsertArgs>(args: SelectSubset<T, ColumnUpsertArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Columns that matches the filter.
+     * @param {ColumnFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const column = await prisma.column.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: ColumnFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Column.
+     * @param {ColumnAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const column = await prisma.column.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: ColumnAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of Columns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnCountArgs} args - Arguments to filter Columns to count.
+     * @example
+     * // Count the number of Columns
+     * const count = await prisma.column.count({
+     *   where: {
+     *     // ... the filter for the Columns we want to count
+     *   }
+     * })
+    **/
+    count<T extends ColumnCountArgs>(
+      args?: Subset<T, ColumnCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ColumnCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Column.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ColumnAggregateArgs>(args: Subset<T, ColumnAggregateArgs>): Prisma.PrismaPromise<GetColumnAggregateType<T>>
+
+    /**
+     * Group by Column.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ColumnGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ColumnGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ColumnGroupByArgs['orderBy'] }
+        : { orderBy?: ColumnGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ColumnGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetColumnGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Column model
+   */
+  readonly fields: ColumnFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Column.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ColumnClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    enclosure<T extends EnclosureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EnclosureDefaultArgs<ExtArgs>>): Prisma__EnclosureClient<$Result.GetResult<Prisma.$EnclosurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Column model
+   */
+  interface ColumnFieldRefs {
+    readonly id: FieldRef<"Column", 'String'>
+    readonly letter: FieldRef<"Column", 'String'>
+    readonly startSeat: FieldRef<"Column", 'Int'>
+    readonly endSeat: FieldRef<"Column", 'Int'>
+    readonly enclosureId: FieldRef<"Column", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Column findUnique
+   */
+  export type ColumnFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter, which Column to fetch.
+     */
+    where: ColumnWhereUniqueInput
+  }
+
+  /**
+   * Column findUniqueOrThrow
+   */
+  export type ColumnFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter, which Column to fetch.
+     */
+    where: ColumnWhereUniqueInput
+  }
+
+  /**
+   * Column findFirst
+   */
+  export type ColumnFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter, which Column to fetch.
+     */
+    where?: ColumnWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Columns to fetch.
+     */
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Columns.
+     */
+    cursor?: ColumnWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Columns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Columns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Columns.
+     */
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
+  }
+
+  /**
+   * Column findFirstOrThrow
+   */
+  export type ColumnFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter, which Column to fetch.
+     */
+    where?: ColumnWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Columns to fetch.
+     */
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Columns.
+     */
+    cursor?: ColumnWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Columns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Columns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Columns.
+     */
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
+  }
+
+  /**
+   * Column findMany
+   */
+  export type ColumnFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter, which Columns to fetch.
+     */
+    where?: ColumnWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Columns to fetch.
+     */
+    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Columns.
+     */
+    cursor?: ColumnWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Columns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Columns.
+     */
+    skip?: number
+    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
+  }
+
+  /**
+   * Column create
+   */
+  export type ColumnCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Column.
+     */
+    data: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
+  }
+
+  /**
+   * Column createMany
+   */
+  export type ColumnCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Columns.
+     */
+    data: ColumnCreateManyInput | ColumnCreateManyInput[]
+  }
+
+  /**
+   * Column update
+   */
+  export type ColumnUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Column.
+     */
+    data: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
+    /**
+     * Choose, which Column to update.
+     */
+    where: ColumnWhereUniqueInput
+  }
+
+  /**
+   * Column updateMany
+   */
+  export type ColumnUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Columns.
+     */
+    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyInput>
+    /**
+     * Filter which Columns to update
+     */
+    where?: ColumnWhereInput
+    /**
+     * Limit how many Columns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Column upsert
+   */
+  export type ColumnUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Column to update in case it exists.
+     */
+    where: ColumnWhereUniqueInput
+    /**
+     * In case the Column found by the `where` argument doesn't exist, create a new Column with this data.
+     */
+    create: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
+    /**
+     * In case the Column was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
+  }
+
+  /**
+   * Column delete
+   */
+  export type ColumnDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+    /**
+     * Filter which Column to delete.
+     */
+    where: ColumnWhereUniqueInput
+  }
+
+  /**
+   * Column deleteMany
+   */
+  export type ColumnDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Columns to delete
+     */
+    where?: ColumnWhereInput
+    /**
+     * Limit how many Columns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Column findRaw
+   */
+  export type ColumnFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Column aggregateRaw
+   */
+  export type ColumnAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Column without action
+   */
+  export type ColumnDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Column
+     */
+    select?: ColumnSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Column
+     */
+    omit?: ColumnOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ColumnInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Row
    */
 
   export type AggregateRow = {
     _count: RowCountAggregateOutputType | null
-    _avg: RowAvgAggregateOutputType | null
-    _sum: RowSumAggregateOutputType | null
     _min: RowMinAggregateOutputType | null
     _max: RowMaxAggregateOutputType | null
-  }
-
-  export type RowAvgAggregateOutputType = {
-    startSeat: number | null
-    endSeat: number | null
-  }
-
-  export type RowSumAggregateOutputType = {
-    startSeat: number | null
-    endSeat: number | null
   }
 
   export type RowMinAggregateOutputType = {
     id: string | null
     letter: string | null
-    startSeat: number | null
-    endSeat: number | null
-    reserved: string | null
+    endLetter: string | null
+    reserved: $Enums.EnclosureType | null
     enclosureId: string | null
   }
 
   export type RowMaxAggregateOutputType = {
     id: string | null
     letter: string | null
-    startSeat: number | null
-    endSeat: number | null
-    reserved: string | null
+    endLetter: string | null
+    reserved: $Enums.EnclosureType | null
     enclosureId: string | null
   }
 
   export type RowCountAggregateOutputType = {
     id: number
     letter: number
-    startSeat: number
-    endSeat: number
+    endLetter: number
     reserved: number
     enclosureId: number
     _all: number
   }
 
 
-  export type RowAvgAggregateInputType = {
-    startSeat?: true
-    endSeat?: true
-  }
-
-  export type RowSumAggregateInputType = {
-    startSeat?: true
-    endSeat?: true
-  }
-
   export type RowMinAggregateInputType = {
     id?: true
     letter?: true
-    startSeat?: true
-    endSeat?: true
+    endLetter?: true
     reserved?: true
     enclosureId?: true
   }
@@ -6001,8 +7166,7 @@ export namespace Prisma {
   export type RowMaxAggregateInputType = {
     id?: true
     letter?: true
-    startSeat?: true
-    endSeat?: true
+    endLetter?: true
     reserved?: true
     enclosureId?: true
   }
@@ -6010,8 +7174,7 @@ export namespace Prisma {
   export type RowCountAggregateInputType = {
     id?: true
     letter?: true
-    startSeat?: true
-    endSeat?: true
+    endLetter?: true
     reserved?: true
     enclosureId?: true
     _all?: true
@@ -6055,18 +7218,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: RowAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RowSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: RowMinAggregateInputType
@@ -6097,8 +7248,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: RowCountAggregateInputType | true
-    _avg?: RowAvgAggregateInputType
-    _sum?: RowSumAggregateInputType
     _min?: RowMinAggregateInputType
     _max?: RowMaxAggregateInputType
   }
@@ -6106,13 +7255,10 @@ export namespace Prisma {
   export type RowGroupByOutputType = {
     id: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
     enclosureId: string
     _count: RowCountAggregateOutputType | null
-    _avg: RowAvgAggregateOutputType | null
-    _sum: RowSumAggregateOutputType | null
     _min: RowMinAggregateOutputType | null
     _max: RowMaxAggregateOutputType | null
   }
@@ -6134,8 +7280,7 @@ export namespace Prisma {
   export type RowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     letter?: boolean
-    startSeat?: boolean
-    endSeat?: boolean
+    endLetter?: boolean
     reserved?: boolean
     enclosureId?: boolean
     enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
@@ -6146,13 +7291,12 @@ export namespace Prisma {
   export type RowSelectScalar = {
     id?: boolean
     letter?: boolean
-    startSeat?: boolean
-    endSeat?: boolean
+    endLetter?: boolean
     reserved?: boolean
     enclosureId?: boolean
   }
 
-  export type RowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "startSeat" | "endSeat" | "reserved" | "enclosureId", ExtArgs["result"]["row"]>
+  export type RowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "endLetter" | "reserved" | "enclosureId", ExtArgs["result"]["row"]>
   export type RowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
   }
@@ -6165,9 +7309,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       letter: string
-      startSeat: number
-      endSeat: number
-      reserved: string
+      endLetter: string
+      reserved: $Enums.EnclosureType
       enclosureId: string
     }, ExtArgs["result"]["row"]>
     composites: {}
@@ -6564,9 +7707,8 @@ export namespace Prisma {
   interface RowFieldRefs {
     readonly id: FieldRef<"Row", 'String'>
     readonly letter: FieldRef<"Row", 'String'>
-    readonly startSeat: FieldRef<"Row", 'Int'>
-    readonly endSeat: FieldRef<"Row", 'Int'>
-    readonly reserved: FieldRef<"Row", 'String'>
+    readonly endLetter: FieldRef<"Row", 'String'>
+    readonly reserved: FieldRef<"Row", 'EnclosureType'>
     readonly enclosureId: FieldRef<"Row", 'String'>
   }
     
@@ -10947,7 +12089,7 @@ export namespace Prisma {
     id: 'id',
     enclosure: 'enclosure',
     row: 'row',
-    seat: 'seat',
+    column: 'column',
     allocatedAt: 'allocatedAt',
     attendeeId: 'attendeeId'
   };
@@ -10959,17 +12101,28 @@ export namespace Prisma {
     id: 'id',
     letter: 'letter',
     allocatedFor: 'allocatedFor',
-    entryDirection: 'entryDirection'
+    entryDirection: 'entryDirection',
+    totalSeats: 'totalSeats'
   };
 
   export type EnclosureScalarFieldEnum = (typeof EnclosureScalarFieldEnum)[keyof typeof EnclosureScalarFieldEnum]
 
 
-  export const RowScalarFieldEnum: {
+  export const ColumnScalarFieldEnum: {
     id: 'id',
     letter: 'letter',
     startSeat: 'startSeat',
     endSeat: 'endSeat',
+    enclosureId: 'enclosureId'
+  };
+
+  export type ColumnScalarFieldEnum = (typeof ColumnScalarFieldEnum)[keyof typeof ColumnScalarFieldEnum]
+
+
+  export const RowScalarFieldEnum: {
+    id: 'id',
+    letter: 'letter',
+    endLetter: 'endLetter',
     reserved: 'reserved',
     enclosureId: 'enclosureId'
   };
@@ -11295,7 +12448,7 @@ export namespace Prisma {
     course?: StringFilter<"Attendee"> | string
     school?: StringFilter<"Attendee"> | string
     degree?: StringFilter<"Attendee"> | string
-    email?: StringNullableFilter<"Attendee"> | string | null
+    email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
@@ -11338,7 +12491,7 @@ export namespace Prisma {
     course?: StringFilter<"Attendee"> | string
     school?: StringFilter<"Attendee"> | string
     degree?: StringFilter<"Attendee"> | string
-    email?: StringNullableFilter<"Attendee"> | string | null
+    email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
@@ -11382,7 +12535,7 @@ export namespace Prisma {
     course?: StringWithAggregatesFilter<"Attendee"> | string
     school?: StringWithAggregatesFilter<"Attendee"> | string
     degree?: StringWithAggregatesFilter<"Attendee"> | string
-    email?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
+    email?: StringWithAggregatesFilter<"Attendee"> | string
     phone?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     convocationEligible?: BoolWithAggregatesFilter<"Attendee"> | boolean
     convocationRegistered?: BoolWithAggregatesFilter<"Attendee"> | boolean
@@ -11400,7 +12553,7 @@ export namespace Prisma {
     id?: StringFilter<"SeatAllocation"> | string
     enclosure?: StringFilter<"SeatAllocation"> | string
     row?: StringFilter<"SeatAllocation"> | string
-    seat?: IntFilter<"SeatAllocation"> | number
+    column?: IntFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeFilter<"SeatAllocation"> | Date | string
     attendeeId?: StringFilter<"SeatAllocation"> | string
     attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
@@ -11410,7 +12563,7 @@ export namespace Prisma {
     id?: SortOrder
     enclosure?: SortOrder
     row?: SortOrder
-    seat?: SortOrder
+    column?: SortOrder
     allocatedAt?: SortOrder
     attendeeId?: SortOrder
     attendee?: AttendeeOrderByWithRelationInput
@@ -11424,7 +12577,7 @@ export namespace Prisma {
     NOT?: SeatAllocationWhereInput | SeatAllocationWhereInput[]
     enclosure?: StringFilter<"SeatAllocation"> | string
     row?: StringFilter<"SeatAllocation"> | string
-    seat?: IntFilter<"SeatAllocation"> | number
+    column?: IntFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeFilter<"SeatAllocation"> | Date | string
     attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
   }, "id" | "attendeeId">
@@ -11433,7 +12586,7 @@ export namespace Prisma {
     id?: SortOrder
     enclosure?: SortOrder
     row?: SortOrder
-    seat?: SortOrder
+    column?: SortOrder
     allocatedAt?: SortOrder
     attendeeId?: SortOrder
     _count?: SeatAllocationCountOrderByAggregateInput
@@ -11450,7 +12603,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"SeatAllocation"> | string
     enclosure?: StringWithAggregatesFilter<"SeatAllocation"> | string
     row?: StringWithAggregatesFilter<"SeatAllocation"> | string
-    seat?: IntWithAggregatesFilter<"SeatAllocation"> | number
+    column?: IntWithAggregatesFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeWithAggregatesFilter<"SeatAllocation"> | Date | string
     attendeeId?: StringWithAggregatesFilter<"SeatAllocation"> | string
   }
@@ -11463,7 +12616,9 @@ export namespace Prisma {
     letter?: StringFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
+    totalSeats?: IntFilter<"Enclosure"> | number
     rows?: RowListRelationFilter
+    colums?: ColumnListRelationFilter
   }
 
   export type EnclosureOrderByWithRelationInput = {
@@ -11471,7 +12626,9 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    totalSeats?: SortOrder
     rows?: RowOrderByRelationAggregateInput
+    colums?: ColumnOrderByRelationAggregateInput
   }
 
   export type EnclosureWhereUniqueInput = Prisma.AtLeast<{
@@ -11482,7 +12639,9 @@ export namespace Prisma {
     letter?: StringFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
+    totalSeats?: IntFilter<"Enclosure"> | number
     rows?: RowListRelationFilter
+    colums?: ColumnListRelationFilter
   }, "id">
 
   export type EnclosureOrderByWithAggregationInput = {
@@ -11490,9 +12649,12 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    totalSeats?: SortOrder
     _count?: EnclosureCountOrderByAggregateInput
+    _avg?: EnclosureAvgOrderByAggregateInput
     _max?: EnclosureMaxOrderByAggregateInput
     _min?: EnclosureMinOrderByAggregateInput
+    _sum?: EnclosureSumOrderByAggregateInput
   }
 
   export type EnclosureScalarWhereWithAggregatesInput = {
@@ -11503,6 +12665,64 @@ export namespace Prisma {
     letter?: StringWithAggregatesFilter<"Enclosure"> | string
     allocatedFor?: EnumEnclosureTypeWithAggregatesFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionWithAggregatesFilter<"Enclosure"> | $Enums.Direction
+    totalSeats?: IntWithAggregatesFilter<"Enclosure"> | number
+  }
+
+  export type ColumnWhereInput = {
+    AND?: ColumnWhereInput | ColumnWhereInput[]
+    OR?: ColumnWhereInput[]
+    NOT?: ColumnWhereInput | ColumnWhereInput[]
+    id?: StringFilter<"Column"> | string
+    letter?: StringFilter<"Column"> | string
+    startSeat?: IntFilter<"Column"> | number
+    endSeat?: IntFilter<"Column"> | number
+    enclosureId?: StringFilter<"Column"> | string
+    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
+  }
+
+  export type ColumnOrderByWithRelationInput = {
+    id?: SortOrder
+    letter?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    enclosureId?: SortOrder
+    enclosure?: EnclosureOrderByWithRelationInput
+  }
+
+  export type ColumnWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ColumnWhereInput | ColumnWhereInput[]
+    OR?: ColumnWhereInput[]
+    NOT?: ColumnWhereInput | ColumnWhereInput[]
+    letter?: StringFilter<"Column"> | string
+    startSeat?: IntFilter<"Column"> | number
+    endSeat?: IntFilter<"Column"> | number
+    enclosureId?: StringFilter<"Column"> | string
+    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
+  }, "id">
+
+  export type ColumnOrderByWithAggregationInput = {
+    id?: SortOrder
+    letter?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    enclosureId?: SortOrder
+    _count?: ColumnCountOrderByAggregateInput
+    _avg?: ColumnAvgOrderByAggregateInput
+    _max?: ColumnMaxOrderByAggregateInput
+    _min?: ColumnMinOrderByAggregateInput
+    _sum?: ColumnSumOrderByAggregateInput
+  }
+
+  export type ColumnScalarWhereWithAggregatesInput = {
+    AND?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
+    OR?: ColumnScalarWhereWithAggregatesInput[]
+    NOT?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Column"> | string
+    letter?: StringWithAggregatesFilter<"Column"> | string
+    startSeat?: IntWithAggregatesFilter<"Column"> | number
+    endSeat?: IntWithAggregatesFilter<"Column"> | number
+    enclosureId?: StringWithAggregatesFilter<"Column"> | string
   }
 
   export type RowWhereInput = {
@@ -11511,9 +12731,8 @@ export namespace Prisma {
     NOT?: RowWhereInput | RowWhereInput[]
     id?: StringFilter<"Row"> | string
     letter?: StringFilter<"Row"> | string
-    startSeat?: IntFilter<"Row"> | number
-    endSeat?: IntFilter<"Row"> | number
-    reserved?: StringFilter<"Row"> | string
+    endLetter?: StringFilter<"Row"> | string
+    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
     enclosureId?: StringFilter<"Row"> | string
     enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
   }
@@ -11521,8 +12740,7 @@ export namespace Prisma {
   export type RowOrderByWithRelationInput = {
     id?: SortOrder
     letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
+    endLetter?: SortOrder
     reserved?: SortOrder
     enclosureId?: SortOrder
     enclosure?: EnclosureOrderByWithRelationInput
@@ -11534,9 +12752,8 @@ export namespace Prisma {
     OR?: RowWhereInput[]
     NOT?: RowWhereInput | RowWhereInput[]
     letter?: StringFilter<"Row"> | string
-    startSeat?: IntFilter<"Row"> | number
-    endSeat?: IntFilter<"Row"> | number
-    reserved?: StringFilter<"Row"> | string
+    endLetter?: StringFilter<"Row"> | string
+    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
     enclosureId?: StringFilter<"Row"> | string
     enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
   }, "id">
@@ -11544,15 +12761,12 @@ export namespace Prisma {
   export type RowOrderByWithAggregationInput = {
     id?: SortOrder
     letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
+    endLetter?: SortOrder
     reserved?: SortOrder
     enclosureId?: SortOrder
     _count?: RowCountOrderByAggregateInput
-    _avg?: RowAvgOrderByAggregateInput
     _max?: RowMaxOrderByAggregateInput
     _min?: RowMinOrderByAggregateInput
-    _sum?: RowSumOrderByAggregateInput
   }
 
   export type RowScalarWhereWithAggregatesInput = {
@@ -11561,9 +12775,8 @@ export namespace Prisma {
     NOT?: RowScalarWhereWithAggregatesInput | RowScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Row"> | string
     letter?: StringWithAggregatesFilter<"Row"> | string
-    startSeat?: IntWithAggregatesFilter<"Row"> | number
-    endSeat?: IntWithAggregatesFilter<"Row"> | number
-    reserved?: StringWithAggregatesFilter<"Row"> | string
+    endLetter?: StringWithAggregatesFilter<"Row"> | string
+    reserved?: EnumEnclosureTypeWithAggregatesFilter<"Row"> | $Enums.EnclosureType
     enclosureId?: StringWithAggregatesFilter<"Row"> | string
   }
 
@@ -11975,7 +13188,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -11994,7 +13207,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -12012,7 +13225,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -12030,7 +13243,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -12049,7 +13262,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -12066,7 +13279,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -12082,7 +13295,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -12097,7 +13310,7 @@ export namespace Prisma {
     id?: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt?: Date | string
     attendee: AttendeeCreateNestedOneWithoutAllocationInput
   }
@@ -12106,7 +13319,7 @@ export namespace Prisma {
     id?: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt?: Date | string
     attendeeId: string
   }
@@ -12114,7 +13327,7 @@ export namespace Prisma {
   export type SeatAllocationUpdateInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendee?: AttendeeUpdateOneRequiredWithoutAllocationNestedInput
   }
@@ -12122,7 +13335,7 @@ export namespace Prisma {
   export type SeatAllocationUncheckedUpdateInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendeeId?: StringFieldUpdateOperationsInput | string
   }
@@ -12131,7 +13344,7 @@ export namespace Prisma {
     id?: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt?: Date | string
     attendeeId: string
   }
@@ -12139,14 +13352,14 @@ export namespace Prisma {
   export type SeatAllocationUpdateManyMutationInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeatAllocationUncheckedUpdateManyInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendeeId?: StringFieldUpdateOperationsInput | string
   }
@@ -12156,7 +13369,9 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
     rows?: RowCreateNestedManyWithoutEnclosureInput
+    colums?: ColumnCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUncheckedCreateInput = {
@@ -12164,21 +13379,27 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
     rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
+    colums?: ColumnUncheckedCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
     rows?: RowUpdateManyWithoutEnclosureNestedInput
+    colums?: ColumnUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureUncheckedUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
     rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
+    colums?: ColumnUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureCreateManyInput = {
@@ -12186,75 +13407,122 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
   }
 
   export type EnclosureUpdateManyMutationInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
   }
 
   export type EnclosureUncheckedUpdateManyInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ColumnCreateInput = {
+    id?: string
+    letter: string
+    startSeat: number
+    endSeat: number
+    enclosure: EnclosureCreateNestedOneWithoutColumsInput
+  }
+
+  export type ColumnUncheckedCreateInput = {
+    id?: string
+    letter: string
+    startSeat: number
+    endSeat: number
+    enclosureId: string
+  }
+
+  export type ColumnUpdateInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    enclosure?: EnclosureUpdateOneRequiredWithoutColumsNestedInput
+  }
+
+  export type ColumnUncheckedUpdateInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    enclosureId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ColumnCreateManyInput = {
+    id?: string
+    letter: string
+    startSeat: number
+    endSeat: number
+    enclosureId: string
+  }
+
+  export type ColumnUpdateManyMutationInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ColumnUncheckedUpdateManyInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    enclosureId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateInput = {
     id?: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved?: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
     enclosure: EnclosureCreateNestedOneWithoutRowsInput
   }
 
   export type RowUncheckedCreateInput = {
     id?: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved?: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
     enclosureId: string
   }
 
   export type RowUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     enclosure?: EnclosureUpdateOneRequiredWithoutRowsNestedInput
   }
 
   export type RowUncheckedUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     enclosureId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateManyInput = {
     id?: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved?: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
     enclosureId: string
   }
 
   export type RowUpdateManyMutationInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
   }
 
   export type RowUncheckedUpdateManyInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     enclosureId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -12882,20 +14150,20 @@ export namespace Prisma {
     id?: SortOrder
     enclosure?: SortOrder
     row?: SortOrder
-    seat?: SortOrder
+    column?: SortOrder
     allocatedAt?: SortOrder
     attendeeId?: SortOrder
   }
 
   export type SeatAllocationAvgOrderByAggregateInput = {
-    seat?: SortOrder
+    column?: SortOrder
   }
 
   export type SeatAllocationMaxOrderByAggregateInput = {
     id?: SortOrder
     enclosure?: SortOrder
     row?: SortOrder
-    seat?: SortOrder
+    column?: SortOrder
     allocatedAt?: SortOrder
     attendeeId?: SortOrder
   }
@@ -12904,13 +14172,13 @@ export namespace Prisma {
     id?: SortOrder
     enclosure?: SortOrder
     row?: SortOrder
-    seat?: SortOrder
+    column?: SortOrder
     allocatedAt?: SortOrder
     attendeeId?: SortOrder
   }
 
   export type SeatAllocationSumOrderByAggregateInput = {
-    seat?: SortOrder
+    column?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -12949,7 +14217,17 @@ export namespace Prisma {
     none?: RowWhereInput
   }
 
+  export type ColumnListRelationFilter = {
+    every?: ColumnWhereInput
+    some?: ColumnWhereInput
+    none?: ColumnWhereInput
+  }
+
   export type RowOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ColumnOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12958,6 +14236,11 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    totalSeats?: SortOrder
+  }
+
+  export type EnclosureAvgOrderByAggregateInput = {
+    totalSeats?: SortOrder
   }
 
   export type EnclosureMaxOrderByAggregateInput = {
@@ -12965,6 +14248,7 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    totalSeats?: SortOrder
   }
 
   export type EnclosureMinOrderByAggregateInput = {
@@ -12972,6 +14256,11 @@ export namespace Prisma {
     letter?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    totalSeats?: SortOrder
+  }
+
+  export type EnclosureSumOrderByAggregateInput = {
+    totalSeats?: SortOrder
   }
 
   export type EnumEnclosureTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -12999,25 +14288,52 @@ export namespace Prisma {
     isNot?: EnclosureWhereInput
   }
 
-  export type RowCountOrderByAggregateInput = {
+  export type ColumnCountOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
     startSeat?: SortOrder
     endSeat?: SortOrder
-    reserved?: SortOrder
     enclosureId?: SortOrder
   }
 
-  export type RowAvgOrderByAggregateInput = {
+  export type ColumnAvgOrderByAggregateInput = {
     startSeat?: SortOrder
     endSeat?: SortOrder
+  }
+
+  export type ColumnMaxOrderByAggregateInput = {
+    id?: SortOrder
+    letter?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    enclosureId?: SortOrder
+  }
+
+  export type ColumnMinOrderByAggregateInput = {
+    id?: SortOrder
+    letter?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    enclosureId?: SortOrder
+  }
+
+  export type ColumnSumOrderByAggregateInput = {
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+  }
+
+  export type RowCountOrderByAggregateInput = {
+    id?: SortOrder
+    letter?: SortOrder
+    endLetter?: SortOrder
+    reserved?: SortOrder
+    enclosureId?: SortOrder
   }
 
   export type RowMaxOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
+    endLetter?: SortOrder
     reserved?: SortOrder
     enclosureId?: SortOrder
   }
@@ -13025,15 +14341,9 @@ export namespace Prisma {
   export type RowMinOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
+    endLetter?: SortOrder
     reserved?: SortOrder
     enclosureId?: SortOrder
-  }
-
-  export type RowSumOrderByAggregateInput = {
-    startSeat?: SortOrder
-    endSeat?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -13398,11 +14708,25 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
   }
 
+  export type ColumnCreateNestedManyWithoutEnclosureInput = {
+    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
+    createMany?: ColumnCreateManyEnclosureInputEnvelope
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+  }
+
   export type RowUncheckedCreateNestedManyWithoutEnclosureInput = {
     create?: XOR<RowCreateWithoutEnclosureInput, RowUncheckedCreateWithoutEnclosureInput> | RowCreateWithoutEnclosureInput[] | RowUncheckedCreateWithoutEnclosureInput[]
     connectOrCreate?: RowCreateOrConnectWithoutEnclosureInput | RowCreateOrConnectWithoutEnclosureInput[]
     createMany?: RowCreateManyEnclosureInputEnvelope
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
+  }
+
+  export type ColumnUncheckedCreateNestedManyWithoutEnclosureInput = {
+    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
+    createMany?: ColumnCreateManyEnclosureInputEnvelope
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
   }
 
   export type EnumEnclosureTypeFieldUpdateOperationsInput = {
@@ -13427,6 +14751,20 @@ export namespace Prisma {
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
   }
 
+  export type ColumnUpdateManyWithoutEnclosureNestedInput = {
+    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
+    upsert?: ColumnUpsertWithWhereUniqueWithoutEnclosureInput | ColumnUpsertWithWhereUniqueWithoutEnclosureInput[]
+    createMany?: ColumnCreateManyEnclosureInputEnvelope
+    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    update?: ColumnUpdateWithWhereUniqueWithoutEnclosureInput | ColumnUpdateWithWhereUniqueWithoutEnclosureInput[]
+    updateMany?: ColumnUpdateManyWithWhereWithoutEnclosureInput | ColumnUpdateManyWithWhereWithoutEnclosureInput[]
+    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+  }
+
   export type RowUncheckedUpdateManyWithoutEnclosureNestedInput = {
     create?: XOR<RowCreateWithoutEnclosureInput, RowUncheckedCreateWithoutEnclosureInput> | RowCreateWithoutEnclosureInput[] | RowUncheckedCreateWithoutEnclosureInput[]
     connectOrCreate?: RowCreateOrConnectWithoutEnclosureInput | RowCreateOrConnectWithoutEnclosureInput[]
@@ -13439,6 +14777,34 @@ export namespace Prisma {
     update?: RowUpdateWithWhereUniqueWithoutEnclosureInput | RowUpdateWithWhereUniqueWithoutEnclosureInput[]
     updateMany?: RowUpdateManyWithWhereWithoutEnclosureInput | RowUpdateManyWithWhereWithoutEnclosureInput[]
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
+  }
+
+  export type ColumnUncheckedUpdateManyWithoutEnclosureNestedInput = {
+    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
+    upsert?: ColumnUpsertWithWhereUniqueWithoutEnclosureInput | ColumnUpsertWithWhereUniqueWithoutEnclosureInput[]
+    createMany?: ColumnCreateManyEnclosureInputEnvelope
+    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+    update?: ColumnUpdateWithWhereUniqueWithoutEnclosureInput | ColumnUpdateWithWhereUniqueWithoutEnclosureInput[]
+    updateMany?: ColumnUpdateManyWithWhereWithoutEnclosureInput | ColumnUpdateManyWithWhereWithoutEnclosureInput[]
+    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+  }
+
+  export type EnclosureCreateNestedOneWithoutColumsInput = {
+    create?: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
+    connectOrCreate?: EnclosureCreateOrConnectWithoutColumsInput
+    connect?: EnclosureWhereUniqueInput
+  }
+
+  export type EnclosureUpdateOneRequiredWithoutColumsNestedInput = {
+    create?: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
+    connectOrCreate?: EnclosureCreateOrConnectWithoutColumsInput
+    upsert?: EnclosureUpsertWithoutColumsInput
+    connect?: EnclosureWhereUniqueInput
+    update?: XOR<XOR<EnclosureUpdateToOneWithWhereWithoutColumsInput, EnclosureUpdateWithoutColumsInput>, EnclosureUncheckedUpdateWithoutColumsInput>
   }
 
   export type EnclosureCreateNestedOneWithoutRowsInput = {
@@ -13767,7 +15133,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -13785,7 +15151,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -13831,7 +15197,7 @@ export namespace Prisma {
     course?: StringFilter<"Attendee"> | string
     school?: StringFilter<"Attendee"> | string
     degree?: StringFilter<"Attendee"> | string
-    email?: StringNullableFilter<"Attendee"> | string | null
+    email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
@@ -13885,7 +15251,7 @@ export namespace Prisma {
     id?: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt?: Date | string
   }
 
@@ -13893,7 +15259,7 @@ export namespace Prisma {
     id?: string
     enclosure: string
     row: string
-    seat: number
+    column: number
     allocatedAt?: Date | string
   }
 
@@ -13959,14 +15325,14 @@ export namespace Prisma {
   export type SeatAllocationUpdateWithoutAttendeeInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeatAllocationUncheckedUpdateWithoutAttendeeInput = {
     enclosure?: StringFieldUpdateOperationsInput | string
     row?: StringFieldUpdateOperationsInput | string
-    seat?: IntFieldUpdateOperationsInput | number
+    column?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -13977,7 +15343,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -13995,7 +15361,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -14028,7 +15394,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -14045,7 +15411,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -14059,17 +15425,15 @@ export namespace Prisma {
   export type RowCreateWithoutEnclosureInput = {
     id?: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved?: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
   }
 
   export type RowUncheckedCreateWithoutEnclosureInput = {
     id?: string
     letter: string
-    startSeat: number
-    endSeat: number
-    reserved?: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
   }
 
   export type RowCreateOrConnectWithoutEnclosureInput = {
@@ -14079,6 +15443,29 @@ export namespace Prisma {
 
   export type RowCreateManyEnclosureInputEnvelope = {
     data: RowCreateManyEnclosureInput | RowCreateManyEnclosureInput[]
+  }
+
+  export type ColumnCreateWithoutEnclosureInput = {
+    id?: string
+    letter: string
+    startSeat: number
+    endSeat: number
+  }
+
+  export type ColumnUncheckedCreateWithoutEnclosureInput = {
+    id?: string
+    letter: string
+    startSeat: number
+    endSeat: number
+  }
+
+  export type ColumnCreateOrConnectWithoutEnclosureInput = {
+    where: ColumnWhereUniqueInput
+    create: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput>
+  }
+
+  export type ColumnCreateManyEnclosureInputEnvelope = {
+    data: ColumnCreateManyEnclosureInput | ColumnCreateManyEnclosureInput[]
   }
 
   export type RowUpsertWithWhereUniqueWithoutEnclosureInput = {
@@ -14103,10 +15490,86 @@ export namespace Prisma {
     NOT?: RowScalarWhereInput | RowScalarWhereInput[]
     id?: StringFilter<"Row"> | string
     letter?: StringFilter<"Row"> | string
-    startSeat?: IntFilter<"Row"> | number
-    endSeat?: IntFilter<"Row"> | number
-    reserved?: StringFilter<"Row"> | string
+    endLetter?: StringFilter<"Row"> | string
+    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
     enclosureId?: StringFilter<"Row"> | string
+  }
+
+  export type ColumnUpsertWithWhereUniqueWithoutEnclosureInput = {
+    where: ColumnWhereUniqueInput
+    update: XOR<ColumnUpdateWithoutEnclosureInput, ColumnUncheckedUpdateWithoutEnclosureInput>
+    create: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput>
+  }
+
+  export type ColumnUpdateWithWhereUniqueWithoutEnclosureInput = {
+    where: ColumnWhereUniqueInput
+    data: XOR<ColumnUpdateWithoutEnclosureInput, ColumnUncheckedUpdateWithoutEnclosureInput>
+  }
+
+  export type ColumnUpdateManyWithWhereWithoutEnclosureInput = {
+    where: ColumnScalarWhereInput
+    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyWithoutEnclosureInput>
+  }
+
+  export type ColumnScalarWhereInput = {
+    AND?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+    OR?: ColumnScalarWhereInput[]
+    NOT?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+    id?: StringFilter<"Column"> | string
+    letter?: StringFilter<"Column"> | string
+    startSeat?: IntFilter<"Column"> | number
+    endSeat?: IntFilter<"Column"> | number
+    enclosureId?: StringFilter<"Column"> | string
+  }
+
+  export type EnclosureCreateWithoutColumsInput = {
+    id?: string
+    letter: string
+    allocatedFor: $Enums.EnclosureType
+    entryDirection: $Enums.Direction
+    totalSeats: number
+    rows?: RowCreateNestedManyWithoutEnclosureInput
+  }
+
+  export type EnclosureUncheckedCreateWithoutColumsInput = {
+    id?: string
+    letter: string
+    allocatedFor: $Enums.EnclosureType
+    entryDirection: $Enums.Direction
+    totalSeats: number
+    rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
+  }
+
+  export type EnclosureCreateOrConnectWithoutColumsInput = {
+    where: EnclosureWhereUniqueInput
+    create: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
+  }
+
+  export type EnclosureUpsertWithoutColumsInput = {
+    update: XOR<EnclosureUpdateWithoutColumsInput, EnclosureUncheckedUpdateWithoutColumsInput>
+    create: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
+    where?: EnclosureWhereInput
+  }
+
+  export type EnclosureUpdateToOneWithWhereWithoutColumsInput = {
+    where?: EnclosureWhereInput
+    data: XOR<EnclosureUpdateWithoutColumsInput, EnclosureUncheckedUpdateWithoutColumsInput>
+  }
+
+  export type EnclosureUpdateWithoutColumsInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    rows?: RowUpdateManyWithoutEnclosureNestedInput
+  }
+
+  export type EnclosureUncheckedUpdateWithoutColumsInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureCreateWithoutRowsInput = {
@@ -14114,6 +15577,8 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
+    colums?: ColumnCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUncheckedCreateWithoutRowsInput = {
@@ -14121,6 +15586,8 @@ export namespace Prisma {
     letter: string
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    totalSeats: number
+    colums?: ColumnUncheckedCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureCreateOrConnectWithoutRowsInput = {
@@ -14143,12 +15610,16 @@ export namespace Prisma {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    colums?: ColumnUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureUncheckedUpdateWithoutRowsInput = {
     letter?: StringFieldUpdateOperationsInput | string
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    colums?: ColumnUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type AttendeeCreateManyAccountInput = {
@@ -14158,7 +15629,7 @@ export namespace Prisma {
     course: string
     school: string
     degree: string
-    email?: string | null
+    email: string
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
@@ -14174,7 +15645,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -14191,7 +15662,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -14208,7 +15679,7 @@ export namespace Prisma {
     course?: StringFieldUpdateOperationsInput | string
     school?: StringFieldUpdateOperationsInput | string
     degree?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
@@ -14221,30 +15692,51 @@ export namespace Prisma {
   export type RowCreateManyEnclosureInput = {
     id?: string
     letter: string
+    endLetter: string
+    reserved: $Enums.EnclosureType
+  }
+
+  export type ColumnCreateManyEnclosureInput = {
+    id?: string
+    letter: string
     startSeat: number
     endSeat: number
-    reserved?: string
   }
 
   export type RowUpdateWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
   }
 
   export type RowUncheckedUpdateWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
   }
 
   export type RowUncheckedUpdateManyWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    endLetter?: StringFieldUpdateOperationsInput | string
+    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+  }
+
+  export type ColumnUpdateWithoutEnclosureInput = {
+    letter?: StringFieldUpdateOperationsInput | string
     startSeat?: IntFieldUpdateOperationsInput | number
     endSeat?: IntFieldUpdateOperationsInput | number
-    reserved?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ColumnUncheckedUpdateWithoutEnclosureInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ColumnUncheckedUpdateManyWithoutEnclosureInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
   }
 
 
