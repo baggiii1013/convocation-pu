@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 import accountRoutes from './account.routes.js';
+import allocationRoutes from './allocation.routes.js';
 import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
 import enclosureRoutes from './enclosure.routes.js';
@@ -38,6 +39,9 @@ router.use('/attendees', attendeeRoutes);
 
 // Enclosure management routes (Admin only)
 router.use('/enclosures', enclosureRoutes);
+
+// Seat allocation routes
+router.use('/allocations', allocationRoutes);
 
 // Seat reservation routes (Admin only)
 router.use('/admin', seatReservationRoutes);

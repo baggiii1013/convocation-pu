@@ -380,7 +380,11 @@ export class AttendeeController {
       
       // Process upload
       const result = await AttendeeService.bulkCreate(
-        parsedData,
+        parsedData.map(row => ({
+          ...row,
+          email: row.email || '', // Provide default empty string if email is missing
+          assignedEnclosure: row.enclosure // Map enclosure to assignedEnclosure
+        })),
         options
       );
       
@@ -431,4 +435,41 @@ export class AttendeeController {
       });
     }
   }
+
+  /**
+   * Search attendees by enrollment ID or name
+   * GET /api/attendees/search?q=<query>
+   */
+  static async search(req: Request, res: Response): Promise<void> {
+    try {
+      const { q } = req.query;
+
+      if (!q || typeof q !== 'string') {
+        res.status(400).json({
+          success: false,
+          message: 'Search query is required',
+          code: 'INVALID_QUERY'
+        });
+        return;
+      }
+
+      // Search by enrollment ID or name (case-insensitive)
+      const results = await AttendeeService.search(q);
+
+      res.status(200).json({
+        success: true,
+        message: `Found ${results.length} attendee(s)`,
+        data: { results }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.search:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Search failed',
+        code: 'SEARCH_ERROR',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
 }
+

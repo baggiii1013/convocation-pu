@@ -192,4 +192,12 @@ router.get(
   AttendeeController.downloadTemplate
 );
 
+// Search attendees
+router.get(
+  '/search',
+  authenticate,
+  authorize('admin', 'staff'),
+  AttendeeController.search
+);
+
 export default router;

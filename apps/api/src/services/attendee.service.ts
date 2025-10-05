@@ -8,13 +8,13 @@ export interface AttendeeCreateInput {
   course: string;
   school: string;
   degree: string;
-  email?: string;
+  email: string; // Required in schema
   phone?: string;
   convocationEligible?: boolean;
   convocationRegistered?: boolean;
-  accountId?: string;
+  assignedEnclosure?: string;
+  enclosure?: string; // Legacy support for Excel uploads
   crr: string;
-  enclosure: string;
 }
 
 export interface AttendeeUpdateInput {
@@ -27,9 +27,8 @@ export interface AttendeeUpdateInput {
   phone?: string;
   convocationEligible?: boolean;
   convocationRegistered?: boolean;
-  accountId?: string;
+  assignedEnclosure?: string;
   crr?: string;
-  enclosure?: string;
 }
 
 export interface AttendeeFilters {
@@ -65,8 +64,15 @@ export class AttendeeService {
         throw new Error(`Attendee with enrollment ID ${data.enrollmentId} already exists`);
       }
 
+      // Map enclosure to assignedEnclosure for backwards compatibility
+      const createData = {
+        ...data,
+        assignedEnclosure: data.assignedEnclosure || data.enclosure,
+        enclosure: undefined // Remove the legacy field
+      };
+
       const attendee = await prisma.attendee.create({
-        data,
+        data: createData,
         include: {
           account: {
             select: {
@@ -377,9 +383,14 @@ export class AttendeeService {
         if (existing) {
           if (options.updateExisting) {
             // Update existing record
+            const updateData = {
+              ...row,
+              assignedEnclosure: row.assignedEnclosure || row.enclosure,
+              enclosure: undefined
+            };
             const updated = await prisma.attendee.update({
               where: { enrollmentId: row.enrollmentId },
-              data: row,
+              data: updateData,
               include: {
                 account: true,
                 allocation: true
@@ -401,8 +412,13 @@ export class AttendeeService {
           }
         } else {
           // Create new record
+          const createData = {
+            ...row,
+            assignedEnclosure: row.assignedEnclosure || row.enclosure,
+            enclosure: undefined
+          };
           const created = await prisma.attendee.create({
-            data: row,
+            data: createData,
             include: {
               account: true,
               allocation: true
@@ -475,4 +491,59 @@ export class AttendeeService {
       throw error;
     }
   }
+
+  /**
+   * Search attendees by enrollment ID or name
+   */
+  static async search(query: string): Promise<Array<{
+    id: string;
+    enrollmentId: string;
+    name: string;
+    course: string;
+    school: string;
+    degree: string;
+    assignedEnclosure: string | null;
+    allocation: {
+      row: string;
+      seat: number;
+    } | null;
+  }>> {
+    try {
+      const attendees = await prisma.attendee.findMany({
+        where: {
+          OR: [
+            { enrollmentId: { contains: query, mode: 'insensitive' } },
+            { name: { contains: query, mode: 'insensitive' } }
+          ]
+        },
+        include: {
+          allocation: {
+            select: {
+              rowLetter: true,
+              seatNumber: true
+            }
+          }
+        },
+        take: 50 // Limit results
+      });
+
+      return attendees.map(a => ({
+        id: a.id,
+        enrollmentId: a.enrollmentId,
+        name: a.name,
+        course: a.course,
+        school: a.school,
+        degree: a.degree,
+        assignedEnclosure: a.assignedEnclosure,
+        allocation: a.allocation ? {
+          row: a.allocation.rowLetter,
+          seat: a.allocation.seatNumber
+        } : null
+      }));
+    } catch (error) {
+      logger.error('Error searching attendees:', error);
+      throw error;
+    }
+  }
 }
+
