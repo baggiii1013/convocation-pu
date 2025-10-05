@@ -12,12 +12,12 @@ interface UploadResultsProps {
         failed: number;
       };
       results: {
-        imported: any[];
-        errors: {
+        imported: Array<Record<string, unknown>>;
+        errors: Array<{
           row: number;
-          data: any;
+          data: Record<string, unknown>;
           error: string;
-        }[];
+        }>;
       };
     };
   };
@@ -164,7 +164,7 @@ export function UploadResults({ results }: UploadResultsProps) {
                         {error.row}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-red-900 dark:text-red-50">
-                        {error.data?.enrollmentId || 'N/A'}
+                        {String(error.data?.enrollmentId || 'N/A')}
                       </td>
                       <td className="px-6 py-4 text-sm text-red-900 dark:text-red-50">
                         {error.error}

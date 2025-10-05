@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { AccountService, type Account } from '@/services/account.service';
-import { Edit, MoreVertical, Search, Trash2, UserCheck, UserX, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Edit, Search, Trash2, UserCheck, UserX, Users } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function ManageUsersPage() {
@@ -20,14 +20,18 @@ export default function ManageUsersPage() {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  useEffect(() => {
-    fetchAccounts();
-  }, [searchQuery, roleFilter, statusFilter, currentPage]);
-
-  const fetchAccounts = async () => {
+  const fetchAccounts = useCallback(async () => {
     try {
       setLoading(true);
-      const filters: any = {
+      const filters: {
+        page: number;
+        limit: number;
+        sortBy: string;
+        sortOrder: 'asc' | 'desc';
+        search?: string;
+        role?: 'ADMIN' | 'STAFF' | 'STUDENT';
+        isActive?: boolean;
+      } = {
         page: currentPage,
         limit: 20,
         sortBy: 'createdAt',
@@ -35,28 +39,34 @@ export default function ManageUsersPage() {
       };
 
       if (searchQuery) filters.search = searchQuery;
-      if (roleFilter !== 'ALL') filters.role = roleFilter;
+      if (roleFilter !== 'ALL') filters.role = roleFilter as 'ADMIN' | 'STAFF' | 'STUDENT';
       if (statusFilter !== 'ALL') filters.isActive = statusFilter === 'ACTIVE';
 
       const result = await AccountService.getAll(filters);
       setAccounts(result.accounts);
       setTotalPages(result.pagination.totalPages);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching accounts:', error);
-      toast.error(error.response?.data?.message || 'Failed to load accounts');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to load accounts');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, searchQuery, roleFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchAccounts();
+  }, [fetchAccounts]);
 
   const handleToggleActive = async (account: Account) => {
     try {
       await AccountService.toggleActive(account.id);
       toast.success(`Account ${account.isActive ? 'deactivated' : 'activated'} successfully`);
       fetchAccounts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error toggling account status:', error);
-      toast.error(error.response?.data?.message || 'Failed to toggle account status');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to toggle account status');
     }
   };
 
@@ -69,9 +79,10 @@ export default function ManageUsersPage() {
       setShowDeleteDialog(false);
       setSelectedAccount(null);
       fetchAccounts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting account:', error);
-      toast.error(error.response?.data?.message || 'Failed to delete account');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to delete account');
     }
   };
 
@@ -390,9 +401,10 @@ function EditUserDialog({ account, onClose, onSuccess }: { account: Account; onC
       await AccountService.update(account.id, formData);
       toast.success('User updated successfully');
       onSuccess();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating user:', error);
-      toast.error(error.response?.data?.message || 'Failed to update user');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to update user');
     } finally {
       setIsSaving(false);
     }
@@ -436,7 +448,7 @@ function EditUserDialog({ account, onClose, onSuccess }: { account: Account; onC
               aria-label="User role"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value as 'ADMIN' | 'STAFF' | 'STUDENT' })}
             >
               <option value="STUDENT">Student</option>
               <option value="STAFF">Staff</option>
@@ -449,7 +461,7 @@ function EditUserDialog({ account, onClose, onSuccess }: { account: Account; onC
               aria-label="Account state"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={formData.accountState}
-              onChange={(e) => setFormData({ ...formData, accountState: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, accountState: e.target.value as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'PENDING_VERIFICATION' })}
             >
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>

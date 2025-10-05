@@ -73,7 +73,7 @@ api.interceptors.response.use(
       
       try {
         // Try to refresh the token using cookie
-        const response = await api.post('/api/v1/auth/refresh');
+        await api.post('/api/v1/auth/refresh');
         
         // No need to store tokens - they're automatically set in httpOnly cookies
         

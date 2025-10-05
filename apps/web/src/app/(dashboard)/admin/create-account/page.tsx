@@ -32,7 +32,6 @@ export default function CreateAccountPage() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
     watch
   } = useForm<CreateAccountFormData>({
@@ -48,33 +47,35 @@ export default function CreateAccountPage() {
     try {
       setIsLoading(true);
       
-      const { confirmPassword, ...accountData } = data;
+      const { confirmPassword: _confirmPassword, ...accountData } = data;
       
-      const response = await api.post('/api/v1/auth/admin/create-account', accountData);
+      await api.post('/api/v1/auth/admin/create-account', accountData);
       
       toast.success(`Account created successfully for ${accountData.email}!`);
       reset(); // Reset form after successful creation
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Account creation error:', err);
       
       // Extract detailed error message
       let errorMessage = 'Failed to create account';
       
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
+      const error = err as { response?: { data?: { message?: string; error?: string }; status?: number }; message?: string };
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
       
       // Show specific error based on status code
-      if (err.response?.status === 400) {
+      if (error.response?.status === 400) {
         toast.error(`Validation Error: ${errorMessage}`);
-      } else if (err.response?.status === 403) {
+      } else if (error.response?.status === 403) {
         toast.error('Access Denied: You do not have permission to create accounts');
-      } else if (err.response?.status === 409 || errorMessage.includes('already')) {
+      } else if (error.response?.status === 409 || errorMessage.includes('already')) {
         toast.error(`Email Already Exists: ${errorMessage}`);
       } else {
         toast.error(`Error: ${errorMessage}`);

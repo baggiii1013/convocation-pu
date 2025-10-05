@@ -13,24 +13,24 @@ datasource db {
 
 // Core User Account Model
 model Account {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  email                 String   @unique
-  password              String   // Hashed password for authentication
-  firstName             String   // User's first name
-  lastName              String   // User's last name
-  displayName           String   // Full display name (computed or set)
-  profileImageURL       String?
-  role                  UserRole @default(STUDENT) // User role for authorization
-  assignedIAMPolicies   String[] // Array of IAM policy IDs
-  accountState          AccountState @default(ACTIVE)
-  isActive              Boolean  @default(true) // Account active status
-  lastLoginAt           DateTime? // Last login timestamp
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  email               String       @unique
+  password            String // Hashed password for authentication
+  firstName           String // User's first name
+  lastName            String // User's last name
+  displayName         String // Full display name (computed or set)
+  profileImageURL     String?
+  role                UserRole     @default(STUDENT) // User role for authorization
+  assignedIAMPolicies String[] // Array of IAM policy IDs
+  accountState        AccountState @default(ACTIVE)
+  isActive            Boolean      @default(true) // Account active status
+  lastLoginAt         DateTime? // Last login timestamp
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
   // Relations
-  attendees             Attendee[]
-  
+  attendees Attendee[]
+
   @@map("accounts")
 }
 
@@ -49,98 +49,97 @@ model Attendee {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   crr                   String   @db.ObjectId
-  enclosure            String
-  
+  enclosure             String
+
   // Relations
-  account               Account? @relation(fields: [accountId], references: [id])
-  accountId             String?  @db.ObjectId
-  allocation            SeatAllocation?
-  
+  account    Account?        @relation(fields: [accountId], references: [id])
+  accountId  String?         @db.ObjectId
+  allocation SeatAllocation?
+
   @@map("attendees")
 }
 
 // Seat Allocation Model
 model SeatAllocation {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  enclosure             String
-  row                   String
-  seat                  Int
-  allocatedAt           DateTime @default(now())
-  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  enclosure   String
+  row         String
+  seat        Int
+  allocatedAt DateTime @default(now())
+
   // Relations
-  attendee              Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
-  attendeeId            String   @unique @db.ObjectId
-  
+  attendee   Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
+  attendeeId String   @unique @db.ObjectId
+
   @@map("seat_allocations")
 }
 
-
 // Enclosure/Venue Mapping Model
 model Enclosure {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  letter                String
-  allocatedFor          EnclosureType
-  entryDirection        Direction
-  
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  letter         String
+  allocatedFor   EnclosureType
+  entryDirection Direction
+
   // Relations
-  rows                  Row[]
-  
+  rows Row[]
+
   @@map("enclosures")
 }
 
 // Row Configuration Model
 model Row {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  letter                String
-  startSeat             Int
-  endSeat               Int
-  reserved              String   @default("")
-  
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  letter    String
+  startSeat Int
+  endSeat   Int
+  reserved  String @default("")
+
   // Relations
-  enclosure             Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
-  enclosureId           String    @db.ObjectId
-  
+  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
+  enclosureId String    @db.ObjectId
+
   @@map("rows")
 }
 
 // Analytics Model
 model Analytics {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  date                  DateTime @unique
-  visitors              Int      @default(0)
-  pageViews             Int      @default(0)
-  uniqueVisitors        Int      @default(0)
-  countries             Json     @default("{}")
-  languages             Json     @default("{}")
-  devices               Json     @default("{}")
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  date           DateTime @unique
+  visitors       Int      @default(0)
+  pageViews      Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  countries      Json     @default("{}")
+  languages      Json     @default("{}")
+  devices        Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
   @@map("analytics")
 }
 
 // IAM Policy Model
 model IAMPolicy {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String   @unique
-  description           String
-  permissions           String[]
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String
+  permissions String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   @@map("iam_policies")
 }
 
 // Department Model
 model Department {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String   @unique
-  code                  String   @unique
-  school                String
-  isActive              Boolean  @default(true)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  code      String   @unique
+  school    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("departments")
 }
 
@@ -157,7 +156,7 @@ model Convocation {
   maxAttendees          Int?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
-  
+
   @@map("convocations")
 }
 

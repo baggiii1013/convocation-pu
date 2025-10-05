@@ -10,17 +10,19 @@ export function TemplateDownloader() {
     setIsDownloading(true);
     try {
       await uploadService.downloadTemplate();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to download template:', error);
       
       // Provide specific error messages based on status code
       let errorMessage = 'Failed to download template. Please try again.';
       
-      if (error?.response?.status === 403) {
+      const err = error as { response?: { status?: number } };
+      
+      if (err?.response?.status === 403) {
         errorMessage = 'Access denied. You need admin or staff privileges to download the template. Please ensure you are logged in with the correct role.';
-      } else if (error?.response?.status === 401) {
+      } else if (err?.response?.status === 401) {
         errorMessage = 'Authentication required. Please log in again.';
-      } else if (error?.response?.status === 404) {
+      } else if (err?.response?.status === 404) {
         errorMessage = 'Template endpoint not found. Please contact support.';
       }
       

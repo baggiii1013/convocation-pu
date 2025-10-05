@@ -5,8 +5,29 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { UploadProgress } from './UploadProgress';
 
+interface UploadResult {
+  success: boolean;
+  message: string;
+  data: {
+    summary: {
+      totalRows: number;
+      successful: number;
+      skipped: number;
+      failed: number;
+    };
+    results: {
+      imported: Array<Record<string, unknown>>;
+      errors: Array<{
+        row: number;
+        data: Record<string, unknown>;
+        error: string;
+      }>;
+    };
+  };
+}
+
 interface ExcelUploaderProps {
-  onUploadComplete: (results: any) => void;
+  onUploadComplete: (results: UploadResult) => void;
 }
 
 export function ExcelUploader({ onUploadComplete }: ExcelUploaderProps) {

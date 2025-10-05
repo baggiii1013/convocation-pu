@@ -5,8 +5,29 @@ import { TemplateDownloader } from '@/components/admin/TemplateDownloader';
 import { UploadResults } from '@/components/admin/UploadResults';
 import { useState } from 'react';
 
+interface UploadResult {
+  success: boolean;
+  message: string;
+  data: {
+    summary: {
+      totalRows: number;
+      successful: number;
+      skipped: number;
+      failed: number;
+    };
+    results: {
+      imported: Array<Record<string, unknown>>;
+      errors: Array<{
+        row: number;
+        data: Record<string, unknown>;
+        error: string;
+      }>;
+    };
+  };
+}
+
 export default function UploadStudentsPage() {
-  const [uploadResults, setUploadResults] = useState<any>(null);
+  const [uploadResults, setUploadResults] = useState<UploadResult | null>(null);
   
   return (
     <div className="container mx-auto px-4 py-8">
