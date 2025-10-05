@@ -46,10 +46,13 @@ model Attendee {
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
+  
+  // Enclosure assignment - stored in database
+  assignedEnclosure     String?  // Enclosure letter (A, B, C, etc.)
+  
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   crr                   String   @db.ObjectId
-  enclosure             String
 
   // Relations
   account    Account?        @relation(fields: [accountId], references: [id])
@@ -59,62 +62,78 @@ model Attendee {
   @@map("attendees")
 }
 
-// Seat Allocation Model
+// Enhanced SeatAllocation Model
 model SeatAllocation {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  enclosure   String
-  row         String
-  column        Int
-  allocatedAt DateTime @default(now())
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  enclosureLetter String   // Changed to letter for easier querying
+  rowLetter       String   // Row letter (A, B, C)
+  seatNumber      Int      // Actual seat number
+  allocatedAt     DateTime @default(now())
 
   // Relations
-  attendee   Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
-  attendeeId String   @unique @db.ObjectId
+  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
+  enclosureId String    @db.ObjectId
+  attendee    Attendee  @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
+  attendeeId  String    @unique @db.ObjectId
 
+  @@unique([enclosureLetter, rowLetter, seatNumber]) // Prevent double allocation
+  @@index([enclosureLetter, rowLetter])
+  @@index([enclosureId])
   @@map("seat_allocations")
 }
 
-// Enclosure/Venue Mapping Model
+// Enhanced Enclosure Model
 model Enclosure {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  letter         String
+  letter         String        @unique // A, B, C, etc.
+  name           String?       // Optional: "North Wing", "Main Hall"
   allocatedFor   EnclosureType
   entryDirection Direction
-  totalSeats     Int
+  displayOrder   Int           @default(0) // Order to display in UI
+  totalSeats     Int           @default(0) // Auto-calculated
+  isActive       Boolean       @default(true)
 
   // Relations
-  rows   Row[]
-  colums Column[]
+  rows            Row[]
+  seatAllocations SeatAllocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("enclosures")
 }
 
-// column Configuration Model
-model Column {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  letter    String
-  startSeat Int
-  endSeat   Int
+// Enhanced Row Model
+model Row {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  letter        String // Row identifier (A, B, C, etc.)
+  startSeat     Int    // First seat number in row
+  endSeat       Int    // Last seat number in row
+  reservedSeats String @default("") // Comma-separated reserved seat numbers: "1,5,10"
+  displayOrder  Int    @default(0) // Order of rows in enclosure
 
   // Relations
   enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
   enclosureId String    @db.ObjectId
 
-  @@map("colums")
+  @@unique([enclosureId, letter])
+  @@index([enclosureId, displayOrder])
+  @@map("rows")
 }
 
-// Row Configuration Model
-model Row {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  letter    String
-  endLetter String
-  reserved  EnclosureType
+// Admin Seat Reservation Model - NEW
+model SeatReservation {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  enclosureLetter String   // Enclosure letter
+  rowLetter       String   // Row letter
+  seatNumber      Int      // Reserved seat number
+  reservedFor     String?  // Optional: reason or person name
+  reservedBy      String?  // Admin who reserved it
+  createdAt       DateTime @default(now())
 
-  // Relations
-  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
-  enclosureId String    @db.ObjectId
-
-  @@map("rows")
+  @@unique([enclosureLetter, rowLetter, seatNumber]) // Prevent duplicate reservations
+  @@index([enclosureLetter])
+  @@map("seat_reservations")
 }
 
 // Analytics Model
@@ -215,4 +234,7 @@ enum Direction {
   NORTHWEST
   SOUTHEAST
   SOUTHWEST
+  LEFT    // For simple left/right entry
+  RIGHT
+  CENTER
 }

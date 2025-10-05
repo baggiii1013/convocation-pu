@@ -34,15 +34,15 @@ export type SeatAllocation = $Result.DefaultSelection<Prisma.$SeatAllocationPayl
  */
 export type Enclosure = $Result.DefaultSelection<Prisma.$EnclosurePayload>
 /**
- * Model Column
- * 
- */
-export type Column = $Result.DefaultSelection<Prisma.$ColumnPayload>
-/**
  * Model Row
  * 
  */
 export type Row = $Result.DefaultSelection<Prisma.$RowPayload>
+/**
+ * Model SeatReservation
+ * 
+ */
+export type SeatReservation = $Result.DefaultSelection<Prisma.$SeatReservationPayload>
 /**
  * Model Analytics
  * 
@@ -118,7 +118,10 @@ export const Direction: {
   NORTHEAST: 'NORTHEAST',
   NORTHWEST: 'NORTHWEST',
   SOUTHEAST: 'SOUTHEAST',
-  SOUTHWEST: 'SOUTHWEST'
+  SOUTHWEST: 'SOUTHWEST',
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+  CENTER: 'CENTER'
 };
 
 export type Direction = (typeof Direction)[keyof typeof Direction]
@@ -271,16 +274,6 @@ export class PrismaClient<
   get enclosure(): Prisma.EnclosureDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.column`: Exposes CRUD operations for the **Column** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Columns
-    * const columns = await prisma.column.findMany()
-    * ```
-    */
-  get column(): Prisma.ColumnDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.row`: Exposes CRUD operations for the **Row** model.
     * Example usage:
     * ```ts
@@ -289,6 +282,16 @@ export class PrismaClient<
     * ```
     */
   get row(): Prisma.RowDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seatReservation`: Exposes CRUD operations for the **SeatReservation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SeatReservations
+    * const seatReservations = await prisma.seatReservation.findMany()
+    * ```
+    */
+  get seatReservation(): Prisma.SeatReservationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.analytics`: Exposes CRUD operations for the **Analytics** model.
@@ -773,8 +776,8 @@ export namespace Prisma {
     Attendee: 'Attendee',
     SeatAllocation: 'SeatAllocation',
     Enclosure: 'Enclosure',
-    Column: 'Column',
     Row: 'Row',
+    SeatReservation: 'SeatReservation',
     Analytics: 'Analytics',
     IAMPolicy: 'IAMPolicy',
     Department: 'Department',
@@ -797,7 +800,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "column" | "row" | "analytics" | "iAMPolicy" | "department" | "convocation"
+      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "row" | "seatReservation" | "analytics" | "iAMPolicy" | "department" | "convocation"
       txIsolationLevel: never
     }
     model: {
@@ -1097,80 +1100,6 @@ export namespace Prisma {
           }
         }
       }
-      Column: {
-        payload: Prisma.$ColumnPayload<ExtArgs>
-        fields: Prisma.ColumnFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ColumnFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ColumnFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          findFirst: {
-            args: Prisma.ColumnFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ColumnFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          findMany: {
-            args: Prisma.ColumnFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>[]
-          }
-          create: {
-            args: Prisma.ColumnCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          createMany: {
-            args: Prisma.ColumnCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.ColumnDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          update: {
-            args: Prisma.ColumnUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          deleteMany: {
-            args: Prisma.ColumnDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ColumnUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.ColumnUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ColumnPayload>
-          }
-          aggregate: {
-            args: Prisma.ColumnAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateColumn>
-          }
-          groupBy: {
-            args: Prisma.ColumnGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ColumnGroupByOutputType>[]
-          }
-          findRaw: {
-            args: Prisma.ColumnFindRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          aggregateRaw: {
-            args: Prisma.ColumnAggregateRawArgs<ExtArgs>
-            result: JsonObject
-          }
-          count: {
-            args: Prisma.ColumnCountArgs<ExtArgs>
-            result: $Utils.Optional<ColumnCountAggregateOutputType> | number
-          }
-        }
-      }
       Row: {
         payload: Prisma.$RowPayload<ExtArgs>
         fields: Prisma.RowFieldRefs
@@ -1242,6 +1171,80 @@ export namespace Prisma {
           count: {
             args: Prisma.RowCountArgs<ExtArgs>
             result: $Utils.Optional<RowCountAggregateOutputType> | number
+          }
+        }
+      }
+      SeatReservation: {
+        payload: Prisma.$SeatReservationPayload<ExtArgs>
+        fields: Prisma.SeatReservationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SeatReservationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SeatReservationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          findFirst: {
+            args: Prisma.SeatReservationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SeatReservationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          findMany: {
+            args: Prisma.SeatReservationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>[]
+          }
+          create: {
+            args: Prisma.SeatReservationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          createMany: {
+            args: Prisma.SeatReservationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SeatReservationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          update: {
+            args: Prisma.SeatReservationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          deleteMany: {
+            args: Prisma.SeatReservationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SeatReservationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SeatReservationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeatReservationPayload>
+          }
+          aggregate: {
+            args: Prisma.SeatReservationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeatReservation>
+          }
+          groupBy: {
+            args: Prisma.SeatReservationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeatReservationGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.SeatReservationFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.SeatReservationAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.SeatReservationCountArgs<ExtArgs>
+            result: $Utils.Optional<SeatReservationCountAggregateOutputType> | number
           }
         }
       }
@@ -1624,8 +1627,8 @@ export namespace Prisma {
     attendee?: AttendeeOmit
     seatAllocation?: SeatAllocationOmit
     enclosure?: EnclosureOmit
-    column?: ColumnOmit
     row?: RowOmit
+    seatReservation?: SeatReservationOmit
     analytics?: AnalyticsOmit
     iAMPolicy?: IAMPolicyOmit
     department?: DepartmentOmit
@@ -1742,12 +1745,12 @@ export namespace Prisma {
 
   export type EnclosureCountOutputType = {
     rows: number
-    colums: number
+    seatAllocations: number
   }
 
   export type EnclosureCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rows?: boolean | EnclosureCountOutputTypeCountRowsArgs
-    colums?: boolean | EnclosureCountOutputTypeCountColumsArgs
+    seatAllocations?: boolean | EnclosureCountOutputTypeCountSeatAllocationsArgs
   }
 
   // Custom InputTypes
@@ -1771,8 +1774,8 @@ export namespace Prisma {
   /**
    * EnclosureCountOutputType without action
    */
-  export type EnclosureCountOutputTypeCountColumsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ColumnWhereInput
+  export type EnclosureCountOutputTypeCountSeatAllocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeatAllocationWhereInput
   }
 
 
@@ -2901,10 +2904,10 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
+    assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
     crr: string | null
-    enclosure: string | null
     accountId: string | null
   }
 
@@ -2919,10 +2922,10 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
+    assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
     crr: string | null
-    enclosure: string | null
     accountId: string | null
   }
 
@@ -2937,10 +2940,10 @@ export namespace Prisma {
     phone: number
     convocationEligible: number
     convocationRegistered: number
+    assignedEnclosure: number
     createdAt: number
     updatedAt: number
     crr: number
-    enclosure: number
     accountId: number
     _all: number
   }
@@ -2957,10 +2960,10 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
     crr?: true
-    enclosure?: true
     accountId?: true
   }
 
@@ -2975,10 +2978,10 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
     crr?: true
-    enclosure?: true
     accountId?: true
   }
 
@@ -2993,10 +2996,10 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
     crr?: true
-    enclosure?: true
     accountId?: true
     _all?: true
   }
@@ -3084,10 +3087,10 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean
     convocationRegistered: boolean
+    assignedEnclosure: string | null
     createdAt: Date
     updatedAt: Date
     crr: string
-    enclosure: string
     accountId: string | null
     _count: AttendeeCountAggregateOutputType | null
     _min: AttendeeMinAggregateOutputType | null
@@ -3119,10 +3122,10 @@ export namespace Prisma {
     phone?: boolean
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     crr?: boolean
-    enclosure?: boolean
     accountId?: boolean
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
@@ -3141,14 +3144,14 @@ export namespace Prisma {
     phone?: boolean
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     crr?: boolean
-    enclosure?: boolean
     accountId?: boolean
   }
 
-  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "createdAt" | "updatedAt" | "crr" | "enclosure" | "accountId", ExtArgs["result"]["attendee"]>
+  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "assignedEnclosure" | "createdAt" | "updatedAt" | "crr" | "accountId", ExtArgs["result"]["attendee"]>
   export type AttendeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
@@ -3171,10 +3174,10 @@ export namespace Prisma {
       phone: string | null
       convocationEligible: boolean
       convocationRegistered: boolean
+      assignedEnclosure: string | null
       createdAt: Date
       updatedAt: Date
       crr: string
-      enclosure: string
       accountId: string | null
     }, ExtArgs["result"]["attendee"]>
     composites: {}
@@ -3580,10 +3583,10 @@ export namespace Prisma {
     readonly phone: FieldRef<"Attendee", 'String'>
     readonly convocationEligible: FieldRef<"Attendee", 'Boolean'>
     readonly convocationRegistered: FieldRef<"Attendee", 'Boolean'>
+    readonly assignedEnclosure: FieldRef<"Attendee", 'String'>
     readonly createdAt: FieldRef<"Attendee", 'DateTime'>
     readonly updatedAt: FieldRef<"Attendee", 'DateTime'>
     readonly crr: FieldRef<"Attendee", 'String'>
-    readonly enclosure: FieldRef<"Attendee", 'String'>
     readonly accountId: FieldRef<"Attendee", 'String'>
   }
     
@@ -4024,74 +4027,80 @@ export namespace Prisma {
   }
 
   export type SeatAllocationAvgAggregateOutputType = {
-    column: number | null
+    seatNumber: number | null
   }
 
   export type SeatAllocationSumAggregateOutputType = {
-    column: number | null
+    seatNumber: number | null
   }
 
   export type SeatAllocationMinAggregateOutputType = {
     id: string | null
-    enclosure: string | null
-    row: string | null
-    column: number | null
+    enclosureLetter: string | null
+    rowLetter: string | null
+    seatNumber: number | null
     allocatedAt: Date | null
+    enclosureId: string | null
     attendeeId: string | null
   }
 
   export type SeatAllocationMaxAggregateOutputType = {
     id: string | null
-    enclosure: string | null
-    row: string | null
-    column: number | null
+    enclosureLetter: string | null
+    rowLetter: string | null
+    seatNumber: number | null
     allocatedAt: Date | null
+    enclosureId: string | null
     attendeeId: string | null
   }
 
   export type SeatAllocationCountAggregateOutputType = {
     id: number
-    enclosure: number
-    row: number
-    column: number
+    enclosureLetter: number
+    rowLetter: number
+    seatNumber: number
     allocatedAt: number
+    enclosureId: number
     attendeeId: number
     _all: number
   }
 
 
   export type SeatAllocationAvgAggregateInputType = {
-    column?: true
+    seatNumber?: true
   }
 
   export type SeatAllocationSumAggregateInputType = {
-    column?: true
+    seatNumber?: true
   }
 
   export type SeatAllocationMinAggregateInputType = {
     id?: true
-    enclosure?: true
-    row?: true
-    column?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
     allocatedAt?: true
+    enclosureId?: true
     attendeeId?: true
   }
 
   export type SeatAllocationMaxAggregateInputType = {
     id?: true
-    enclosure?: true
-    row?: true
-    column?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
     allocatedAt?: true
+    enclosureId?: true
     attendeeId?: true
   }
 
   export type SeatAllocationCountAggregateInputType = {
     id?: true
-    enclosure?: true
-    row?: true
-    column?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
     allocatedAt?: true
+    enclosureId?: true
     attendeeId?: true
     _all?: true
   }
@@ -4184,10 +4193,11 @@ export namespace Prisma {
 
   export type SeatAllocationGroupByOutputType = {
     id: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt: Date
+    enclosureId: string
     attendeeId: string
     _count: SeatAllocationCountAggregateOutputType | null
     _avg: SeatAllocationAvgAggregateOutputType | null
@@ -4212,11 +4222,13 @@ export namespace Prisma {
 
   export type SeatAllocationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    enclosure?: boolean
-    row?: boolean
-    column?: boolean
+    enclosureLetter?: boolean
+    rowLetter?: boolean
+    seatNumber?: boolean
     allocatedAt?: boolean
+    enclosureId?: boolean
     attendeeId?: boolean
+    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
     attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["seatAllocation"]>
 
@@ -4224,29 +4236,33 @@ export namespace Prisma {
 
   export type SeatAllocationSelectScalar = {
     id?: boolean
-    enclosure?: boolean
-    row?: boolean
-    column?: boolean
+    enclosureLetter?: boolean
+    rowLetter?: boolean
+    seatNumber?: boolean
     allocatedAt?: boolean
+    enclosureId?: boolean
     attendeeId?: boolean
   }
 
-  export type SeatAllocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enclosure" | "row" | "column" | "allocatedAt" | "attendeeId", ExtArgs["result"]["seatAllocation"]>
+  export type SeatAllocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enclosureLetter" | "rowLetter" | "seatNumber" | "allocatedAt" | "enclosureId" | "attendeeId", ExtArgs["result"]["seatAllocation"]>
   export type SeatAllocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
     attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
   }
 
   export type $SeatAllocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SeatAllocation"
     objects: {
+      enclosure: Prisma.$EnclosurePayload<ExtArgs>
       attendee: Prisma.$AttendeePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      enclosure: string
-      row: string
-      column: number
+      enclosureLetter: string
+      rowLetter: string
+      seatNumber: number
       allocatedAt: Date
+      enclosureId: string
       attendeeId: string
     }, ExtArgs["result"]["seatAllocation"]>
     composites: {}
@@ -4611,6 +4627,7 @@ export namespace Prisma {
    */
   export interface Prisma__SeatAllocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    enclosure<T extends EnclosureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EnclosureDefaultArgs<ExtArgs>>): Prisma__EnclosureClient<$Result.GetResult<Prisma.$EnclosurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     attendee<T extends AttendeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttendeeDefaultArgs<ExtArgs>>): Prisma__AttendeeClient<$Result.GetResult<Prisma.$AttendeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4642,10 +4659,11 @@ export namespace Prisma {
    */
   interface SeatAllocationFieldRefs {
     readonly id: FieldRef<"SeatAllocation", 'String'>
-    readonly enclosure: FieldRef<"SeatAllocation", 'String'>
-    readonly row: FieldRef<"SeatAllocation", 'String'>
-    readonly column: FieldRef<"SeatAllocation", 'Int'>
+    readonly enclosureLetter: FieldRef<"SeatAllocation", 'String'>
+    readonly rowLetter: FieldRef<"SeatAllocation", 'String'>
+    readonly seatNumber: FieldRef<"SeatAllocation", 'Int'>
     readonly allocatedAt: FieldRef<"SeatAllocation", 'DateTime'>
+    readonly enclosureId: FieldRef<"SeatAllocation", 'String'>
     readonly attendeeId: FieldRef<"SeatAllocation", 'String'>
   }
     
@@ -5048,69 +5066,103 @@ export namespace Prisma {
   }
 
   export type EnclosureAvgAggregateOutputType = {
+    displayOrder: number | null
     totalSeats: number | null
   }
 
   export type EnclosureSumAggregateOutputType = {
+    displayOrder: number | null
     totalSeats: number | null
   }
 
   export type EnclosureMinAggregateOutputType = {
     id: string | null
     letter: string | null
+    name: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
+    displayOrder: number | null
     totalSeats: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type EnclosureMaxAggregateOutputType = {
     id: string | null
     letter: string | null
+    name: string | null
     allocatedFor: $Enums.EnclosureType | null
     entryDirection: $Enums.Direction | null
+    displayOrder: number | null
     totalSeats: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type EnclosureCountAggregateOutputType = {
     id: number
     letter: number
+    name: number
     allocatedFor: number
     entryDirection: number
+    displayOrder: number
     totalSeats: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type EnclosureAvgAggregateInputType = {
+    displayOrder?: true
     totalSeats?: true
   }
 
   export type EnclosureSumAggregateInputType = {
+    displayOrder?: true
     totalSeats?: true
   }
 
   export type EnclosureMinAggregateInputType = {
     id?: true
     letter?: true
+    name?: true
     allocatedFor?: true
     entryDirection?: true
+    displayOrder?: true
     totalSeats?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type EnclosureMaxAggregateInputType = {
     id?: true
     letter?: true
+    name?: true
     allocatedFor?: true
     entryDirection?: true
+    displayOrder?: true
     totalSeats?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type EnclosureCountAggregateInputType = {
     id?: true
     letter?: true
+    name?: true
     allocatedFor?: true
     entryDirection?: true
+    displayOrder?: true
     totalSeats?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -5203,9 +5255,14 @@ export namespace Prisma {
   export type EnclosureGroupByOutputType = {
     id: string
     letter: string
+    name: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
+    displayOrder: number
     totalSeats: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
     _count: EnclosureCountAggregateOutputType | null
     _avg: EnclosureAvgAggregateOutputType | null
     _sum: EnclosureSumAggregateOutputType | null
@@ -5230,11 +5287,16 @@ export namespace Prisma {
   export type EnclosureSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     letter?: boolean
+    name?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
+    displayOrder?: boolean
     totalSeats?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
-    colums?: boolean | Enclosure$columsArgs<ExtArgs>
+    seatAllocations?: boolean | Enclosure$seatAllocationsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["enclosure"]>
 
@@ -5243,15 +5305,20 @@ export namespace Prisma {
   export type EnclosureSelectScalar = {
     id?: boolean
     letter?: boolean
+    name?: boolean
     allocatedFor?: boolean
     entryDirection?: boolean
+    displayOrder?: boolean
     totalSeats?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "allocatedFor" | "entryDirection" | "totalSeats", ExtArgs["result"]["enclosure"]>
+  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "name" | "allocatedFor" | "entryDirection" | "displayOrder" | "totalSeats" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["enclosure"]>
   export type EnclosureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
-    colums?: boolean | Enclosure$columsArgs<ExtArgs>
+    seatAllocations?: boolean | Enclosure$seatAllocationsArgs<ExtArgs>
     _count?: boolean | EnclosureCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -5259,14 +5326,19 @@ export namespace Prisma {
     name: "Enclosure"
     objects: {
       rows: Prisma.$RowPayload<ExtArgs>[]
-      colums: Prisma.$ColumnPayload<ExtArgs>[]
+      seatAllocations: Prisma.$SeatAllocationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       letter: string
+      name: string | null
       allocatedFor: $Enums.EnclosureType
       entryDirection: $Enums.Direction
+      displayOrder: number
       totalSeats: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["enclosure"]>
     composites: {}
   }
@@ -5631,7 +5703,7 @@ export namespace Prisma {
   export interface Prisma__EnclosureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rows<T extends Enclosure$rowsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    colums<T extends Enclosure$columsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$columsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    seatAllocations<T extends Enclosure$seatAllocationsArgs<ExtArgs> = {}>(args?: Subset<T, Enclosure$seatAllocationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeatAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5663,9 +5735,14 @@ export namespace Prisma {
   interface EnclosureFieldRefs {
     readonly id: FieldRef<"Enclosure", 'String'>
     readonly letter: FieldRef<"Enclosure", 'String'>
+    readonly name: FieldRef<"Enclosure", 'String'>
     readonly allocatedFor: FieldRef<"Enclosure", 'EnclosureType'>
     readonly entryDirection: FieldRef<"Enclosure", 'Direction'>
+    readonly displayOrder: FieldRef<"Enclosure", 'Int'>
     readonly totalSeats: FieldRef<"Enclosure", 'Int'>
+    readonly isActive: FieldRef<"Enclosure", 'Boolean'>
+    readonly createdAt: FieldRef<"Enclosure", 'DateTime'>
+    readonly updatedAt: FieldRef<"Enclosure", 'DateTime'>
   }
     
 
@@ -6060,27 +6137,27 @@ export namespace Prisma {
   }
 
   /**
-   * Enclosure.colums
+   * Enclosure.seatAllocations
    */
-  export type Enclosure$columsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Enclosure$seatAllocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Column
+     * Select specific fields to fetch from the SeatAllocation
      */
-    select?: ColumnSelect<ExtArgs> | null
+    select?: SeatAllocationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Column
+     * Omit specific fields from the SeatAllocation
      */
-    omit?: ColumnOmit<ExtArgs> | null
+    omit?: SeatAllocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ColumnInclude<ExtArgs> | null
-    where?: ColumnWhereInput
-    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
-    cursor?: ColumnWhereUniqueInput
+    include?: SeatAllocationInclude<ExtArgs> | null
+    where?: SeatAllocationWhereInput
+    orderBy?: SeatAllocationOrderByWithRelationInput | SeatAllocationOrderByWithRelationInput[]
+    cursor?: SeatAllocationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
+    distinct?: SeatAllocationScalarFieldEnum | SeatAllocationScalarFieldEnum[]
   }
 
   /**
@@ -6103,1079 +6180,100 @@ export namespace Prisma {
 
 
   /**
-   * Model Column
-   */
-
-  export type AggregateColumn = {
-    _count: ColumnCountAggregateOutputType | null
-    _avg: ColumnAvgAggregateOutputType | null
-    _sum: ColumnSumAggregateOutputType | null
-    _min: ColumnMinAggregateOutputType | null
-    _max: ColumnMaxAggregateOutputType | null
-  }
-
-  export type ColumnAvgAggregateOutputType = {
-    startSeat: number | null
-    endSeat: number | null
-  }
-
-  export type ColumnSumAggregateOutputType = {
-    startSeat: number | null
-    endSeat: number | null
-  }
-
-  export type ColumnMinAggregateOutputType = {
-    id: string | null
-    letter: string | null
-    startSeat: number | null
-    endSeat: number | null
-    enclosureId: string | null
-  }
-
-  export type ColumnMaxAggregateOutputType = {
-    id: string | null
-    letter: string | null
-    startSeat: number | null
-    endSeat: number | null
-    enclosureId: string | null
-  }
-
-  export type ColumnCountAggregateOutputType = {
-    id: number
-    letter: number
-    startSeat: number
-    endSeat: number
-    enclosureId: number
-    _all: number
-  }
-
-
-  export type ColumnAvgAggregateInputType = {
-    startSeat?: true
-    endSeat?: true
-  }
-
-  export type ColumnSumAggregateInputType = {
-    startSeat?: true
-    endSeat?: true
-  }
-
-  export type ColumnMinAggregateInputType = {
-    id?: true
-    letter?: true
-    startSeat?: true
-    endSeat?: true
-    enclosureId?: true
-  }
-
-  export type ColumnMaxAggregateInputType = {
-    id?: true
-    letter?: true
-    startSeat?: true
-    endSeat?: true
-    enclosureId?: true
-  }
-
-  export type ColumnCountAggregateInputType = {
-    id?: true
-    letter?: true
-    startSeat?: true
-    endSeat?: true
-    enclosureId?: true
-    _all?: true
-  }
-
-  export type ColumnAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Column to aggregate.
-     */
-    where?: ColumnWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Columns to fetch.
-     */
-    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ColumnWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Columns from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Columns.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Columns
-    **/
-    _count?: true | ColumnCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ColumnAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ColumnSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ColumnMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ColumnMaxAggregateInputType
-  }
-
-  export type GetColumnAggregateType<T extends ColumnAggregateArgs> = {
-        [P in keyof T & keyof AggregateColumn]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateColumn[P]>
-      : GetScalarType<T[P], AggregateColumn[P]>
-  }
-
-
-
-
-  export type ColumnGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ColumnWhereInput
-    orderBy?: ColumnOrderByWithAggregationInput | ColumnOrderByWithAggregationInput[]
-    by: ColumnScalarFieldEnum[] | ColumnScalarFieldEnum
-    having?: ColumnScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ColumnCountAggregateInputType | true
-    _avg?: ColumnAvgAggregateInputType
-    _sum?: ColumnSumAggregateInputType
-    _min?: ColumnMinAggregateInputType
-    _max?: ColumnMaxAggregateInputType
-  }
-
-  export type ColumnGroupByOutputType = {
-    id: string
-    letter: string
-    startSeat: number
-    endSeat: number
-    enclosureId: string
-    _count: ColumnCountAggregateOutputType | null
-    _avg: ColumnAvgAggregateOutputType | null
-    _sum: ColumnSumAggregateOutputType | null
-    _min: ColumnMinAggregateOutputType | null
-    _max: ColumnMaxAggregateOutputType | null
-  }
-
-  type GetColumnGroupByPayload<T extends ColumnGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ColumnGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ColumnGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ColumnGroupByOutputType[P]>
-            : GetScalarType<T[P], ColumnGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ColumnSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    letter?: boolean
-    startSeat?: boolean
-    endSeat?: boolean
-    enclosureId?: boolean
-    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["column"]>
-
-
-
-  export type ColumnSelectScalar = {
-    id?: boolean
-    letter?: boolean
-    startSeat?: boolean
-    endSeat?: boolean
-    enclosureId?: boolean
-  }
-
-  export type ColumnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "startSeat" | "endSeat" | "enclosureId", ExtArgs["result"]["column"]>
-  export type ColumnInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
-  }
-
-  export type $ColumnPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Column"
-    objects: {
-      enclosure: Prisma.$EnclosurePayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      letter: string
-      startSeat: number
-      endSeat: number
-      enclosureId: string
-    }, ExtArgs["result"]["column"]>
-    composites: {}
-  }
-
-  type ColumnGetPayload<S extends boolean | null | undefined | ColumnDefaultArgs> = $Result.GetResult<Prisma.$ColumnPayload, S>
-
-  type ColumnCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ColumnFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ColumnCountAggregateInputType | true
-    }
-
-  export interface ColumnDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Column'], meta: { name: 'Column' } }
-    /**
-     * Find zero or one Column that matches the filter.
-     * @param {ColumnFindUniqueArgs} args - Arguments to find a Column
-     * @example
-     * // Get one Column
-     * const column = await prisma.column.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ColumnFindUniqueArgs>(args: SelectSubset<T, ColumnFindUniqueArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Column that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ColumnFindUniqueOrThrowArgs} args - Arguments to find a Column
-     * @example
-     * // Get one Column
-     * const column = await prisma.column.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ColumnFindUniqueOrThrowArgs>(args: SelectSubset<T, ColumnFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Column that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnFindFirstArgs} args - Arguments to find a Column
-     * @example
-     * // Get one Column
-     * const column = await prisma.column.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ColumnFindFirstArgs>(args?: SelectSubset<T, ColumnFindFirstArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Column that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnFindFirstOrThrowArgs} args - Arguments to find a Column
-     * @example
-     * // Get one Column
-     * const column = await prisma.column.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ColumnFindFirstOrThrowArgs>(args?: SelectSubset<T, ColumnFindFirstOrThrowArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Columns that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Columns
-     * const columns = await prisma.column.findMany()
-     * 
-     * // Get first 10 Columns
-     * const columns = await prisma.column.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const columnWithIdOnly = await prisma.column.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ColumnFindManyArgs>(args?: SelectSubset<T, ColumnFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Column.
-     * @param {ColumnCreateArgs} args - Arguments to create a Column.
-     * @example
-     * // Create one Column
-     * const Column = await prisma.column.create({
-     *   data: {
-     *     // ... data to create a Column
-     *   }
-     * })
-     * 
-     */
-    create<T extends ColumnCreateArgs>(args: SelectSubset<T, ColumnCreateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Columns.
-     * @param {ColumnCreateManyArgs} args - Arguments to create many Columns.
-     * @example
-     * // Create many Columns
-     * const column = await prisma.column.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ColumnCreateManyArgs>(args?: SelectSubset<T, ColumnCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Column.
-     * @param {ColumnDeleteArgs} args - Arguments to delete one Column.
-     * @example
-     * // Delete one Column
-     * const Column = await prisma.column.delete({
-     *   where: {
-     *     // ... filter to delete one Column
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ColumnDeleteArgs>(args: SelectSubset<T, ColumnDeleteArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Column.
-     * @param {ColumnUpdateArgs} args - Arguments to update one Column.
-     * @example
-     * // Update one Column
-     * const column = await prisma.column.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ColumnUpdateArgs>(args: SelectSubset<T, ColumnUpdateArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Columns.
-     * @param {ColumnDeleteManyArgs} args - Arguments to filter Columns to delete.
-     * @example
-     * // Delete a few Columns
-     * const { count } = await prisma.column.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ColumnDeleteManyArgs>(args?: SelectSubset<T, ColumnDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Columns.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Columns
-     * const column = await prisma.column.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ColumnUpdateManyArgs>(args: SelectSubset<T, ColumnUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Column.
-     * @param {ColumnUpsertArgs} args - Arguments to update or create a Column.
-     * @example
-     * // Update or create a Column
-     * const column = await prisma.column.upsert({
-     *   create: {
-     *     // ... data to create a Column
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Column we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ColumnUpsertArgs>(args: SelectSubset<T, ColumnUpsertArgs<ExtArgs>>): Prisma__ColumnClient<$Result.GetResult<Prisma.$ColumnPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Columns that matches the filter.
-     * @param {ColumnFindRawArgs} args - Select which filters you would like to apply.
-     * @example
-     * const column = await prisma.column.findRaw({
-     *   filter: { age: { $gt: 25 } }
-     * })
-     */
-    findRaw(args?: ColumnFindRawArgs): Prisma.PrismaPromise<JsonObject>
-
-    /**
-     * Perform aggregation operations on a Column.
-     * @param {ColumnAggregateRawArgs} args - Select which aggregations you would like to apply.
-     * @example
-     * const column = await prisma.column.aggregateRaw({
-     *   pipeline: [
-     *     { $match: { status: "registered" } },
-     *     { $group: { _id: "$country", total: { $sum: 1 } } }
-     *   ]
-     * })
-     */
-    aggregateRaw(args?: ColumnAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
-
-
-    /**
-     * Count the number of Columns.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnCountArgs} args - Arguments to filter Columns to count.
-     * @example
-     * // Count the number of Columns
-     * const count = await prisma.column.count({
-     *   where: {
-     *     // ... the filter for the Columns we want to count
-     *   }
-     * })
-    **/
-    count<T extends ColumnCountArgs>(
-      args?: Subset<T, ColumnCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ColumnCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Column.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ColumnAggregateArgs>(args: Subset<T, ColumnAggregateArgs>): Prisma.PrismaPromise<GetColumnAggregateType<T>>
-
-    /**
-     * Group by Column.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ColumnGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ColumnGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ColumnGroupByArgs['orderBy'] }
-        : { orderBy?: ColumnGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ColumnGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetColumnGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Column model
-   */
-  readonly fields: ColumnFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Column.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ColumnClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    enclosure<T extends EnclosureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EnclosureDefaultArgs<ExtArgs>>): Prisma__EnclosureClient<$Result.GetResult<Prisma.$EnclosurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Column model
-   */
-  interface ColumnFieldRefs {
-    readonly id: FieldRef<"Column", 'String'>
-    readonly letter: FieldRef<"Column", 'String'>
-    readonly startSeat: FieldRef<"Column", 'Int'>
-    readonly endSeat: FieldRef<"Column", 'Int'>
-    readonly enclosureId: FieldRef<"Column", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Column findUnique
-   */
-  export type ColumnFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter, which Column to fetch.
-     */
-    where: ColumnWhereUniqueInput
-  }
-
-  /**
-   * Column findUniqueOrThrow
-   */
-  export type ColumnFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter, which Column to fetch.
-     */
-    where: ColumnWhereUniqueInput
-  }
-
-  /**
-   * Column findFirst
-   */
-  export type ColumnFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter, which Column to fetch.
-     */
-    where?: ColumnWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Columns to fetch.
-     */
-    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Columns.
-     */
-    cursor?: ColumnWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Columns from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Columns.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Columns.
-     */
-    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
-  }
-
-  /**
-   * Column findFirstOrThrow
-   */
-  export type ColumnFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter, which Column to fetch.
-     */
-    where?: ColumnWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Columns to fetch.
-     */
-    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Columns.
-     */
-    cursor?: ColumnWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Columns from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Columns.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Columns.
-     */
-    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
-  }
-
-  /**
-   * Column findMany
-   */
-  export type ColumnFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter, which Columns to fetch.
-     */
-    where?: ColumnWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Columns to fetch.
-     */
-    orderBy?: ColumnOrderByWithRelationInput | ColumnOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Columns.
-     */
-    cursor?: ColumnWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Columns from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Columns.
-     */
-    skip?: number
-    distinct?: ColumnScalarFieldEnum | ColumnScalarFieldEnum[]
-  }
-
-  /**
-   * Column create
-   */
-  export type ColumnCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Column.
-     */
-    data: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
-  }
-
-  /**
-   * Column createMany
-   */
-  export type ColumnCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Columns.
-     */
-    data: ColumnCreateManyInput | ColumnCreateManyInput[]
-  }
-
-  /**
-   * Column update
-   */
-  export type ColumnUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Column.
-     */
-    data: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
-    /**
-     * Choose, which Column to update.
-     */
-    where: ColumnWhereUniqueInput
-  }
-
-  /**
-   * Column updateMany
-   */
-  export type ColumnUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Columns.
-     */
-    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyInput>
-    /**
-     * Filter which Columns to update
-     */
-    where?: ColumnWhereInput
-    /**
-     * Limit how many Columns to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Column upsert
-   */
-  export type ColumnUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Column to update in case it exists.
-     */
-    where: ColumnWhereUniqueInput
-    /**
-     * In case the Column found by the `where` argument doesn't exist, create a new Column with this data.
-     */
-    create: XOR<ColumnCreateInput, ColumnUncheckedCreateInput>
-    /**
-     * In case the Column was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ColumnUpdateInput, ColumnUncheckedUpdateInput>
-  }
-
-  /**
-   * Column delete
-   */
-  export type ColumnDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-    /**
-     * Filter which Column to delete.
-     */
-    where: ColumnWhereUniqueInput
-  }
-
-  /**
-   * Column deleteMany
-   */
-  export type ColumnDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Columns to delete
-     */
-    where?: ColumnWhereInput
-    /**
-     * Limit how many Columns to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Column findRaw
-   */
-  export type ColumnFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-     */
-    filter?: InputJsonValue
-    /**
-     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * Column aggregateRaw
-   */
-  export type ColumnAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-     */
-    pipeline?: InputJsonValue[]
-    /**
-     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-     */
-    options?: InputJsonValue
-  }
-
-  /**
-   * Column without action
-   */
-  export type ColumnDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Column
-     */
-    select?: ColumnSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Column
-     */
-    omit?: ColumnOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ColumnInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Row
    */
 
   export type AggregateRow = {
     _count: RowCountAggregateOutputType | null
+    _avg: RowAvgAggregateOutputType | null
+    _sum: RowSumAggregateOutputType | null
     _min: RowMinAggregateOutputType | null
     _max: RowMaxAggregateOutputType | null
+  }
+
+  export type RowAvgAggregateOutputType = {
+    startSeat: number | null
+    endSeat: number | null
+    displayOrder: number | null
+  }
+
+  export type RowSumAggregateOutputType = {
+    startSeat: number | null
+    endSeat: number | null
+    displayOrder: number | null
   }
 
   export type RowMinAggregateOutputType = {
     id: string | null
     letter: string | null
-    endLetter: string | null
-    reserved: $Enums.EnclosureType | null
+    startSeat: number | null
+    endSeat: number | null
+    reservedSeats: string | null
+    displayOrder: number | null
     enclosureId: string | null
   }
 
   export type RowMaxAggregateOutputType = {
     id: string | null
     letter: string | null
-    endLetter: string | null
-    reserved: $Enums.EnclosureType | null
+    startSeat: number | null
+    endSeat: number | null
+    reservedSeats: string | null
+    displayOrder: number | null
     enclosureId: string | null
   }
 
   export type RowCountAggregateOutputType = {
     id: number
     letter: number
-    endLetter: number
-    reserved: number
+    startSeat: number
+    endSeat: number
+    reservedSeats: number
+    displayOrder: number
     enclosureId: number
     _all: number
   }
 
 
+  export type RowAvgAggregateInputType = {
+    startSeat?: true
+    endSeat?: true
+    displayOrder?: true
+  }
+
+  export type RowSumAggregateInputType = {
+    startSeat?: true
+    endSeat?: true
+    displayOrder?: true
+  }
+
   export type RowMinAggregateInputType = {
     id?: true
     letter?: true
-    endLetter?: true
-    reserved?: true
+    startSeat?: true
+    endSeat?: true
+    reservedSeats?: true
+    displayOrder?: true
     enclosureId?: true
   }
 
   export type RowMaxAggregateInputType = {
     id?: true
     letter?: true
-    endLetter?: true
-    reserved?: true
+    startSeat?: true
+    endSeat?: true
+    reservedSeats?: true
+    displayOrder?: true
     enclosureId?: true
   }
 
   export type RowCountAggregateInputType = {
     id?: true
     letter?: true
-    endLetter?: true
-    reserved?: true
+    startSeat?: true
+    endSeat?: true
+    reservedSeats?: true
+    displayOrder?: true
     enclosureId?: true
     _all?: true
   }
@@ -7218,6 +6316,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: RowAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RowSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: RowMinAggregateInputType
@@ -7248,6 +6358,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: RowCountAggregateInputType | true
+    _avg?: RowAvgAggregateInputType
+    _sum?: RowSumAggregateInputType
     _min?: RowMinAggregateInputType
     _max?: RowMaxAggregateInputType
   }
@@ -7255,10 +6367,14 @@ export namespace Prisma {
   export type RowGroupByOutputType = {
     id: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats: string
+    displayOrder: number
     enclosureId: string
     _count: RowCountAggregateOutputType | null
+    _avg: RowAvgAggregateOutputType | null
+    _sum: RowSumAggregateOutputType | null
     _min: RowMinAggregateOutputType | null
     _max: RowMaxAggregateOutputType | null
   }
@@ -7280,8 +6396,10 @@ export namespace Prisma {
   export type RowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     letter?: boolean
-    endLetter?: boolean
-    reserved?: boolean
+    startSeat?: boolean
+    endSeat?: boolean
+    reservedSeats?: boolean
+    displayOrder?: boolean
     enclosureId?: boolean
     enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["row"]>
@@ -7291,12 +6409,14 @@ export namespace Prisma {
   export type RowSelectScalar = {
     id?: boolean
     letter?: boolean
-    endLetter?: boolean
-    reserved?: boolean
+    startSeat?: boolean
+    endSeat?: boolean
+    reservedSeats?: boolean
+    displayOrder?: boolean
     enclosureId?: boolean
   }
 
-  export type RowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "endLetter" | "reserved" | "enclosureId", ExtArgs["result"]["row"]>
+  export type RowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "startSeat" | "endSeat" | "reservedSeats" | "displayOrder" | "enclosureId", ExtArgs["result"]["row"]>
   export type RowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enclosure?: boolean | EnclosureDefaultArgs<ExtArgs>
   }
@@ -7309,8 +6429,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       letter: string
-      endLetter: string
-      reserved: $Enums.EnclosureType
+      startSeat: number
+      endSeat: number
+      reservedSeats: string
+      displayOrder: number
       enclosureId: string
     }, ExtArgs["result"]["row"]>
     composites: {}
@@ -7707,8 +6829,10 @@ export namespace Prisma {
   interface RowFieldRefs {
     readonly id: FieldRef<"Row", 'String'>
     readonly letter: FieldRef<"Row", 'String'>
-    readonly endLetter: FieldRef<"Row", 'String'>
-    readonly reserved: FieldRef<"Row", 'EnclosureType'>
+    readonly startSeat: FieldRef<"Row", 'Int'>
+    readonly endSeat: FieldRef<"Row", 'Int'>
+    readonly reservedSeats: FieldRef<"Row", 'String'>
+    readonly displayOrder: FieldRef<"Row", 'Int'>
     readonly enclosureId: FieldRef<"Row", 'String'>
   }
     
@@ -8095,6 +7219,994 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: RowInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SeatReservation
+   */
+
+  export type AggregateSeatReservation = {
+    _count: SeatReservationCountAggregateOutputType | null
+    _avg: SeatReservationAvgAggregateOutputType | null
+    _sum: SeatReservationSumAggregateOutputType | null
+    _min: SeatReservationMinAggregateOutputType | null
+    _max: SeatReservationMaxAggregateOutputType | null
+  }
+
+  export type SeatReservationAvgAggregateOutputType = {
+    seatNumber: number | null
+  }
+
+  export type SeatReservationSumAggregateOutputType = {
+    seatNumber: number | null
+  }
+
+  export type SeatReservationMinAggregateOutputType = {
+    id: string | null
+    enclosureLetter: string | null
+    rowLetter: string | null
+    seatNumber: number | null
+    reservedFor: string | null
+    reservedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type SeatReservationMaxAggregateOutputType = {
+    id: string | null
+    enclosureLetter: string | null
+    rowLetter: string | null
+    seatNumber: number | null
+    reservedFor: string | null
+    reservedBy: string | null
+    createdAt: Date | null
+  }
+
+  export type SeatReservationCountAggregateOutputType = {
+    id: number
+    enclosureLetter: number
+    rowLetter: number
+    seatNumber: number
+    reservedFor: number
+    reservedBy: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SeatReservationAvgAggregateInputType = {
+    seatNumber?: true
+  }
+
+  export type SeatReservationSumAggregateInputType = {
+    seatNumber?: true
+  }
+
+  export type SeatReservationMinAggregateInputType = {
+    id?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
+    reservedFor?: true
+    reservedBy?: true
+    createdAt?: true
+  }
+
+  export type SeatReservationMaxAggregateInputType = {
+    id?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
+    reservedFor?: true
+    reservedBy?: true
+    createdAt?: true
+  }
+
+  export type SeatReservationCountAggregateInputType = {
+    id?: true
+    enclosureLetter?: true
+    rowLetter?: true
+    seatNumber?: true
+    reservedFor?: true
+    reservedBy?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SeatReservationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeatReservation to aggregate.
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeatReservations to fetch.
+     */
+    orderBy?: SeatReservationOrderByWithRelationInput | SeatReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SeatReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeatReservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeatReservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SeatReservations
+    **/
+    _count?: true | SeatReservationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SeatReservationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SeatReservationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeatReservationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeatReservationMaxAggregateInputType
+  }
+
+  export type GetSeatReservationAggregateType<T extends SeatReservationAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeatReservation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeatReservation[P]>
+      : GetScalarType<T[P], AggregateSeatReservation[P]>
+  }
+
+
+
+
+  export type SeatReservationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeatReservationWhereInput
+    orderBy?: SeatReservationOrderByWithAggregationInput | SeatReservationOrderByWithAggregationInput[]
+    by: SeatReservationScalarFieldEnum[] | SeatReservationScalarFieldEnum
+    having?: SeatReservationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeatReservationCountAggregateInputType | true
+    _avg?: SeatReservationAvgAggregateInputType
+    _sum?: SeatReservationSumAggregateInputType
+    _min?: SeatReservationMinAggregateInputType
+    _max?: SeatReservationMaxAggregateInputType
+  }
+
+  export type SeatReservationGroupByOutputType = {
+    id: string
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    reservedFor: string | null
+    reservedBy: string | null
+    createdAt: Date
+    _count: SeatReservationCountAggregateOutputType | null
+    _avg: SeatReservationAvgAggregateOutputType | null
+    _sum: SeatReservationSumAggregateOutputType | null
+    _min: SeatReservationMinAggregateOutputType | null
+    _max: SeatReservationMaxAggregateOutputType | null
+  }
+
+  type GetSeatReservationGroupByPayload<T extends SeatReservationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeatReservationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeatReservationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeatReservationGroupByOutputType[P]>
+            : GetScalarType<T[P], SeatReservationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SeatReservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    enclosureLetter?: boolean
+    rowLetter?: boolean
+    seatNumber?: boolean
+    reservedFor?: boolean
+    reservedBy?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["seatReservation"]>
+
+
+
+  export type SeatReservationSelectScalar = {
+    id?: boolean
+    enclosureLetter?: boolean
+    rowLetter?: boolean
+    seatNumber?: boolean
+    reservedFor?: boolean
+    reservedBy?: boolean
+    createdAt?: boolean
+  }
+
+  export type SeatReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enclosureLetter" | "rowLetter" | "seatNumber" | "reservedFor" | "reservedBy" | "createdAt", ExtArgs["result"]["seatReservation"]>
+
+  export type $SeatReservationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SeatReservation"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      enclosureLetter: string
+      rowLetter: string
+      seatNumber: number
+      reservedFor: string | null
+      reservedBy: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["seatReservation"]>
+    composites: {}
+  }
+
+  type SeatReservationGetPayload<S extends boolean | null | undefined | SeatReservationDefaultArgs> = $Result.GetResult<Prisma.$SeatReservationPayload, S>
+
+  type SeatReservationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SeatReservationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SeatReservationCountAggregateInputType | true
+    }
+
+  export interface SeatReservationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SeatReservation'], meta: { name: 'SeatReservation' } }
+    /**
+     * Find zero or one SeatReservation that matches the filter.
+     * @param {SeatReservationFindUniqueArgs} args - Arguments to find a SeatReservation
+     * @example
+     * // Get one SeatReservation
+     * const seatReservation = await prisma.seatReservation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SeatReservationFindUniqueArgs>(args: SelectSubset<T, SeatReservationFindUniqueArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SeatReservation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SeatReservationFindUniqueOrThrowArgs} args - Arguments to find a SeatReservation
+     * @example
+     * // Get one SeatReservation
+     * const seatReservation = await prisma.seatReservation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SeatReservationFindUniqueOrThrowArgs>(args: SelectSubset<T, SeatReservationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SeatReservation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationFindFirstArgs} args - Arguments to find a SeatReservation
+     * @example
+     * // Get one SeatReservation
+     * const seatReservation = await prisma.seatReservation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SeatReservationFindFirstArgs>(args?: SelectSubset<T, SeatReservationFindFirstArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SeatReservation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationFindFirstOrThrowArgs} args - Arguments to find a SeatReservation
+     * @example
+     * // Get one SeatReservation
+     * const seatReservation = await prisma.seatReservation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SeatReservationFindFirstOrThrowArgs>(args?: SelectSubset<T, SeatReservationFindFirstOrThrowArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SeatReservations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SeatReservations
+     * const seatReservations = await prisma.seatReservation.findMany()
+     * 
+     * // Get first 10 SeatReservations
+     * const seatReservations = await prisma.seatReservation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seatReservationWithIdOnly = await prisma.seatReservation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SeatReservationFindManyArgs>(args?: SelectSubset<T, SeatReservationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SeatReservation.
+     * @param {SeatReservationCreateArgs} args - Arguments to create a SeatReservation.
+     * @example
+     * // Create one SeatReservation
+     * const SeatReservation = await prisma.seatReservation.create({
+     *   data: {
+     *     // ... data to create a SeatReservation
+     *   }
+     * })
+     * 
+     */
+    create<T extends SeatReservationCreateArgs>(args: SelectSubset<T, SeatReservationCreateArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SeatReservations.
+     * @param {SeatReservationCreateManyArgs} args - Arguments to create many SeatReservations.
+     * @example
+     * // Create many SeatReservations
+     * const seatReservation = await prisma.seatReservation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SeatReservationCreateManyArgs>(args?: SelectSubset<T, SeatReservationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SeatReservation.
+     * @param {SeatReservationDeleteArgs} args - Arguments to delete one SeatReservation.
+     * @example
+     * // Delete one SeatReservation
+     * const SeatReservation = await prisma.seatReservation.delete({
+     *   where: {
+     *     // ... filter to delete one SeatReservation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SeatReservationDeleteArgs>(args: SelectSubset<T, SeatReservationDeleteArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SeatReservation.
+     * @param {SeatReservationUpdateArgs} args - Arguments to update one SeatReservation.
+     * @example
+     * // Update one SeatReservation
+     * const seatReservation = await prisma.seatReservation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SeatReservationUpdateArgs>(args: SelectSubset<T, SeatReservationUpdateArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SeatReservations.
+     * @param {SeatReservationDeleteManyArgs} args - Arguments to filter SeatReservations to delete.
+     * @example
+     * // Delete a few SeatReservations
+     * const { count } = await prisma.seatReservation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SeatReservationDeleteManyArgs>(args?: SelectSubset<T, SeatReservationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SeatReservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SeatReservations
+     * const seatReservation = await prisma.seatReservation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SeatReservationUpdateManyArgs>(args: SelectSubset<T, SeatReservationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SeatReservation.
+     * @param {SeatReservationUpsertArgs} args - Arguments to update or create a SeatReservation.
+     * @example
+     * // Update or create a SeatReservation
+     * const seatReservation = await prisma.seatReservation.upsert({
+     *   create: {
+     *     // ... data to create a SeatReservation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SeatReservation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SeatReservationUpsertArgs>(args: SelectSubset<T, SeatReservationUpsertArgs<ExtArgs>>): Prisma__SeatReservationClient<$Result.GetResult<Prisma.$SeatReservationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SeatReservations that matches the filter.
+     * @param {SeatReservationFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const seatReservation = await prisma.seatReservation.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: SeatReservationFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a SeatReservation.
+     * @param {SeatReservationAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const seatReservation = await prisma.seatReservation.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: SeatReservationAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of SeatReservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationCountArgs} args - Arguments to filter SeatReservations to count.
+     * @example
+     * // Count the number of SeatReservations
+     * const count = await prisma.seatReservation.count({
+     *   where: {
+     *     // ... the filter for the SeatReservations we want to count
+     *   }
+     * })
+    **/
+    count<T extends SeatReservationCountArgs>(
+      args?: Subset<T, SeatReservationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeatReservationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SeatReservation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeatReservationAggregateArgs>(args: Subset<T, SeatReservationAggregateArgs>): Prisma.PrismaPromise<GetSeatReservationAggregateType<T>>
+
+    /**
+     * Group by SeatReservation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeatReservationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SeatReservationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SeatReservationGroupByArgs['orderBy'] }
+        : { orderBy?: SeatReservationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SeatReservationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeatReservationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SeatReservation model
+   */
+  readonly fields: SeatReservationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SeatReservation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SeatReservationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SeatReservation model
+   */
+  interface SeatReservationFieldRefs {
+    readonly id: FieldRef<"SeatReservation", 'String'>
+    readonly enclosureLetter: FieldRef<"SeatReservation", 'String'>
+    readonly rowLetter: FieldRef<"SeatReservation", 'String'>
+    readonly seatNumber: FieldRef<"SeatReservation", 'Int'>
+    readonly reservedFor: FieldRef<"SeatReservation", 'String'>
+    readonly reservedBy: FieldRef<"SeatReservation", 'String'>
+    readonly createdAt: FieldRef<"SeatReservation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SeatReservation findUnique
+   */
+  export type SeatReservationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which SeatReservation to fetch.
+     */
+    where: SeatReservationWhereUniqueInput
+  }
+
+  /**
+   * SeatReservation findUniqueOrThrow
+   */
+  export type SeatReservationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which SeatReservation to fetch.
+     */
+    where: SeatReservationWhereUniqueInput
+  }
+
+  /**
+   * SeatReservation findFirst
+   */
+  export type SeatReservationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which SeatReservation to fetch.
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeatReservations to fetch.
+     */
+    orderBy?: SeatReservationOrderByWithRelationInput | SeatReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeatReservations.
+     */
+    cursor?: SeatReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeatReservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeatReservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeatReservations.
+     */
+    distinct?: SeatReservationScalarFieldEnum | SeatReservationScalarFieldEnum[]
+  }
+
+  /**
+   * SeatReservation findFirstOrThrow
+   */
+  export type SeatReservationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which SeatReservation to fetch.
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeatReservations to fetch.
+     */
+    orderBy?: SeatReservationOrderByWithRelationInput | SeatReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeatReservations.
+     */
+    cursor?: SeatReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeatReservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeatReservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeatReservations.
+     */
+    distinct?: SeatReservationScalarFieldEnum | SeatReservationScalarFieldEnum[]
+  }
+
+  /**
+   * SeatReservation findMany
+   */
+  export type SeatReservationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter, which SeatReservations to fetch.
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeatReservations to fetch.
+     */
+    orderBy?: SeatReservationOrderByWithRelationInput | SeatReservationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SeatReservations.
+     */
+    cursor?: SeatReservationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeatReservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeatReservations.
+     */
+    skip?: number
+    distinct?: SeatReservationScalarFieldEnum | SeatReservationScalarFieldEnum[]
+  }
+
+  /**
+   * SeatReservation create
+   */
+  export type SeatReservationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SeatReservation.
+     */
+    data: XOR<SeatReservationCreateInput, SeatReservationUncheckedCreateInput>
+  }
+
+  /**
+   * SeatReservation createMany
+   */
+  export type SeatReservationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SeatReservations.
+     */
+    data: SeatReservationCreateManyInput | SeatReservationCreateManyInput[]
+  }
+
+  /**
+   * SeatReservation update
+   */
+  export type SeatReservationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SeatReservation.
+     */
+    data: XOR<SeatReservationUpdateInput, SeatReservationUncheckedUpdateInput>
+    /**
+     * Choose, which SeatReservation to update.
+     */
+    where: SeatReservationWhereUniqueInput
+  }
+
+  /**
+   * SeatReservation updateMany
+   */
+  export type SeatReservationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SeatReservations.
+     */
+    data: XOR<SeatReservationUpdateManyMutationInput, SeatReservationUncheckedUpdateManyInput>
+    /**
+     * Filter which SeatReservations to update
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * Limit how many SeatReservations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SeatReservation upsert
+   */
+  export type SeatReservationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SeatReservation to update in case it exists.
+     */
+    where: SeatReservationWhereUniqueInput
+    /**
+     * In case the SeatReservation found by the `where` argument doesn't exist, create a new SeatReservation with this data.
+     */
+    create: XOR<SeatReservationCreateInput, SeatReservationUncheckedCreateInput>
+    /**
+     * In case the SeatReservation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SeatReservationUpdateInput, SeatReservationUncheckedUpdateInput>
+  }
+
+  /**
+   * SeatReservation delete
+   */
+  export type SeatReservationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
+    /**
+     * Filter which SeatReservation to delete.
+     */
+    where: SeatReservationWhereUniqueInput
+  }
+
+  /**
+   * SeatReservation deleteMany
+   */
+  export type SeatReservationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeatReservations to delete
+     */
+    where?: SeatReservationWhereInput
+    /**
+     * Limit how many SeatReservations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SeatReservation findRaw
+   */
+  export type SeatReservationFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * SeatReservation aggregateRaw
+   */
+  export type SeatReservationAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * SeatReservation without action
+   */
+  export type SeatReservationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeatReservation
+     */
+    select?: SeatReservationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeatReservation
+     */
+    omit?: SeatReservationOmit<ExtArgs> | null
   }
 
 
@@ -12075,10 +12187,10 @@ export namespace Prisma {
     phone: 'phone',
     convocationEligible: 'convocationEligible',
     convocationRegistered: 'convocationRegistered',
+    assignedEnclosure: 'assignedEnclosure',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     crr: 'crr',
-    enclosure: 'enclosure',
     accountId: 'accountId'
   };
 
@@ -12087,10 +12199,11 @@ export namespace Prisma {
 
   export const SeatAllocationScalarFieldEnum: {
     id: 'id',
-    enclosure: 'enclosure',
-    row: 'row',
-    column: 'column',
+    enclosureLetter: 'enclosureLetter',
+    rowLetter: 'rowLetter',
+    seatNumber: 'seatNumber',
     allocatedAt: 'allocatedAt',
+    enclosureId: 'enclosureId',
     attendeeId: 'attendeeId'
   };
 
@@ -12100,34 +12213,43 @@ export namespace Prisma {
   export const EnclosureScalarFieldEnum: {
     id: 'id',
     letter: 'letter',
+    name: 'name',
     allocatedFor: 'allocatedFor',
     entryDirection: 'entryDirection',
-    totalSeats: 'totalSeats'
+    displayOrder: 'displayOrder',
+    totalSeats: 'totalSeats',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type EnclosureScalarFieldEnum = (typeof EnclosureScalarFieldEnum)[keyof typeof EnclosureScalarFieldEnum]
 
 
-  export const ColumnScalarFieldEnum: {
+  export const RowScalarFieldEnum: {
     id: 'id',
     letter: 'letter',
     startSeat: 'startSeat',
     endSeat: 'endSeat',
-    enclosureId: 'enclosureId'
-  };
-
-  export type ColumnScalarFieldEnum = (typeof ColumnScalarFieldEnum)[keyof typeof ColumnScalarFieldEnum]
-
-
-  export const RowScalarFieldEnum: {
-    id: 'id',
-    letter: 'letter',
-    endLetter: 'endLetter',
-    reserved: 'reserved',
+    reservedSeats: 'reservedSeats',
+    displayOrder: 'displayOrder',
     enclosureId: 'enclosureId'
   };
 
   export type RowScalarFieldEnum = (typeof RowScalarFieldEnum)[keyof typeof RowScalarFieldEnum]
+
+
+  export const SeatReservationScalarFieldEnum: {
+    id: 'id',
+    enclosureLetter: 'enclosureLetter',
+    rowLetter: 'rowLetter',
+    seatNumber: 'seatNumber',
+    reservedFor: 'reservedFor',
+    reservedBy: 'reservedBy',
+    createdAt: 'createdAt'
+  };
+
+  export type SeatReservationScalarFieldEnum = (typeof SeatReservationScalarFieldEnum)[keyof typeof SeatReservationScalarFieldEnum]
 
 
   export const AnalyticsScalarFieldEnum: {
@@ -12452,10 +12574,10 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
     crr?: StringFilter<"Attendee"> | string
-    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
@@ -12472,10 +12594,10 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     crr?: SortOrder
-    enclosure?: SortOrder
     accountId?: SortOrder
     account?: AccountOrderByWithRelationInput
     allocation?: SeatAllocationOrderByWithRelationInput
@@ -12495,10 +12617,10 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
     crr?: StringFilter<"Attendee"> | string
-    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
@@ -12515,10 +12637,10 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     crr?: SortOrder
-    enclosure?: SortOrder
     accountId?: SortOrder
     _count?: AttendeeCountOrderByAggregateInput
     _max?: AttendeeMaxOrderByAggregateInput
@@ -12539,10 +12661,10 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     convocationEligible?: BoolWithAggregatesFilter<"Attendee"> | boolean
     convocationRegistered?: BoolWithAggregatesFilter<"Attendee"> | boolean
+    assignedEnclosure?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
     crr?: StringWithAggregatesFilter<"Attendee"> | string
-    enclosure?: StringWithAggregatesFilter<"Attendee"> | string
     accountId?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
   }
 
@@ -12551,43 +12673,51 @@ export namespace Prisma {
     OR?: SeatAllocationWhereInput[]
     NOT?: SeatAllocationWhereInput | SeatAllocationWhereInput[]
     id?: StringFilter<"SeatAllocation"> | string
-    enclosure?: StringFilter<"SeatAllocation"> | string
-    row?: StringFilter<"SeatAllocation"> | string
-    column?: IntFilter<"SeatAllocation"> | number
+    enclosureLetter?: StringFilter<"SeatAllocation"> | string
+    rowLetter?: StringFilter<"SeatAllocation"> | string
+    seatNumber?: IntFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeFilter<"SeatAllocation"> | Date | string
+    enclosureId?: StringFilter<"SeatAllocation"> | string
     attendeeId?: StringFilter<"SeatAllocation"> | string
+    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
     attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
   }
 
   export type SeatAllocationOrderByWithRelationInput = {
     id?: SortOrder
-    enclosure?: SortOrder
-    row?: SortOrder
-    column?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
     allocatedAt?: SortOrder
+    enclosureId?: SortOrder
     attendeeId?: SortOrder
+    enclosure?: EnclosureOrderByWithRelationInput
     attendee?: AttendeeOrderByWithRelationInput
   }
 
   export type SeatAllocationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     attendeeId?: string
+    enclosureLetter_rowLetter_seatNumber?: SeatAllocationEnclosureLetterRowLetterSeatNumberCompoundUniqueInput
     AND?: SeatAllocationWhereInput | SeatAllocationWhereInput[]
     OR?: SeatAllocationWhereInput[]
     NOT?: SeatAllocationWhereInput | SeatAllocationWhereInput[]
-    enclosure?: StringFilter<"SeatAllocation"> | string
-    row?: StringFilter<"SeatAllocation"> | string
-    column?: IntFilter<"SeatAllocation"> | number
+    enclosureLetter?: StringFilter<"SeatAllocation"> | string
+    rowLetter?: StringFilter<"SeatAllocation"> | string
+    seatNumber?: IntFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeFilter<"SeatAllocation"> | Date | string
+    enclosureId?: StringFilter<"SeatAllocation"> | string
+    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
     attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
-  }, "id" | "attendeeId">
+  }, "id" | "attendeeId" | "enclosureLetter_rowLetter_seatNumber">
 
   export type SeatAllocationOrderByWithAggregationInput = {
     id?: SortOrder
-    enclosure?: SortOrder
-    row?: SortOrder
-    column?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
     allocatedAt?: SortOrder
+    enclosureId?: SortOrder
     attendeeId?: SortOrder
     _count?: SeatAllocationCountOrderByAggregateInput
     _avg?: SeatAllocationAvgOrderByAggregateInput
@@ -12601,10 +12731,11 @@ export namespace Prisma {
     OR?: SeatAllocationScalarWhereWithAggregatesInput[]
     NOT?: SeatAllocationScalarWhereWithAggregatesInput | SeatAllocationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SeatAllocation"> | string
-    enclosure?: StringWithAggregatesFilter<"SeatAllocation"> | string
-    row?: StringWithAggregatesFilter<"SeatAllocation"> | string
-    column?: IntWithAggregatesFilter<"SeatAllocation"> | number
+    enclosureLetter?: StringWithAggregatesFilter<"SeatAllocation"> | string
+    rowLetter?: StringWithAggregatesFilter<"SeatAllocation"> | string
+    seatNumber?: IntWithAggregatesFilter<"SeatAllocation"> | number
     allocatedAt?: DateTimeWithAggregatesFilter<"SeatAllocation"> | Date | string
+    enclosureId?: StringWithAggregatesFilter<"SeatAllocation"> | string
     attendeeId?: StringWithAggregatesFilter<"SeatAllocation"> | string
   }
 
@@ -12614,42 +12745,62 @@ export namespace Prisma {
     NOT?: EnclosureWhereInput | EnclosureWhereInput[]
     id?: StringFilter<"Enclosure"> | string
     letter?: StringFilter<"Enclosure"> | string
+    name?: StringNullableFilter<"Enclosure"> | string | null
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
+    displayOrder?: IntFilter<"Enclosure"> | number
     totalSeats?: IntFilter<"Enclosure"> | number
+    isActive?: BoolFilter<"Enclosure"> | boolean
+    createdAt?: DateTimeFilter<"Enclosure"> | Date | string
+    updatedAt?: DateTimeFilter<"Enclosure"> | Date | string
     rows?: RowListRelationFilter
-    colums?: ColumnListRelationFilter
+    seatAllocations?: SeatAllocationListRelationFilter
   }
 
   export type EnclosureOrderByWithRelationInput = {
     id?: SortOrder
     letter?: SortOrder
+    name?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     rows?: RowOrderByRelationAggregateInput
-    colums?: ColumnOrderByRelationAggregateInput
+    seatAllocations?: SeatAllocationOrderByRelationAggregateInput
   }
 
   export type EnclosureWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    letter?: string
     AND?: EnclosureWhereInput | EnclosureWhereInput[]
     OR?: EnclosureWhereInput[]
     NOT?: EnclosureWhereInput | EnclosureWhereInput[]
-    letter?: StringFilter<"Enclosure"> | string
+    name?: StringNullableFilter<"Enclosure"> | string | null
     allocatedFor?: EnumEnclosureTypeFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionFilter<"Enclosure"> | $Enums.Direction
+    displayOrder?: IntFilter<"Enclosure"> | number
     totalSeats?: IntFilter<"Enclosure"> | number
+    isActive?: BoolFilter<"Enclosure"> | boolean
+    createdAt?: DateTimeFilter<"Enclosure"> | Date | string
+    updatedAt?: DateTimeFilter<"Enclosure"> | Date | string
     rows?: RowListRelationFilter
-    colums?: ColumnListRelationFilter
-  }, "id">
+    seatAllocations?: SeatAllocationListRelationFilter
+  }, "id" | "letter">
 
   export type EnclosureOrderByWithAggregationInput = {
     id?: SortOrder
     letter?: SortOrder
+    name?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: EnclosureCountOrderByAggregateInput
     _avg?: EnclosureAvgOrderByAggregateInput
     _max?: EnclosureMaxOrderByAggregateInput
@@ -12663,66 +12814,14 @@ export namespace Prisma {
     NOT?: EnclosureScalarWhereWithAggregatesInput | EnclosureScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Enclosure"> | string
     letter?: StringWithAggregatesFilter<"Enclosure"> | string
+    name?: StringNullableWithAggregatesFilter<"Enclosure"> | string | null
     allocatedFor?: EnumEnclosureTypeWithAggregatesFilter<"Enclosure"> | $Enums.EnclosureType
     entryDirection?: EnumDirectionWithAggregatesFilter<"Enclosure"> | $Enums.Direction
+    displayOrder?: IntWithAggregatesFilter<"Enclosure"> | number
     totalSeats?: IntWithAggregatesFilter<"Enclosure"> | number
-  }
-
-  export type ColumnWhereInput = {
-    AND?: ColumnWhereInput | ColumnWhereInput[]
-    OR?: ColumnWhereInput[]
-    NOT?: ColumnWhereInput | ColumnWhereInput[]
-    id?: StringFilter<"Column"> | string
-    letter?: StringFilter<"Column"> | string
-    startSeat?: IntFilter<"Column"> | number
-    endSeat?: IntFilter<"Column"> | number
-    enclosureId?: StringFilter<"Column"> | string
-    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
-  }
-
-  export type ColumnOrderByWithRelationInput = {
-    id?: SortOrder
-    letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-    enclosureId?: SortOrder
-    enclosure?: EnclosureOrderByWithRelationInput
-  }
-
-  export type ColumnWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: ColumnWhereInput | ColumnWhereInput[]
-    OR?: ColumnWhereInput[]
-    NOT?: ColumnWhereInput | ColumnWhereInput[]
-    letter?: StringFilter<"Column"> | string
-    startSeat?: IntFilter<"Column"> | number
-    endSeat?: IntFilter<"Column"> | number
-    enclosureId?: StringFilter<"Column"> | string
-    enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
-  }, "id">
-
-  export type ColumnOrderByWithAggregationInput = {
-    id?: SortOrder
-    letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-    enclosureId?: SortOrder
-    _count?: ColumnCountOrderByAggregateInput
-    _avg?: ColumnAvgOrderByAggregateInput
-    _max?: ColumnMaxOrderByAggregateInput
-    _min?: ColumnMinOrderByAggregateInput
-    _sum?: ColumnSumOrderByAggregateInput
-  }
-
-  export type ColumnScalarWhereWithAggregatesInput = {
-    AND?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
-    OR?: ColumnScalarWhereWithAggregatesInput[]
-    NOT?: ColumnScalarWhereWithAggregatesInput | ColumnScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Column"> | string
-    letter?: StringWithAggregatesFilter<"Column"> | string
-    startSeat?: IntWithAggregatesFilter<"Column"> | number
-    endSeat?: IntWithAggregatesFilter<"Column"> | number
-    enclosureId?: StringWithAggregatesFilter<"Column"> | string
+    isActive?: BoolWithAggregatesFilter<"Enclosure"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Enclosure"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Enclosure"> | Date | string
   }
 
   export type RowWhereInput = {
@@ -12731,8 +12830,10 @@ export namespace Prisma {
     NOT?: RowWhereInput | RowWhereInput[]
     id?: StringFilter<"Row"> | string
     letter?: StringFilter<"Row"> | string
-    endLetter?: StringFilter<"Row"> | string
-    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
+    startSeat?: IntFilter<"Row"> | number
+    endSeat?: IntFilter<"Row"> | number
+    reservedSeats?: StringFilter<"Row"> | string
+    displayOrder?: IntFilter<"Row"> | number
     enclosureId?: StringFilter<"Row"> | string
     enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
   }
@@ -12740,33 +12841,42 @@ export namespace Prisma {
   export type RowOrderByWithRelationInput = {
     id?: SortOrder
     letter?: SortOrder
-    endLetter?: SortOrder
-    reserved?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    reservedSeats?: SortOrder
+    displayOrder?: SortOrder
     enclosureId?: SortOrder
     enclosure?: EnclosureOrderByWithRelationInput
   }
 
   export type RowWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    enclosureId_letter?: RowEnclosureIdLetterCompoundUniqueInput
     AND?: RowWhereInput | RowWhereInput[]
     OR?: RowWhereInput[]
     NOT?: RowWhereInput | RowWhereInput[]
     letter?: StringFilter<"Row"> | string
-    endLetter?: StringFilter<"Row"> | string
-    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
+    startSeat?: IntFilter<"Row"> | number
+    endSeat?: IntFilter<"Row"> | number
+    reservedSeats?: StringFilter<"Row"> | string
+    displayOrder?: IntFilter<"Row"> | number
     enclosureId?: StringFilter<"Row"> | string
     enclosure?: XOR<EnclosureScalarRelationFilter, EnclosureWhereInput>
-  }, "id">
+  }, "id" | "enclosureId_letter">
 
   export type RowOrderByWithAggregationInput = {
     id?: SortOrder
     letter?: SortOrder
-    endLetter?: SortOrder
-    reserved?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    reservedSeats?: SortOrder
+    displayOrder?: SortOrder
     enclosureId?: SortOrder
     _count?: RowCountOrderByAggregateInput
+    _avg?: RowAvgOrderByAggregateInput
     _max?: RowMaxOrderByAggregateInput
     _min?: RowMinOrderByAggregateInput
+    _sum?: RowSumOrderByAggregateInput
   }
 
   export type RowScalarWhereWithAggregatesInput = {
@@ -12775,9 +12885,76 @@ export namespace Prisma {
     NOT?: RowScalarWhereWithAggregatesInput | RowScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Row"> | string
     letter?: StringWithAggregatesFilter<"Row"> | string
-    endLetter?: StringWithAggregatesFilter<"Row"> | string
-    reserved?: EnumEnclosureTypeWithAggregatesFilter<"Row"> | $Enums.EnclosureType
+    startSeat?: IntWithAggregatesFilter<"Row"> | number
+    endSeat?: IntWithAggregatesFilter<"Row"> | number
+    reservedSeats?: StringWithAggregatesFilter<"Row"> | string
+    displayOrder?: IntWithAggregatesFilter<"Row"> | number
     enclosureId?: StringWithAggregatesFilter<"Row"> | string
+  }
+
+  export type SeatReservationWhereInput = {
+    AND?: SeatReservationWhereInput | SeatReservationWhereInput[]
+    OR?: SeatReservationWhereInput[]
+    NOT?: SeatReservationWhereInput | SeatReservationWhereInput[]
+    id?: StringFilter<"SeatReservation"> | string
+    enclosureLetter?: StringFilter<"SeatReservation"> | string
+    rowLetter?: StringFilter<"SeatReservation"> | string
+    seatNumber?: IntFilter<"SeatReservation"> | number
+    reservedFor?: StringNullableFilter<"SeatReservation"> | string | null
+    reservedBy?: StringNullableFilter<"SeatReservation"> | string | null
+    createdAt?: DateTimeFilter<"SeatReservation"> | Date | string
+  }
+
+  export type SeatReservationOrderByWithRelationInput = {
+    id?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
+    reservedFor?: SortOrder
+    reservedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeatReservationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    enclosureLetter_rowLetter_seatNumber?: SeatReservationEnclosureLetterRowLetterSeatNumberCompoundUniqueInput
+    AND?: SeatReservationWhereInput | SeatReservationWhereInput[]
+    OR?: SeatReservationWhereInput[]
+    NOT?: SeatReservationWhereInput | SeatReservationWhereInput[]
+    enclosureLetter?: StringFilter<"SeatReservation"> | string
+    rowLetter?: StringFilter<"SeatReservation"> | string
+    seatNumber?: IntFilter<"SeatReservation"> | number
+    reservedFor?: StringNullableFilter<"SeatReservation"> | string | null
+    reservedBy?: StringNullableFilter<"SeatReservation"> | string | null
+    createdAt?: DateTimeFilter<"SeatReservation"> | Date | string
+  }, "id" | "enclosureLetter_rowLetter_seatNumber">
+
+  export type SeatReservationOrderByWithAggregationInput = {
+    id?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
+    reservedFor?: SortOrder
+    reservedBy?: SortOrder
+    createdAt?: SortOrder
+    _count?: SeatReservationCountOrderByAggregateInput
+    _avg?: SeatReservationAvgOrderByAggregateInput
+    _max?: SeatReservationMaxOrderByAggregateInput
+    _min?: SeatReservationMinOrderByAggregateInput
+    _sum?: SeatReservationSumOrderByAggregateInput
+  }
+
+  export type SeatReservationScalarWhereWithAggregatesInput = {
+    AND?: SeatReservationScalarWhereWithAggregatesInput | SeatReservationScalarWhereWithAggregatesInput[]
+    OR?: SeatReservationScalarWhereWithAggregatesInput[]
+    NOT?: SeatReservationScalarWhereWithAggregatesInput | SeatReservationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SeatReservation"> | string
+    enclosureLetter?: StringWithAggregatesFilter<"SeatReservation"> | string
+    rowLetter?: StringWithAggregatesFilter<"SeatReservation"> | string
+    seatNumber?: IntWithAggregatesFilter<"SeatReservation"> | number
+    reservedFor?: StringNullableWithAggregatesFilter<"SeatReservation"> | string | null
+    reservedBy?: StringNullableWithAggregatesFilter<"SeatReservation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SeatReservation"> | Date | string
   }
 
   export type AnalyticsWhereInput = {
@@ -13192,10 +13369,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
   }
@@ -13211,10 +13388,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     accountId?: string | null
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
   }
@@ -13229,10 +13406,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
   }
@@ -13247,10 +13424,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
   }
@@ -13266,10 +13443,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     accountId?: string | null
   }
 
@@ -13283,10 +13460,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttendeeUncheckedUpdateManyInput = {
@@ -13299,231 +13476,301 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SeatAllocationCreateInput = {
     id?: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt?: Date | string
+    enclosure: EnclosureCreateNestedOneWithoutSeatAllocationsInput
     attendee: AttendeeCreateNestedOneWithoutAllocationInput
   }
 
   export type SeatAllocationUncheckedCreateInput = {
     id?: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt?: Date | string
+    enclosureId: string
     attendeeId: string
   }
 
   export type SeatAllocationUpdateInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enclosure?: EnclosureUpdateOneRequiredWithoutSeatAllocationsNestedInput
     attendee?: AttendeeUpdateOneRequiredWithoutAllocationNestedInput
   }
 
   export type SeatAllocationUncheckedUpdateInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enclosureId?: StringFieldUpdateOperationsInput | string
     attendeeId?: StringFieldUpdateOperationsInput | string
   }
 
   export type SeatAllocationCreateManyInput = {
     id?: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt?: Date | string
+    enclosureId: string
     attendeeId: string
   }
 
   export type SeatAllocationUpdateManyMutationInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeatAllocationUncheckedUpdateManyInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enclosureId?: StringFieldUpdateOperationsInput | string
     attendeeId?: StringFieldUpdateOperationsInput | string
   }
 
   export type EnclosureCreateInput = {
     id?: string
     letter: string
+    name?: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    totalSeats: number
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rows?: RowCreateNestedManyWithoutEnclosureInput
-    colums?: ColumnCreateNestedManyWithoutEnclosureInput
+    seatAllocations?: SeatAllocationCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUncheckedCreateInput = {
     id?: string
     letter: string
+    name?: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    totalSeats: number
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
-    colums?: ColumnUncheckedCreateNestedManyWithoutEnclosureInput
+    seatAllocations?: SeatAllocationUncheckedCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUpdateManyWithoutEnclosureNestedInput
-    colums?: ColumnUpdateManyWithoutEnclosureNestedInput
+    seatAllocations?: SeatAllocationUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureUncheckedUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
-    colums?: ColumnUncheckedUpdateManyWithoutEnclosureNestedInput
+    seatAllocations?: SeatAllocationUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureCreateManyInput = {
     id?: string
     letter: string
+    name?: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    totalSeats: number
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type EnclosureUpdateManyMutationInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EnclosureUncheckedUpdateManyInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ColumnCreateInput = {
-    id?: string
-    letter: string
-    startSeat: number
-    endSeat: number
-    enclosure: EnclosureCreateNestedOneWithoutColumsInput
-  }
-
-  export type ColumnUncheckedCreateInput = {
-    id?: string
-    letter: string
-    startSeat: number
-    endSeat: number
-    enclosureId: string
-  }
-
-  export type ColumnUpdateInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    enclosure?: EnclosureUpdateOneRequiredWithoutColumsNestedInput
-  }
-
-  export type ColumnUncheckedUpdateInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    enclosureId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ColumnCreateManyInput = {
-    id?: string
-    letter: string
-    startSeat: number
-    endSeat: number
-    enclosureId: string
-  }
-
-  export type ColumnUpdateManyMutationInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ColumnUncheckedUpdateManyInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
-    enclosureId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RowCreateInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
     enclosure: EnclosureCreateNestedOneWithoutRowsInput
   }
 
   export type RowUncheckedCreateInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
     enclosureId: string
   }
 
   export type RowUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
     enclosure?: EnclosureUpdateOneRequiredWithoutRowsNestedInput
   }
 
   export type RowUncheckedUpdateInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
     enclosureId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateManyInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
     enclosureId: string
   }
 
   export type RowUpdateManyMutationInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type RowUncheckedUpdateManyInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
     enclosureId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SeatReservationCreateInput = {
+    id?: string
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    reservedFor?: string | null
+    reservedBy?: string | null
+    createdAt?: Date | string
+  }
+
+  export type SeatReservationUncheckedCreateInput = {
+    id?: string
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    reservedFor?: string | null
+    reservedBy?: string | null
+    createdAt?: Date | string
+  }
+
+  export type SeatReservationUpdateInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    reservedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeatReservationUncheckedUpdateInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    reservedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeatReservationCreateManyInput = {
+    id?: string
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    reservedFor?: string | null
+    reservedBy?: string | null
+    createdAt?: Date | string
+  }
+
+  export type SeatReservationUpdateManyMutationInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    reservedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeatReservationUncheckedUpdateManyInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    reservedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    reservedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AnalyticsCreateInput = {
@@ -14087,10 +14334,10 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     crr?: SortOrder
-    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -14105,10 +14352,10 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     crr?: SortOrder
-    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -14123,10 +14370,10 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     crr?: SortOrder
-    enclosure?: SortOrder
     accountId?: SortOrder
   }
 
@@ -14141,44 +14388,58 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type EnclosureScalarRelationFilter = {
+    is?: EnclosureWhereInput
+    isNot?: EnclosureWhereInput
+  }
+
   export type AttendeeScalarRelationFilter = {
     is?: AttendeeWhereInput
     isNot?: AttendeeWhereInput
   }
 
+  export type SeatAllocationEnclosureLetterRowLetterSeatNumberCompoundUniqueInput = {
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+  }
+
   export type SeatAllocationCountOrderByAggregateInput = {
     id?: SortOrder
-    enclosure?: SortOrder
-    row?: SortOrder
-    column?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
     allocatedAt?: SortOrder
+    enclosureId?: SortOrder
     attendeeId?: SortOrder
   }
 
   export type SeatAllocationAvgOrderByAggregateInput = {
-    column?: SortOrder
+    seatNumber?: SortOrder
   }
 
   export type SeatAllocationMaxOrderByAggregateInput = {
     id?: SortOrder
-    enclosure?: SortOrder
-    row?: SortOrder
-    column?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
     allocatedAt?: SortOrder
+    enclosureId?: SortOrder
     attendeeId?: SortOrder
   }
 
   export type SeatAllocationMinOrderByAggregateInput = {
     id?: SortOrder
-    enclosure?: SortOrder
-    row?: SortOrder
-    column?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
     allocatedAt?: SortOrder
+    enclosureId?: SortOrder
     attendeeId?: SortOrder
   }
 
   export type SeatAllocationSumOrderByAggregateInput = {
-    column?: SortOrder
+    seatNumber?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -14217,49 +14478,66 @@ export namespace Prisma {
     none?: RowWhereInput
   }
 
-  export type ColumnListRelationFilter = {
-    every?: ColumnWhereInput
-    some?: ColumnWhereInput
-    none?: ColumnWhereInput
+  export type SeatAllocationListRelationFilter = {
+    every?: SeatAllocationWhereInput
+    some?: SeatAllocationWhereInput
+    none?: SeatAllocationWhereInput
   }
 
   export type RowOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ColumnOrderByRelationAggregateInput = {
+  export type SeatAllocationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type EnclosureCountOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
+    name?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnclosureAvgOrderByAggregateInput = {
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
   }
 
   export type EnclosureMaxOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
+    name?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnclosureMinOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
+    name?: SortOrder
     allocatedFor?: SortOrder
     entryDirection?: SortOrder
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnclosureSumOrderByAggregateInput = {
+    displayOrder?: SortOrder
     totalSeats?: SortOrder
   }
 
@@ -14283,67 +14561,95 @@ export namespace Prisma {
     _max?: NestedEnumDirectionFilter<$PrismaModel>
   }
 
-  export type EnclosureScalarRelationFilter = {
-    is?: EnclosureWhereInput
-    isNot?: EnclosureWhereInput
-  }
-
-  export type ColumnCountOrderByAggregateInput = {
-    id?: SortOrder
-    letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-    enclosureId?: SortOrder
-  }
-
-  export type ColumnAvgOrderByAggregateInput = {
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-  }
-
-  export type ColumnMaxOrderByAggregateInput = {
-    id?: SortOrder
-    letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-    enclosureId?: SortOrder
-  }
-
-  export type ColumnMinOrderByAggregateInput = {
-    id?: SortOrder
-    letter?: SortOrder
-    startSeat?: SortOrder
-    endSeat?: SortOrder
-    enclosureId?: SortOrder
-  }
-
-  export type ColumnSumOrderByAggregateInput = {
-    startSeat?: SortOrder
-    endSeat?: SortOrder
+  export type RowEnclosureIdLetterCompoundUniqueInput = {
+    enclosureId: string
+    letter: string
   }
 
   export type RowCountOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
-    endLetter?: SortOrder
-    reserved?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    reservedSeats?: SortOrder
+    displayOrder?: SortOrder
     enclosureId?: SortOrder
+  }
+
+  export type RowAvgOrderByAggregateInput = {
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type RowMaxOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
-    endLetter?: SortOrder
-    reserved?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    reservedSeats?: SortOrder
+    displayOrder?: SortOrder
     enclosureId?: SortOrder
   }
 
   export type RowMinOrderByAggregateInput = {
     id?: SortOrder
     letter?: SortOrder
-    endLetter?: SortOrder
-    reserved?: SortOrder
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    reservedSeats?: SortOrder
+    displayOrder?: SortOrder
     enclosureId?: SortOrder
+  }
+
+  export type RowSumOrderByAggregateInput = {
+    startSeat?: SortOrder
+    endSeat?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type SeatReservationEnclosureLetterRowLetterSeatNumberCompoundUniqueInput = {
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+  }
+
+  export type SeatReservationCountOrderByAggregateInput = {
+    id?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
+    reservedFor?: SortOrder
+    reservedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeatReservationAvgOrderByAggregateInput = {
+    seatNumber?: SortOrder
+  }
+
+  export type SeatReservationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
+    reservedFor?: SortOrder
+    reservedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeatReservationMinOrderByAggregateInput = {
+    id?: SortOrder
+    enclosureLetter?: SortOrder
+    rowLetter?: SortOrder
+    seatNumber?: SortOrder
+    reservedFor?: SortOrder
+    reservedBy?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SeatReservationSumOrderByAggregateInput = {
+    seatNumber?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -14679,6 +14985,12 @@ export namespace Prisma {
     update?: XOR<XOR<SeatAllocationUpdateToOneWithWhereWithoutAttendeeInput, SeatAllocationUpdateWithoutAttendeeInput>, SeatAllocationUncheckedUpdateWithoutAttendeeInput>
   }
 
+  export type EnclosureCreateNestedOneWithoutSeatAllocationsInput = {
+    create?: XOR<EnclosureCreateWithoutSeatAllocationsInput, EnclosureUncheckedCreateWithoutSeatAllocationsInput>
+    connectOrCreate?: EnclosureCreateOrConnectWithoutSeatAllocationsInput
+    connect?: EnclosureWhereUniqueInput
+  }
+
   export type AttendeeCreateNestedOneWithoutAllocationInput = {
     create?: XOR<AttendeeCreateWithoutAllocationInput, AttendeeUncheckedCreateWithoutAllocationInput>
     connectOrCreate?: AttendeeCreateOrConnectWithoutAllocationInput
@@ -14691,6 +15003,14 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EnclosureUpdateOneRequiredWithoutSeatAllocationsNestedInput = {
+    create?: XOR<EnclosureCreateWithoutSeatAllocationsInput, EnclosureUncheckedCreateWithoutSeatAllocationsInput>
+    connectOrCreate?: EnclosureCreateOrConnectWithoutSeatAllocationsInput
+    upsert?: EnclosureUpsertWithoutSeatAllocationsInput
+    connect?: EnclosureWhereUniqueInput
+    update?: XOR<XOR<EnclosureUpdateToOneWithWhereWithoutSeatAllocationsInput, EnclosureUpdateWithoutSeatAllocationsInput>, EnclosureUncheckedUpdateWithoutSeatAllocationsInput>
   }
 
   export type AttendeeUpdateOneRequiredWithoutAllocationNestedInput = {
@@ -14708,11 +15028,11 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
   }
 
-  export type ColumnCreateNestedManyWithoutEnclosureInput = {
-    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
-    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
-    createMany?: ColumnCreateManyEnclosureInputEnvelope
-    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+  export type SeatAllocationCreateNestedManyWithoutEnclosureInput = {
+    create?: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput> | SeatAllocationCreateWithoutEnclosureInput[] | SeatAllocationUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: SeatAllocationCreateOrConnectWithoutEnclosureInput | SeatAllocationCreateOrConnectWithoutEnclosureInput[]
+    createMany?: SeatAllocationCreateManyEnclosureInputEnvelope
+    connect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
   }
 
   export type RowUncheckedCreateNestedManyWithoutEnclosureInput = {
@@ -14722,11 +15042,11 @@ export namespace Prisma {
     connect?: RowWhereUniqueInput | RowWhereUniqueInput[]
   }
 
-  export type ColumnUncheckedCreateNestedManyWithoutEnclosureInput = {
-    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
-    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
-    createMany?: ColumnCreateManyEnclosureInputEnvelope
-    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
+  export type SeatAllocationUncheckedCreateNestedManyWithoutEnclosureInput = {
+    create?: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput> | SeatAllocationCreateWithoutEnclosureInput[] | SeatAllocationUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: SeatAllocationCreateOrConnectWithoutEnclosureInput | SeatAllocationCreateOrConnectWithoutEnclosureInput[]
+    createMany?: SeatAllocationCreateManyEnclosureInputEnvelope
+    connect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
   }
 
   export type EnumEnclosureTypeFieldUpdateOperationsInput = {
@@ -14751,18 +15071,18 @@ export namespace Prisma {
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
   }
 
-  export type ColumnUpdateManyWithoutEnclosureNestedInput = {
-    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
-    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
-    upsert?: ColumnUpsertWithWhereUniqueWithoutEnclosureInput | ColumnUpsertWithWhereUniqueWithoutEnclosureInput[]
-    createMany?: ColumnCreateManyEnclosureInputEnvelope
-    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    update?: ColumnUpdateWithWhereUniqueWithoutEnclosureInput | ColumnUpdateWithWhereUniqueWithoutEnclosureInput[]
-    updateMany?: ColumnUpdateManyWithWhereWithoutEnclosureInput | ColumnUpdateManyWithWhereWithoutEnclosureInput[]
-    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
+  export type SeatAllocationUpdateManyWithoutEnclosureNestedInput = {
+    create?: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput> | SeatAllocationCreateWithoutEnclosureInput[] | SeatAllocationUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: SeatAllocationCreateOrConnectWithoutEnclosureInput | SeatAllocationCreateOrConnectWithoutEnclosureInput[]
+    upsert?: SeatAllocationUpsertWithWhereUniqueWithoutEnclosureInput | SeatAllocationUpsertWithWhereUniqueWithoutEnclosureInput[]
+    createMany?: SeatAllocationCreateManyEnclosureInputEnvelope
+    set?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    disconnect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    delete?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    connect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    update?: SeatAllocationUpdateWithWhereUniqueWithoutEnclosureInput | SeatAllocationUpdateWithWhereUniqueWithoutEnclosureInput[]
+    updateMany?: SeatAllocationUpdateManyWithWhereWithoutEnclosureInput | SeatAllocationUpdateManyWithWhereWithoutEnclosureInput[]
+    deleteMany?: SeatAllocationScalarWhereInput | SeatAllocationScalarWhereInput[]
   }
 
   export type RowUncheckedUpdateManyWithoutEnclosureNestedInput = {
@@ -14779,32 +15099,18 @@ export namespace Prisma {
     deleteMany?: RowScalarWhereInput | RowScalarWhereInput[]
   }
 
-  export type ColumnUncheckedUpdateManyWithoutEnclosureNestedInput = {
-    create?: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput> | ColumnCreateWithoutEnclosureInput[] | ColumnUncheckedCreateWithoutEnclosureInput[]
-    connectOrCreate?: ColumnCreateOrConnectWithoutEnclosureInput | ColumnCreateOrConnectWithoutEnclosureInput[]
-    upsert?: ColumnUpsertWithWhereUniqueWithoutEnclosureInput | ColumnUpsertWithWhereUniqueWithoutEnclosureInput[]
-    createMany?: ColumnCreateManyEnclosureInputEnvelope
-    set?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    disconnect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    delete?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    connect?: ColumnWhereUniqueInput | ColumnWhereUniqueInput[]
-    update?: ColumnUpdateWithWhereUniqueWithoutEnclosureInput | ColumnUpdateWithWhereUniqueWithoutEnclosureInput[]
-    updateMany?: ColumnUpdateManyWithWhereWithoutEnclosureInput | ColumnUpdateManyWithWhereWithoutEnclosureInput[]
-    deleteMany?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
-  }
-
-  export type EnclosureCreateNestedOneWithoutColumsInput = {
-    create?: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
-    connectOrCreate?: EnclosureCreateOrConnectWithoutColumsInput
-    connect?: EnclosureWhereUniqueInput
-  }
-
-  export type EnclosureUpdateOneRequiredWithoutColumsNestedInput = {
-    create?: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
-    connectOrCreate?: EnclosureCreateOrConnectWithoutColumsInput
-    upsert?: EnclosureUpsertWithoutColumsInput
-    connect?: EnclosureWhereUniqueInput
-    update?: XOR<XOR<EnclosureUpdateToOneWithWhereWithoutColumsInput, EnclosureUpdateWithoutColumsInput>, EnclosureUncheckedUpdateWithoutColumsInput>
+  export type SeatAllocationUncheckedUpdateManyWithoutEnclosureNestedInput = {
+    create?: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput> | SeatAllocationCreateWithoutEnclosureInput[] | SeatAllocationUncheckedCreateWithoutEnclosureInput[]
+    connectOrCreate?: SeatAllocationCreateOrConnectWithoutEnclosureInput | SeatAllocationCreateOrConnectWithoutEnclosureInput[]
+    upsert?: SeatAllocationUpsertWithWhereUniqueWithoutEnclosureInput | SeatAllocationUpsertWithWhereUniqueWithoutEnclosureInput[]
+    createMany?: SeatAllocationCreateManyEnclosureInputEnvelope
+    set?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    disconnect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    delete?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    connect?: SeatAllocationWhereUniqueInput | SeatAllocationWhereUniqueInput[]
+    update?: SeatAllocationUpdateWithWhereUniqueWithoutEnclosureInput | SeatAllocationUpdateWithWhereUniqueWithoutEnclosureInput[]
+    updateMany?: SeatAllocationUpdateManyWithWhereWithoutEnclosureInput | SeatAllocationUpdateManyWithWhereWithoutEnclosureInput[]
+    deleteMany?: SeatAllocationScalarWhereInput | SeatAllocationScalarWhereInput[]
   }
 
   export type EnclosureCreateNestedOneWithoutRowsInput = {
@@ -15137,10 +15443,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
   }
 
@@ -15155,10 +15461,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
   }
 
@@ -15201,10 +15507,10 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
     crr?: StringFilter<"Attendee"> | string
-    enclosure?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
   }
 
@@ -15249,18 +15555,20 @@ export namespace Prisma {
 
   export type SeatAllocationCreateWithoutAttendeeInput = {
     id?: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt?: Date | string
+    enclosure: EnclosureCreateNestedOneWithoutSeatAllocationsInput
   }
 
   export type SeatAllocationUncheckedCreateWithoutAttendeeInput = {
     id?: string
-    enclosure: string
-    row: string
-    column: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
     allocatedAt?: Date | string
+    enclosureId: string
   }
 
   export type SeatAllocationCreateOrConnectWithoutAttendeeInput = {
@@ -15323,17 +15631,52 @@ export namespace Prisma {
   }
 
   export type SeatAllocationUpdateWithoutAttendeeInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enclosure?: EnclosureUpdateOneRequiredWithoutSeatAllocationsNestedInput
   }
 
   export type SeatAllocationUncheckedUpdateWithoutAttendeeInput = {
-    enclosure?: StringFieldUpdateOperationsInput | string
-    row?: StringFieldUpdateOperationsInput | string
-    column?: IntFieldUpdateOperationsInput | number
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enclosureId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type EnclosureCreateWithoutSeatAllocationsInput = {
+    id?: string
+    letter: string
+    name?: string | null
+    allocatedFor: $Enums.EnclosureType
+    entryDirection: $Enums.Direction
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rows?: RowCreateNestedManyWithoutEnclosureInput
+  }
+
+  export type EnclosureUncheckedCreateWithoutSeatAllocationsInput = {
+    id?: string
+    letter: string
+    name?: string | null
+    allocatedFor: $Enums.EnclosureType
+    entryDirection: $Enums.Direction
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
+  }
+
+  export type EnclosureCreateOrConnectWithoutSeatAllocationsInput = {
+    where: EnclosureWhereUniqueInput
+    create: XOR<EnclosureCreateWithoutSeatAllocationsInput, EnclosureUncheckedCreateWithoutSeatAllocationsInput>
   }
 
   export type AttendeeCreateWithoutAllocationInput = {
@@ -15347,10 +15690,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
   }
 
@@ -15365,16 +15708,53 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
     accountId?: string | null
   }
 
   export type AttendeeCreateOrConnectWithoutAllocationInput = {
     where: AttendeeWhereUniqueInput
     create: XOR<AttendeeCreateWithoutAllocationInput, AttendeeUncheckedCreateWithoutAllocationInput>
+  }
+
+  export type EnclosureUpsertWithoutSeatAllocationsInput = {
+    update: XOR<EnclosureUpdateWithoutSeatAllocationsInput, EnclosureUncheckedUpdateWithoutSeatAllocationsInput>
+    create: XOR<EnclosureCreateWithoutSeatAllocationsInput, EnclosureUncheckedCreateWithoutSeatAllocationsInput>
+    where?: EnclosureWhereInput
+  }
+
+  export type EnclosureUpdateToOneWithWhereWithoutSeatAllocationsInput = {
+    where?: EnclosureWhereInput
+    data: XOR<EnclosureUpdateWithoutSeatAllocationsInput, EnclosureUncheckedUpdateWithoutSeatAllocationsInput>
+  }
+
+  export type EnclosureUpdateWithoutSeatAllocationsInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rows?: RowUpdateManyWithoutEnclosureNestedInput
+  }
+
+  export type EnclosureUncheckedUpdateWithoutSeatAllocationsInput = {
+    letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type AttendeeUpsertWithoutAllocationInput = {
@@ -15398,10 +15778,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
   }
 
@@ -15415,25 +15795,29 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RowCreateWithoutEnclosureInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
   }
 
   export type RowUncheckedCreateWithoutEnclosureInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
+    startSeat: number
+    endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
   }
 
   export type RowCreateOrConnectWithoutEnclosureInput = {
@@ -15445,27 +15829,31 @@ export namespace Prisma {
     data: RowCreateManyEnclosureInput | RowCreateManyEnclosureInput[]
   }
 
-  export type ColumnCreateWithoutEnclosureInput = {
+  export type SeatAllocationCreateWithoutEnclosureInput = {
     id?: string
-    letter: string
-    startSeat: number
-    endSeat: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    allocatedAt?: Date | string
+    attendee: AttendeeCreateNestedOneWithoutAllocationInput
   }
 
-  export type ColumnUncheckedCreateWithoutEnclosureInput = {
+  export type SeatAllocationUncheckedCreateWithoutEnclosureInput = {
     id?: string
-    letter: string
-    startSeat: number
-    endSeat: number
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    allocatedAt?: Date | string
+    attendeeId: string
   }
 
-  export type ColumnCreateOrConnectWithoutEnclosureInput = {
-    where: ColumnWhereUniqueInput
-    create: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput>
+  export type SeatAllocationCreateOrConnectWithoutEnclosureInput = {
+    where: SeatAllocationWhereUniqueInput
+    create: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput>
   }
 
-  export type ColumnCreateManyEnclosureInputEnvelope = {
-    data: ColumnCreateManyEnclosureInput | ColumnCreateManyEnclosureInput[]
+  export type SeatAllocationCreateManyEnclosureInputEnvelope = {
+    data: SeatAllocationCreateManyEnclosureInput | SeatAllocationCreateManyEnclosureInput[]
   }
 
   export type RowUpsertWithWhereUniqueWithoutEnclosureInput = {
@@ -15490,104 +15878,68 @@ export namespace Prisma {
     NOT?: RowScalarWhereInput | RowScalarWhereInput[]
     id?: StringFilter<"Row"> | string
     letter?: StringFilter<"Row"> | string
-    endLetter?: StringFilter<"Row"> | string
-    reserved?: EnumEnclosureTypeFilter<"Row"> | $Enums.EnclosureType
+    startSeat?: IntFilter<"Row"> | number
+    endSeat?: IntFilter<"Row"> | number
+    reservedSeats?: StringFilter<"Row"> | string
+    displayOrder?: IntFilter<"Row"> | number
     enclosureId?: StringFilter<"Row"> | string
   }
 
-  export type ColumnUpsertWithWhereUniqueWithoutEnclosureInput = {
-    where: ColumnWhereUniqueInput
-    update: XOR<ColumnUpdateWithoutEnclosureInput, ColumnUncheckedUpdateWithoutEnclosureInput>
-    create: XOR<ColumnCreateWithoutEnclosureInput, ColumnUncheckedCreateWithoutEnclosureInput>
+  export type SeatAllocationUpsertWithWhereUniqueWithoutEnclosureInput = {
+    where: SeatAllocationWhereUniqueInput
+    update: XOR<SeatAllocationUpdateWithoutEnclosureInput, SeatAllocationUncheckedUpdateWithoutEnclosureInput>
+    create: XOR<SeatAllocationCreateWithoutEnclosureInput, SeatAllocationUncheckedCreateWithoutEnclosureInput>
   }
 
-  export type ColumnUpdateWithWhereUniqueWithoutEnclosureInput = {
-    where: ColumnWhereUniqueInput
-    data: XOR<ColumnUpdateWithoutEnclosureInput, ColumnUncheckedUpdateWithoutEnclosureInput>
+  export type SeatAllocationUpdateWithWhereUniqueWithoutEnclosureInput = {
+    where: SeatAllocationWhereUniqueInput
+    data: XOR<SeatAllocationUpdateWithoutEnclosureInput, SeatAllocationUncheckedUpdateWithoutEnclosureInput>
   }
 
-  export type ColumnUpdateManyWithWhereWithoutEnclosureInput = {
-    where: ColumnScalarWhereInput
-    data: XOR<ColumnUpdateManyMutationInput, ColumnUncheckedUpdateManyWithoutEnclosureInput>
+  export type SeatAllocationUpdateManyWithWhereWithoutEnclosureInput = {
+    where: SeatAllocationScalarWhereInput
+    data: XOR<SeatAllocationUpdateManyMutationInput, SeatAllocationUncheckedUpdateManyWithoutEnclosureInput>
   }
 
-  export type ColumnScalarWhereInput = {
-    AND?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
-    OR?: ColumnScalarWhereInput[]
-    NOT?: ColumnScalarWhereInput | ColumnScalarWhereInput[]
-    id?: StringFilter<"Column"> | string
-    letter?: StringFilter<"Column"> | string
-    startSeat?: IntFilter<"Column"> | number
-    endSeat?: IntFilter<"Column"> | number
-    enclosureId?: StringFilter<"Column"> | string
-  }
-
-  export type EnclosureCreateWithoutColumsInput = {
-    id?: string
-    letter: string
-    allocatedFor: $Enums.EnclosureType
-    entryDirection: $Enums.Direction
-    totalSeats: number
-    rows?: RowCreateNestedManyWithoutEnclosureInput
-  }
-
-  export type EnclosureUncheckedCreateWithoutColumsInput = {
-    id?: string
-    letter: string
-    allocatedFor: $Enums.EnclosureType
-    entryDirection: $Enums.Direction
-    totalSeats: number
-    rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
-  }
-
-  export type EnclosureCreateOrConnectWithoutColumsInput = {
-    where: EnclosureWhereUniqueInput
-    create: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
-  }
-
-  export type EnclosureUpsertWithoutColumsInput = {
-    update: XOR<EnclosureUpdateWithoutColumsInput, EnclosureUncheckedUpdateWithoutColumsInput>
-    create: XOR<EnclosureCreateWithoutColumsInput, EnclosureUncheckedCreateWithoutColumsInput>
-    where?: EnclosureWhereInput
-  }
-
-  export type EnclosureUpdateToOneWithWhereWithoutColumsInput = {
-    where?: EnclosureWhereInput
-    data: XOR<EnclosureUpdateWithoutColumsInput, EnclosureUncheckedUpdateWithoutColumsInput>
-  }
-
-  export type EnclosureUpdateWithoutColumsInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    totalSeats?: IntFieldUpdateOperationsInput | number
-    rows?: RowUpdateManyWithoutEnclosureNestedInput
-  }
-
-  export type EnclosureUncheckedUpdateWithoutColumsInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-    entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
-    totalSeats?: IntFieldUpdateOperationsInput | number
-    rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
+  export type SeatAllocationScalarWhereInput = {
+    AND?: SeatAllocationScalarWhereInput | SeatAllocationScalarWhereInput[]
+    OR?: SeatAllocationScalarWhereInput[]
+    NOT?: SeatAllocationScalarWhereInput | SeatAllocationScalarWhereInput[]
+    id?: StringFilter<"SeatAllocation"> | string
+    enclosureLetter?: StringFilter<"SeatAllocation"> | string
+    rowLetter?: StringFilter<"SeatAllocation"> | string
+    seatNumber?: IntFilter<"SeatAllocation"> | number
+    allocatedAt?: DateTimeFilter<"SeatAllocation"> | Date | string
+    enclosureId?: StringFilter<"SeatAllocation"> | string
+    attendeeId?: StringFilter<"SeatAllocation"> | string
   }
 
   export type EnclosureCreateWithoutRowsInput = {
     id?: string
     letter: string
+    name?: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    totalSeats: number
-    colums?: ColumnCreateNestedManyWithoutEnclosureInput
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seatAllocations?: SeatAllocationCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureUncheckedCreateWithoutRowsInput = {
     id?: string
     letter: string
+    name?: string | null
     allocatedFor: $Enums.EnclosureType
     entryDirection: $Enums.Direction
-    totalSeats: number
-    colums?: ColumnUncheckedCreateNestedManyWithoutEnclosureInput
+    displayOrder?: number
+    totalSeats?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seatAllocations?: SeatAllocationUncheckedCreateNestedManyWithoutEnclosureInput
   }
 
   export type EnclosureCreateOrConnectWithoutRowsInput = {
@@ -15608,18 +15960,28 @@ export namespace Prisma {
 
   export type EnclosureUpdateWithoutRowsInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
-    colums?: ColumnUpdateManyWithoutEnclosureNestedInput
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seatAllocations?: SeatAllocationUpdateManyWithoutEnclosureNestedInput
   }
 
   export type EnclosureUncheckedUpdateWithoutRowsInput = {
     letter?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     allocatedFor?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
     entryDirection?: EnumDirectionFieldUpdateOperationsInput | $Enums.Direction
+    displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
-    colums?: ColumnUncheckedUpdateManyWithoutEnclosureNestedInput
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seatAllocations?: SeatAllocationUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
   export type AttendeeCreateManyAccountInput = {
@@ -15633,10 +15995,10 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
-    enclosure: string
   }
 
   export type AttendeeUpdateWithoutAccountInput = {
@@ -15649,10 +16011,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
   }
 
@@ -15666,10 +16028,10 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
   }
 
@@ -15683,60 +16045,76 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
-    enclosure?: StringFieldUpdateOperationsInput | string
   }
 
   export type RowCreateManyEnclosureInput = {
     id?: string
     letter: string
-    endLetter: string
-    reserved: $Enums.EnclosureType
-  }
-
-  export type ColumnCreateManyEnclosureInput = {
-    id?: string
-    letter: string
     startSeat: number
     endSeat: number
+    reservedSeats?: string
+    displayOrder?: number
+  }
+
+  export type SeatAllocationCreateManyEnclosureInput = {
+    id?: string
+    enclosureLetter: string
+    rowLetter: string
+    seatNumber: number
+    allocatedAt?: Date | string
+    attendeeId: string
   }
 
   export type RowUpdateWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type RowUncheckedUpdateWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
+    startSeat?: IntFieldUpdateOperationsInput | number
+    endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type RowUncheckedUpdateManyWithoutEnclosureInput = {
     letter?: StringFieldUpdateOperationsInput | string
-    endLetter?: StringFieldUpdateOperationsInput | string
-    reserved?: EnumEnclosureTypeFieldUpdateOperationsInput | $Enums.EnclosureType
-  }
-
-  export type ColumnUpdateWithoutEnclosureInput = {
-    letter?: StringFieldUpdateOperationsInput | string
     startSeat?: IntFieldUpdateOperationsInput | number
     endSeat?: IntFieldUpdateOperationsInput | number
+    reservedSeats?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ColumnUncheckedUpdateWithoutEnclosureInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
+  export type SeatAllocationUpdateWithoutEnclosureInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendee?: AttendeeUpdateOneRequiredWithoutAllocationNestedInput
   }
 
-  export type ColumnUncheckedUpdateManyWithoutEnclosureInput = {
-    letter?: StringFieldUpdateOperationsInput | string
-    startSeat?: IntFieldUpdateOperationsInput | number
-    endSeat?: IntFieldUpdateOperationsInput | number
+  export type SeatAllocationUncheckedUpdateWithoutEnclosureInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendeeId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SeatAllocationUncheckedUpdateManyWithoutEnclosureInput = {
+    enclosureLetter?: StringFieldUpdateOperationsInput | string
+    rowLetter?: StringFieldUpdateOperationsInput | string
+    seatNumber?: IntFieldUpdateOperationsInput | number
+    allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendeeId?: StringFieldUpdateOperationsInput | string
   }
 
 

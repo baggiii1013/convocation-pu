@@ -141,44 +141,54 @@ exports.Prisma.AttendeeScalarFieldEnum = {
   phone: 'phone',
   convocationEligible: 'convocationEligible',
   convocationRegistered: 'convocationRegistered',
+  assignedEnclosure: 'assignedEnclosure',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   crr: 'crr',
-  enclosure: 'enclosure',
   accountId: 'accountId'
 };
 
 exports.Prisma.SeatAllocationScalarFieldEnum = {
   id: 'id',
-  enclosure: 'enclosure',
-  row: 'row',
-  column: 'column',
+  enclosureLetter: 'enclosureLetter',
+  rowLetter: 'rowLetter',
+  seatNumber: 'seatNumber',
   allocatedAt: 'allocatedAt',
+  enclosureId: 'enclosureId',
   attendeeId: 'attendeeId'
 };
 
 exports.Prisma.EnclosureScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
+  name: 'name',
   allocatedFor: 'allocatedFor',
   entryDirection: 'entryDirection',
-  totalSeats: 'totalSeats'
-};
-
-exports.Prisma.ColumnScalarFieldEnum = {
-  id: 'id',
-  letter: 'letter',
-  startSeat: 'startSeat',
-  endSeat: 'endSeat',
-  enclosureId: 'enclosureId'
+  displayOrder: 'displayOrder',
+  totalSeats: 'totalSeats',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.RowScalarFieldEnum = {
   id: 'id',
   letter: 'letter',
-  endLetter: 'endLetter',
-  reserved: 'reserved',
+  startSeat: 'startSeat',
+  endSeat: 'endSeat',
+  reservedSeats: 'reservedSeats',
+  displayOrder: 'displayOrder',
   enclosureId: 'enclosureId'
+};
+
+exports.Prisma.SeatReservationScalarFieldEnum = {
+  id: 'id',
+  enclosureLetter: 'enclosureLetter',
+  rowLetter: 'rowLetter',
+  seatNumber: 'seatNumber',
+  reservedFor: 'reservedFor',
+  reservedBy: 'reservedBy',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.AnalyticsScalarFieldEnum = {
@@ -266,7 +276,10 @@ exports.Direction = exports.$Enums.Direction = {
   NORTHEAST: 'NORTHEAST',
   NORTHWEST: 'NORTHWEST',
   SOUTHEAST: 'SOUTHEAST',
-  SOUTHWEST: 'SOUTHWEST'
+  SOUTHWEST: 'SOUTHWEST',
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+  CENTER: 'CENTER'
 };
 
 exports.Prisma.ModelName = {
@@ -274,8 +287,8 @@ exports.Prisma.ModelName = {
   Attendee: 'Attendee',
   SeatAllocation: 'SeatAllocation',
   Enclosure: 'Enclosure',
-  Column: 'Column',
   Row: 'Row',
+  SeatReservation: 'SeatReservation',
   Analytics: 'Analytics',
   IAMPolicy: 'IAMPolicy',
   Department: 'Department',

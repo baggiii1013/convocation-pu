@@ -3,6 +3,8 @@ import { Router } from 'express';
 import accountRoutes from './account.routes.js';
 import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
+import enclosureRoutes from './enclosure.routes.js';
+import seatReservationRoutes from './seatReservation.routes.js';
 
 const router = Router();
 
@@ -33,6 +35,12 @@ router.use('/accounts', accountRoutes);
 
 // Attendee management routes
 router.use('/attendees', attendeeRoutes);
+
+// Enclosure management routes (Admin only)
+router.use('/enclosures', enclosureRoutes);
+
+// Seat reservation routes (Admin only)
+router.use('/admin', seatReservationRoutes);
 
 // TODO: Add route modules here as they are created
 // router.use('/config', configRoutes);
