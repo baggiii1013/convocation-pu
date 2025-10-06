@@ -2,9 +2,10 @@
 
 ## Executive Summary
 
-This document outlines a comprehensive, phased approach to implement an **automatic seat assignment system** for convocation attendees with a **theater-style seat visualization** (inspired by District.in). 
+This document outlines a comprehensive, phased approach to implement an **automatic seat assignment system** for convocation attendees with a **theater-style seat visualization** (inspired by District.in).
 
 **Key Features:**
+
 - **Admin-Managed Enclosures**: Admins create and manage enclosure configurations (rows, columns, reserved seats) through a frontend dashboard
 - **Admin Seat Reservation**: Admins can manually reserve specific seats before running the allocation algorithm
 - **Database-Driven Attendee Data**: Attendee data is read from the existing `attendee` collection in MongoDB, which includes their assigned enclosure letter
@@ -16,12 +17,14 @@ This document outlines a comprehensive, phased approach to implement an **automa
 ## Current State Analysis
 
 ### Your Project Structure
+
 - **Backend**: Node.js/TypeScript API using Prisma ORM with MongoDB
 - **Frontend**: Next.js web application
 - **Database**: MongoDB with Prisma schema
 - **Stack**: Bun runtime, TypeScript, REST APIs
 
 ### Reference Implementation (mussiii1013/pu-convocation)
+
 - **Backend**: Kotlin (Ktor) + AWS Lambda for seat allocation
 - **Seat Algorithm**: AWS Lambda job that runs automatically on data upload
 - **Frontend**: Next.js with sophisticated seat visualization components
@@ -55,6 +58,7 @@ Your current schema needs the following adjustments to match the seat assignment
 ### Duration: 3-4 days
 
 ### Objectives
+
 - Align your Prisma schema with seat assignment requirements
 - Ensure proper relationships between Enclosure, Row, Column, and SeatAllocation
 - Create admin API endpoints for managing enclosures
@@ -68,6 +72,7 @@ Your current schema needs the following adjustments to match the seat assignment
 #### 1.1 Update Prisma Schema (schema.prisma)
 
 **Current Issues:**
+
 - `Column` model needs proper letter designation
 - `Row` needs range support (start letter to end letter)
 - Missing relationship clarity for seat numbering
@@ -85,11 +90,11 @@ model Enclosure {
   displayOrder   Int           @default(0) // Order to display in UI
   totalSeats     Int           @default(0) // Auto-calculated
   isActive       Boolean       @default(true)
-  
+
   // Relations
   rows           Row[]
   seatAllocations SeatAllocation[]
-  
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -104,7 +109,7 @@ model Row {
   endSeat     Int     // Last seat number in row
   reservedSeats String  @default("") // Comma-separated reserved seat numbers: "1,5,10"
   displayOrder Int    @default(0)  // Order of rows in enclosure
-  
+
   // Relations
   enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
   enclosureId String    @db.ObjectId
@@ -123,7 +128,7 @@ model SeatReservation {
   reservedFor String?  // Optional: reason or person name
   reservedBy  String?  // Admin who reserved it
   createdAt   DateTime @default(now())
-  
+
   @@unique([enclosureLetter, rowLetter, seatNumber]) // Prevent duplicate reservations
   @@index([enclosureLetter])
   @@map("seat_reservations")
@@ -161,14 +166,14 @@ model Attendee {
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
-  
+
   // Enclosure assignment - stored in database
   assignedEnclosure     String?  // Enclosure letter (A, B, C, etc.)
-  
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   crr                   String   @db.ObjectId
-  
+
   // Relations
   account               Account?        @relation(fields: [accountId], references: [id])
   accountId             String?         @db.ObjectId
@@ -212,8 +217,8 @@ bun run db:push
 ```typescript
 // apps/api/src/controllers/enclosure.controller.ts
 
-import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
+import { Request, Response } from "express";
+import { prisma } from "../lib/prisma";
 
 export class EnclosureController {
   /**
@@ -224,26 +229,26 @@ export class EnclosureController {
       const enclosures = await prisma.enclosure.findMany({
         include: {
           rows: {
-            orderBy: { displayOrder: 'asc' }
+            orderBy: { displayOrder: "asc" },
           },
           _count: {
-            select: { seatAllocations: true }
-          }
+            select: { seatAllocations: true },
+          },
         },
-        orderBy: { displayOrder: 'asc' }
+        orderBy: { displayOrder: "asc" },
       });
 
       // Calculate total seats for each enclosure
-      const enclosuresWithSeats = enclosures.map(enc => ({
+      const enclosuresWithSeats = enclosures.map((enc) => ({
         ...enc,
         totalSeats: this.calculateTotalSeats(enc.rows),
-        allocatedSeats: enc._count.seatAllocations
+        allocatedSeats: enc._count.seatAllocations,
       }));
 
       return res.json(enclosuresWithSeats);
     } catch (error) {
-      console.error('Get enclosures error:', error);
-      return res.status(500).json({ error: 'Failed to fetch enclosures' });
+      console.error("Get enclosures error:", error);
+      return res.status(500).json({ error: "Failed to fetch enclosures" });
     }
   }
 
@@ -252,15 +257,18 @@ export class EnclosureController {
    */
   async createEnclosure(req: Request, res: Response) {
     try {
-      const { letter, name, allocatedFor, entryDirection, displayOrder, rows } = req.body;
+      const { letter, name, allocatedFor, entryDirection, displayOrder, rows } =
+        req.body;
 
       // Validate enclosure letter is unique
       const existing = await prisma.enclosure.findUnique({
-        where: { letter }
+        where: { letter },
       });
 
       if (existing) {
-        return res.status(400).json({ error: 'Enclosure letter already exists' });
+        return res
+          .status(400)
+          .json({ error: "Enclosure letter already exists" });
       }
 
       // Create enclosure with rows
@@ -276,27 +284,27 @@ export class EnclosureController {
               letter: row.letter,
               startSeat: row.startSeat,
               endSeat: row.endSeat,
-              reserved: row.reserved || '',
-              displayOrder: index
-            }))
-          }
+              reserved: row.reserved || "",
+              displayOrder: index,
+            })),
+          },
         },
         include: {
-          rows: true
-        }
+          rows: true,
+        },
       });
 
       // Calculate and update total seats
       const totalSeats = this.calculateTotalSeats(enclosure.rows);
       await prisma.enclosure.update({
         where: { id: enclosure.id },
-        data: { totalSeats }
+        data: { totalSeats },
       });
 
       return res.status(201).json(enclosure);
     } catch (error) {
-      console.error('Create enclosure error:', error);
-      return res.status(500).json({ error: 'Failed to create enclosure' });
+      console.error("Create enclosure error:", error);
+      return res.status(500).json({ error: "Failed to create enclosure" });
     }
   }
 
@@ -306,11 +314,12 @@ export class EnclosureController {
   async updateEnclosure(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { letter, name, allocatedFor, entryDirection, displayOrder, rows } = req.body;
+      const { letter, name, allocatedFor, entryDirection, displayOrder, rows } =
+        req.body;
 
       // Delete existing rows
       await prisma.row.deleteMany({
-        where: { enclosureId: id }
+        where: { enclosureId: id },
       });
 
       // Update enclosure with new rows
@@ -327,27 +336,27 @@ export class EnclosureController {
               letter: row.letter,
               startSeat: row.startSeat,
               endSeat: row.endSeat,
-              reserved: row.reserved || '',
-              displayOrder: index
-            }))
-          }
+              reserved: row.reserved || "",
+              displayOrder: index,
+            })),
+          },
         },
         include: {
-          rows: true
-        }
+          rows: true,
+        },
       });
 
       // Update total seats
       const totalSeats = this.calculateTotalSeats(enclosure.rows);
       await prisma.enclosure.update({
         where: { id },
-        data: { totalSeats }
+        data: { totalSeats },
       });
 
       return res.json(enclosure);
     } catch (error) {
-      console.error('Update enclosure error:', error);
-      return res.status(500).json({ error: 'Failed to update enclosure' });
+      console.error("Update enclosure error:", error);
+      return res.status(500).json({ error: "Failed to update enclosure" });
     }
   }
 
@@ -360,35 +369,38 @@ export class EnclosureController {
 
       // Check if enclosure has allocations
       const allocations = await prisma.seatAllocation.count({
-        where: { enclosureId: id }
+        where: { enclosureId: id },
       });
 
       if (allocations > 0) {
-        return res.status(400).json({ 
-          error: 'Cannot delete enclosure with seat allocations. Clear allocations first.' 
+        return res.status(400).json({
+          error:
+            "Cannot delete enclosure with seat allocations. Clear allocations first.",
         });
       }
 
       await prisma.enclosure.delete({
-        where: { id }
+        where: { id },
       });
 
-      return res.json({ message: 'Enclosure deleted successfully' });
+      return res.json({ message: "Enclosure deleted successfully" });
     } catch (error) {
-      console.error('Delete enclosure error:', error);
-      return res.status(500).json({ error: 'Failed to delete enclosure' });
+      console.error("Delete enclosure error:", error);
+      return res.status(500).json({ error: "Failed to delete enclosure" });
     }
   }
 
   /**
    * Helper: Calculate total seats in enclosure
    */
-  private calculateTotalSeats(rows: Array<{ startSeat: number; endSeat: number; reserved: string }>): number {
+  private calculateTotalSeats(
+    rows: Array<{ startSeat: number; endSeat: number; reserved: string }>
+  ): number {
     return rows.reduce((total, row) => {
       const reservedCount = row.reserved
-        ? row.reserved.split(',').filter(s => s.trim()).length
+        ? row.reserved.split(",").filter((s) => s.trim()).length
         : 0;
-      const rowSeats = (row.endSeat - row.startSeat + 1) - reservedCount;
+      const rowSeats = row.endSeat - row.startSeat + 1 - reservedCount;
       return total + rowSeats;
     }, 0);
   }
@@ -400,9 +412,9 @@ export class EnclosureController {
 ```typescript
 // apps/api/src/routes/enclosure.routes.ts
 
-import { Router } from 'express';
-import { EnclosureController } from '../controllers/enclosure.controller';
-import { authMiddleware } from '../middleware/auth';
+import { Router } from "express";
+import { EnclosureController } from "../controllers/enclosure.controller";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 const controller = new EnclosureController();
@@ -411,10 +423,10 @@ const controller = new EnclosureController();
 router.use(authMiddleware);
 
 // CRUD operations
-router.get('/', controller.getAllEnclosures.bind(controller));
-router.post('/', controller.createEnclosure.bind(controller));
-router.put('/:id', controller.updateEnclosure.bind(controller));
-router.delete('/:id', controller.deleteEnclosure.bind(controller));
+router.get("/", controller.getAllEnclosures.bind(controller));
+router.post("/", controller.createEnclosure.bind(controller));
+router.put("/:id", controller.updateEnclosure.bind(controller));
+router.delete("/:id", controller.deleteEnclosure.bind(controller));
 
 export default router;
 ```
@@ -424,16 +436,22 @@ export default router;
 ```typescript
 // apps/web/src/app/admin/enclosures/page.tsx
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, Edit, GripVertical } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Trash2, Edit, GripVertical } from "lucide-react";
+import { toast } from "sonner";
 
 interface Row {
   letter: string;
@@ -457,7 +475,9 @@ interface Enclosure {
 export default function EnclosureManagementPage() {
   const [enclosures, setEnclosures] = useState<Enclosure[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure | null>(null);
+  const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -466,24 +486,26 @@ export default function EnclosureManagementPage() {
 
   const fetchEnclosures = async () => {
     try {
-      const res = await fetch('/api/enclosures');
+      const res = await fetch("/api/enclosures");
       const data = await res.json();
       setEnclosures(data);
     } catch (error) {
-      toast.error('Failed to load enclosures');
+      toast.error("Failed to load enclosures");
     }
   };
 
   const handleCreateOrUpdate = async (enclosure: Enclosure) => {
     setLoading(true);
     try {
-      const url = enclosure.id ? `/api/enclosures/${enclosure.id}` : '/api/enclosures';
-      const method = enclosure.id ? 'PUT' : 'POST';
+      const url = enclosure.id
+        ? `/api/enclosures/${enclosure.id}`
+        : "/api/enclosures";
+      const method = enclosure.id ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enclosure)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enclosure),
       });
 
       if (!res.ok) {
@@ -491,30 +513,30 @@ export default function EnclosureManagementPage() {
         throw new Error(error.error);
       }
 
-      toast.success(enclosure.id ? 'Enclosure updated' : 'Enclosure created');
+      toast.success(enclosure.id ? "Enclosure updated" : "Enclosure created");
       fetchEnclosures();
       setIsEditing(false);
       setCurrentEnclosure(null);
     } catch (error: any) {
-      toast.error(error.message || 'Operation failed');
+      toast.error(error.message || "Operation failed");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure? This cannot be undone.')) return;
+    if (!confirm("Are you sure? This cannot be undone.")) return;
 
     try {
-      const res = await fetch(`/api/enclosures/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/enclosures/${id}`, { method: "DELETE" });
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.error);
       }
-      toast.success('Enclosure deleted');
+      toast.success("Enclosure deleted");
       fetchEnclosures();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete');
+      toast.error(error.message || "Failed to delete");
     }
   };
 
@@ -531,12 +553,12 @@ export default function EnclosureManagementPage() {
           onClick={() => {
             setIsEditing(true);
             setCurrentEnclosure({
-              letter: '',
-              name: '',
-              allocatedFor: 'STUDENTS',
-              entryDirection: 'NORTH',
+              letter: "",
+              name: "",
+              allocatedFor: "STUDENTS",
+              entryDirection: "NORTH",
               displayOrder: enclosures.length,
-              rows: [{ letter: 'A', startSeat: 1, endSeat: 50, reserved: '' }]
+              rows: [{ letter: "A", startSeat: 1, endSeat: 50, reserved: "" }],
             });
           }}
           className="flex items-center gap-2"
@@ -549,7 +571,10 @@ export default function EnclosureManagementPage() {
       {/* Enclosure List */}
       <div className="grid gap-6 mb-8">
         {enclosures.map((enclosure) => (
-          <Card key={enclosure.id} className="hover:shadow-lg transition-shadow">
+          <Card
+            key={enclosure.id}
+            className="hover:shadow-lg transition-shadow"
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -566,7 +591,8 @@ export default function EnclosureManagementPage() {
                       <span>Entry: {enclosure.entryDirection}</span>
                       <span>Total Seats: {enclosure.totalSeats}</span>
                       <span className="text-green-600">
-                        Allocated: {enclosure.allocatedSeats}/{enclosure.totalSeats}
+                        Allocated: {enclosure.allocatedSeats}/
+                        {enclosure.totalSeats}
                       </span>
                     </div>
                   </div>
@@ -595,19 +621,29 @@ export default function EnclosureManagementPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-gray-700">Rows Configuration:</p>
+                <p className="text-sm font-semibold text-gray-700">
+                  Rows Configuration:
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {enclosure.rows.map((row) => {
-                    const reserved = row.reserved ? row.reserved.split(',').length : 0;
+                    const reserved = row.reserved
+                      ? row.reserved.split(",").length
+                      : 0;
                     const total = row.endSeat - row.startSeat + 1;
                     return (
-                      <div key={row.letter} className="bg-gray-50 p-3 rounded text-xs">
+                      <div
+                        key={row.letter}
+                        className="bg-gray-50 p-3 rounded text-xs"
+                      >
                         <p className="font-bold">Row {row.letter}</p>
                         <p className="text-gray-600">
-                          Seats: {row.startSeat}-{row.endSeat} ({total - reserved} available)
+                          Seats: {row.startSeat}-{row.endSeat} (
+                          {total - reserved} available)
                         </p>
                         {reserved > 0 && (
-                          <p className="text-yellow-600">Reserved: {reserved}</p>
+                          <p className="text-yellow-600">
+                            Reserved: {reserved}
+                          </p>
                         )}
                       </div>
                     );
@@ -640,7 +676,7 @@ function EnclosureForm({
   enclosure,
   onSave,
   onCancel,
-  loading
+  loading,
 }: {
   enclosure: Enclosure;
   onSave: (enc: Enclosure) => void;
@@ -650,22 +686,20 @@ function EnclosureForm({
   const [formData, setFormData] = useState<Enclosure>(enclosure);
 
   const addRow = () => {
-    const nextLetter = String.fromCharCode(
-      65 + formData.rows.length
-    ); // A, B, C...
+    const nextLetter = String.fromCharCode(65 + formData.rows.length); // A, B, C...
     setFormData({
       ...formData,
       rows: [
         ...formData.rows,
-        { letter: nextLetter, startSeat: 1, endSeat: 50, reserved: '' }
-      ]
+        { letter: nextLetter, startSeat: 1, endSeat: 50, reserved: "" },
+      ],
     });
   };
 
   const removeRow = (index: number) => {
     setFormData({
       ...formData,
-      rows: formData.rows.filter((_, i) => i !== index)
+      rows: formData.rows.filter((_, i) => i !== index),
     });
   };
 
@@ -680,7 +714,7 @@ function EnclosureForm({
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <CardTitle>
-            {formData.id ? 'Edit Enclosure' : 'Create New Enclosure'}
+            {formData.id ? "Edit Enclosure" : "Create New Enclosure"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -698,7 +732,10 @@ function EnclosureForm({
                 <Input
                   value={formData.letter}
                   onChange={(e) =>
-                    setFormData({ ...formData, letter: e.target.value.toUpperCase() })
+                    setFormData({
+                      ...formData,
+                      letter: e.target.value.toUpperCase(),
+                    })
                   }
                   placeholder="A, B, C..."
                   maxLength={1}
@@ -708,8 +745,10 @@ function EnclosureForm({
               <div>
                 <Label>Name (Optional)</Label>
                 <Input
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.name || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   placeholder="Main Hall, North Wing..."
                 />
               </div>
@@ -765,7 +804,10 @@ function EnclosureForm({
                   type="number"
                   value={formData.displayOrder}
                   onChange={(e) =>
-                    setFormData({ ...formData, displayOrder: parseInt(e.target.value) })
+                    setFormData({
+                      ...formData,
+                      displayOrder: parseInt(e.target.value),
+                    })
                   }
                   min={0}
                 />
@@ -776,7 +818,12 @@ function EnclosureForm({
             <div>
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-lg">Rows Configuration</Label>
-                <Button type="button" onClick={addRow} variant="outline" size="sm">
+                <Button
+                  type="button"
+                  onClick={addRow}
+                  variant="outline"
+                  size="sm"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Row
                 </Button>
@@ -792,7 +839,11 @@ function EnclosureForm({
                       <Input
                         value={row.letter}
                         onChange={(e) =>
-                          updateRow(index, 'letter', e.target.value.toUpperCase())
+                          updateRow(
+                            index,
+                            "letter",
+                            e.target.value.toUpperCase()
+                          )
                         }
                         placeholder="A"
                         maxLength={1}
@@ -804,7 +855,11 @@ function EnclosureForm({
                         type="number"
                         value={row.startSeat}
                         onChange={(e) =>
-                          updateRow(index, 'startSeat', parseInt(e.target.value))
+                          updateRow(
+                            index,
+                            "startSeat",
+                            parseInt(e.target.value)
+                          )
                         }
                         placeholder="Start Seat"
                         min={1}
@@ -816,7 +871,7 @@ function EnclosureForm({
                         type="number"
                         value={row.endSeat}
                         onChange={(e) =>
-                          updateRow(index, 'endSeat', parseInt(e.target.value))
+                          updateRow(index, "endSeat", parseInt(e.target.value))
                         }
                         placeholder="End Seat"
                         min={row.startSeat}
@@ -826,7 +881,9 @@ function EnclosureForm({
                     <div className="col-span-4">
                       <Input
                         value={row.reserved}
-                        onChange={(e) => updateRow(index, 'reserved', e.target.value)}
+                        onChange={(e) =>
+                          updateRow(index, "reserved", e.target.value)
+                        }
                         placeholder="Reserved: 1,5,10"
                       />
                     </div>
@@ -852,7 +909,7 @@ function EnclosureForm({
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : formData.id ? 'Update' : 'Create'}
+                {loading ? "Saving..." : formData.id ? "Update" : "Create"}
               </Button>
             </div>
           </form>
@@ -870,8 +927,8 @@ function EnclosureForm({
 ```typescript
 // apps/api/src/controllers/seatReservation.controller.ts
 
-import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
+import { Request, Response } from "express";
+import { prisma } from "../lib/prisma";
 
 export class SeatReservationController {
   /**
@@ -881,17 +938,23 @@ export class SeatReservationController {
   static async reserveSeats(req: Request, res: Response) {
     try {
       const { reservations } = req.body;
-      
+
       // Validate input
       if (!Array.isArray(reservations) || reservations.length === 0) {
-        return res.status(400).json({ error: 'Reservations array required' });
+        return res.status(400).json({ error: "Reservations array required" });
       }
 
       const results = [];
       const errors = [];
 
       for (const reservation of reservations) {
-        const { enclosureLetter, rowLetter, seatNumber, reservedFor, reservedBy } = reservation;
+        const {
+          enclosureLetter,
+          rowLetter,
+          seatNumber,
+          reservedFor,
+          reservedBy,
+        } = reservation;
 
         // Check if seat is already allocated
         const existing = await prisma.seatAllocation.findUnique({
@@ -899,15 +962,15 @@ export class SeatReservationController {
             enclosureLetter_rowLetter_seatNumber: {
               enclosureLetter,
               rowLetter,
-              seatNumber
-            }
-          }
+              seatNumber,
+            },
+          },
         });
 
         if (existing) {
           errors.push({
             seat: `${enclosureLetter}-${rowLetter}-${seatNumber}`,
-            error: 'Seat already allocated to an attendee'
+            error: "Seat already allocated to an attendee",
           });
           continue;
         }
@@ -918,15 +981,15 @@ export class SeatReservationController {
             enclosureLetter_rowLetter_seatNumber: {
               enclosureLetter,
               rowLetter,
-              seatNumber
-            }
-          }
+              seatNumber,
+            },
+          },
         });
 
         if (alreadyReserved) {
           errors.push({
             seat: `${enclosureLetter}-${rowLetter}-${seatNumber}`,
-            error: 'Seat already reserved'
+            error: "Seat already reserved",
           });
           continue;
         }
@@ -938,8 +1001,8 @@ export class SeatReservationController {
             rowLetter,
             seatNumber,
             reservedFor,
-            reservedBy
-          }
+            reservedBy,
+          },
         });
 
         results.push(created);
@@ -949,11 +1012,11 @@ export class SeatReservationController {
         success: results.length,
         failed: errors.length,
         reservations: results,
-        errors
+        errors,
       });
     } catch (error) {
-      console.error('Seat reservation error:', error);
-      res.status(500).json({ error: 'Failed to reserve seats' });
+      console.error("Seat reservation error:", error);
+      res.status(500).json({ error: "Failed to reserve seats" });
     }
   }
 
@@ -965,23 +1028,23 @@ export class SeatReservationController {
     try {
       const { enclosureLetter } = req.query;
 
-      const where = enclosureLetter 
+      const where = enclosureLetter
         ? { enclosureLetter: enclosureLetter as string }
         : {};
 
       const reservations = await prisma.seatReservation.findMany({
         where,
         orderBy: [
-          { enclosureLetter: 'asc' },
-          { rowLetter: 'asc' },
-          { seatNumber: 'asc' }
-        ]
+          { enclosureLetter: "asc" },
+          { rowLetter: "asc" },
+          { seatNumber: "asc" },
+        ],
       });
 
       res.json({ reservations });
     } catch (error) {
-      console.error('Get reservations error:', error);
-      res.status(500).json({ error: 'Failed to fetch reservations' });
+      console.error("Get reservations error:", error);
+      res.status(500).json({ error: "Failed to fetch reservations" });
     }
   }
 
@@ -994,13 +1057,13 @@ export class SeatReservationController {
       const { id } = req.params;
 
       await prisma.seatReservation.delete({
-        where: { id }
+        where: { id },
       });
 
-      res.json({ message: 'Reservation removed successfully' });
+      res.json({ message: "Reservation removed successfully" });
     } catch (error) {
-      console.error('Remove reservation error:', error);
-      res.status(500).json({ error: 'Failed to remove reservation' });
+      console.error("Remove reservation error:", error);
+      res.status(500).json({ error: "Failed to remove reservation" });
     }
   }
 
@@ -1013,8 +1076,8 @@ export class SeatReservationController {
       const result = await prisma.seatReservation.deleteMany({});
       res.json({ message: `Cleared ${result.count} reservations` });
     } catch (error) {
-      console.error('Clear reservations error:', error);
-      res.status(500).json({ error: 'Failed to clear reservations' });
+      console.error("Clear reservations error:", error);
+      res.status(500).json({ error: "Failed to clear reservations" });
     }
   }
 }
@@ -1023,20 +1086,20 @@ export class SeatReservationController {
 ```typescript
 // apps/api/src/routes/seatReservation.routes.ts
 
-import { Router } from 'express';
-import { SeatReservationController } from '../controllers/seatReservation.controller';
-import { authMiddleware } from '../middleware/auth';
-import { adminMiddleware } from '../middleware/admin';
+import { Router } from "express";
+import { SeatReservationController } from "../controllers/seatReservation.controller";
+import { authMiddleware } from "../middleware/auth";
+import { adminMiddleware } from "../middleware/admin";
 
 const router = Router();
 
 // All routes require admin authentication
 router.use(authMiddleware, adminMiddleware);
 
-router.post('/reserve-seats', SeatReservationController.reserveSeats);
-router.get('/reservations', SeatReservationController.getReservations);
-router.delete('/reservations/:id', SeatReservationController.removeReservation);
-router.delete('/reservations', SeatReservationController.clearAllReservations);
+router.post("/reserve-seats", SeatReservationController.reserveSeats);
+router.get("/reservations", SeatReservationController.getReservations);
+router.delete("/reservations/:id", SeatReservationController.removeReservation);
+router.delete("/reservations", SeatReservationController.clearAllReservations);
 
 export default router;
 ```
@@ -1048,14 +1111,20 @@ export default router;
 ```typescript
 // apps/web/src/app/admin/reserve-seats/page.tsx
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Reservation {
   id: string;
@@ -1069,10 +1138,10 @@ interface Reservation {
 
 export default function ReserveSeatsPage() {
   const [enclosures, setEnclosures] = useState<any[]>([]);
-  const [selectedEnclosure, setSelectedEnclosure] = useState('');
-  const [selectedRow, setSelectedRow] = useState('');
-  const [seatNumbers, setSeatNumbers] = useState('');
-  const [reservedFor, setReservedFor] = useState('');
+  const [selectedEnclosure, setSelectedEnclosure] = useState("");
+  const [selectedRow, setSelectedRow] = useState("");
+  const [seatNumbers, setSeatNumbers] = useState("");
+  const [reservedFor, setReservedFor] = useState("");
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -1082,20 +1151,20 @@ export default function ReserveSeatsPage() {
   }, []);
 
   const fetchEnclosures = async () => {
-    const res = await fetch('/api/enclosures');
+    const res = await fetch("/api/enclosures");
     const data = await res.json();
     setEnclosures(data);
   };
 
   const fetchReservations = async () => {
-    const res = await fetch('/api/admin/reservations');
+    const res = await fetch("/api/admin/reservations");
     const data = await res.json();
     setReservations(data.reservations || []);
   };
 
   const handleReserve = async () => {
     if (!selectedEnclosure || !selectedRow || !seatNumbers) {
-      alert('Please fill all fields');
+      alert("Please fill all fields");
       return;
     }
 
@@ -1103,36 +1172,40 @@ export default function ReserveSeatsPage() {
     try {
       // Parse seat numbers (comma-separated: 1,5,10-15)
       const seats = parseSeatNumbers(seatNumbers);
-      
-      const reservations = seats.map(seat => ({
+
+      const reservations = seats.map((seat) => ({
         enclosureLetter: selectedEnclosure,
         rowLetter: selectedRow,
         seatNumber: seat,
         reservedFor,
-        reservedBy: 'admin' // Get from auth context
+        reservedBy: "admin", // Get from auth context
       }));
 
-      const res = await fetch('/api/admin/reserve-seats', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reservations })
+      const res = await fetch("/api/admin/reserve-seats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reservations }),
       });
 
       const data = await res.json();
-      
+
       if (data.errors && data.errors.length > 0) {
-        alert(`Reserved ${data.success} seats. ${data.failed} failed:\n${data.errors.map((e: any) => e.seat + ': ' + e.error).join('\n')}`);
+        alert(
+          `Reserved ${data.success} seats. ${data.failed} failed:\n${data.errors
+            .map((e: any) => e.seat + ": " + e.error)
+            .join("\n")}`
+        );
       } else {
         alert(`Successfully reserved ${data.success} seats`);
       }
 
       // Reset form
-      setSeatNumbers('');
-      setReservedFor('');
+      setSeatNumbers("");
+      setReservedFor("");
       fetchReservations();
     } catch (error) {
-      console.error('Reservation failed:', error);
-      alert('Failed to reserve seats');
+      console.error("Reservation failed:", error);
+      alert("Failed to reserve seats");
     } finally {
       setLoading(false);
     }
@@ -1140,11 +1213,11 @@ export default function ReserveSeatsPage() {
 
   const parseSeatNumbers = (input: string): number[] => {
     const seats: number[] = [];
-    const parts = input.split(',').map(p => p.trim());
-    
+    const parts = input.split(",").map((p) => p.trim());
+
     for (const part of parts) {
-      if (part.includes('-')) {
-        const [start, end] = part.split('-').map(Number);
+      if (part.includes("-")) {
+        const [start, end] = part.split("-").map(Number);
         for (let i = start; i <= end; i++) {
           seats.push(i);
         }
@@ -1152,22 +1225,24 @@ export default function ReserveSeatsPage() {
         seats.push(Number(part));
       }
     }
-    
+
     return seats;
   };
 
   const removeReservation = async (id: string) => {
-    if (!confirm('Remove this reservation?')) return;
+    if (!confirm("Remove this reservation?")) return;
 
     try {
-      await fetch(`/api/admin/reservations/${id}`, { method: 'DELETE' });
+      await fetch(`/api/admin/reservations/${id}`, { method: "DELETE" });
       fetchReservations();
     } catch (error) {
-      console.error('Remove failed:', error);
+      console.error("Remove failed:", error);
     }
   };
 
-  const selectedEnclosureData = enclosures.find(e => e.letter === selectedEnclosure);
+  const selectedEnclosureData = enclosures.find(
+    (e) => e.letter === selectedEnclosure
+  );
 
   return (
     <div className="min-h-screen p-8">
@@ -1180,12 +1255,15 @@ export default function ReserveSeatsPage() {
           <div className="space-y-4">
             <div>
               <Label>Enclosure</Label>
-              <Select value={selectedEnclosure} onValueChange={setSelectedEnclosure}>
+              <Select
+                value={selectedEnclosure}
+                onValueChange={setSelectedEnclosure}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select enclosure" />
                 </SelectTrigger>
                 <SelectContent>
-                  {enclosures.map(enc => (
+                  {enclosures.map((enc) => (
                     <SelectItem key={enc.letter} value={enc.letter}>
                       Enclosure {enc.letter} - {enc.name}
                     </SelectItem>
@@ -1233,12 +1311,14 @@ export default function ReserveSeatsPage() {
               />
             </div>
 
-            <Button 
-              onClick={handleReserve} 
-              disabled={loading || !selectedEnclosure || !selectedRow || !seatNumbers}
+            <Button
+              onClick={handleReserve}
+              disabled={
+                loading || !selectedEnclosure || !selectedRow || !seatNumbers
+              }
               className="w-full"
             >
-              {loading ? 'Reserving...' : 'Reserve Seats'}
+              {loading ? "Reserving..." : "Reserve Seats"}
             </Button>
           </div>
         </Card>
@@ -1249,8 +1329,11 @@ export default function ReserveSeatsPage() {
             Current Reservations ({reservations.length})
           </h2>
           <div className="space-y-2 max-h-96 overflow-y-auto">
-            {reservations.map(res => (
-              <div key={res.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+            {reservations.map((res) => (
+              <div
+                key={res.id}
+                className="flex justify-between items-center p-3 bg-gray-50 rounded"
+              >
                 <div>
                   <p className="font-bold">
                     {res.enclosureLetter}-{res.rowLetter}-{res.seatNumber}
@@ -1269,7 +1352,9 @@ export default function ReserveSeatsPage() {
               </div>
             ))}
             {reservations.length === 0 && (
-              <p className="text-center text-gray-500 py-8">No reservations yet</p>
+              <p className="text-center text-gray-500 py-8">
+                No reservations yet
+              </p>
             )}
           </div>
         </Card>
@@ -1280,6 +1365,7 @@ export default function ReserveSeatsPage() {
 ```
 
 ### Deliverables
+
 - ✅ Updated Prisma schema with SeatReservation model
 - ✅ Database migration files
 - ✅ Enclosure Management API (CRUD endpoints)
@@ -1295,6 +1381,7 @@ export default function ReserveSeatsPage() {
 ### Duration: 5-7 days
 
 ### Objectives
+
 - Implement automatic seat allocation algorithm in bun
 - Read attendee data from existing MongoDB `attendee` collection
 - Handle admin-reserved seats and skip them during allocation
@@ -1334,7 +1421,7 @@ export default function ReserveSeatsPage() {
 ```typescript
 // apps/api/src/services/seatAllocation.service.ts
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 interface EnclosureConfig {
   letter: string;
@@ -1353,11 +1440,15 @@ export class SeatAllocationService {
    * Main allocation algorithm - inspired by reference implementation
    * @param attendees - Attendees with assigned enclosure
    */
-  async allocateSeats(attendees: Array<{ id: string; assignedEnclosure: string }>) {
+  async allocateSeats(
+    attendees: Array<{ id: string; assignedEnclosure: string }>
+  ) {
     // Group attendees by enclosure
     const attendeesByEnclosure = this.groupByEnclosure(attendees);
 
-    for (const [enclosureLetter, enclosureAttendees] of Object.entries(attendeesByEnclosure)) {
+    for (const [enclosureLetter, enclosureAttendees] of Object.entries(
+      attendeesByEnclosure
+    )) {
       await this.allocateForEnclosure(enclosureLetter, enclosureAttendees);
     }
   }
@@ -1372,7 +1463,7 @@ export class SeatAllocationService {
     // Fetch enclosure configuration
     const enclosure = await this.prisma.enclosure.findUnique({
       where: { letter: enclosureLetter },
-      include: { rows: true }
+      include: { rows: true },
     });
 
     if (!enclosure) {
@@ -1382,18 +1473,22 @@ export class SeatAllocationService {
     // Fetch admin-reserved seats for this enclosure
     const adminReservedSeats = await this.prisma.seatReservation.findMany({
       where: { enclosureLetter },
-      select: { rowLetter: true, seatNumber: true }
+      select: { rowLetter: true, seatNumber: true },
     });
 
     // Create a Set for quick lookup: "A-5" format
     const adminReservedSet = new Set(
-      adminReservedSeats.map(r => `${r.rowLetter}-${r.seatNumber}`)
+      adminReservedSeats.map((r) => `${r.rowLetter}-${r.seatNumber}`)
     );
 
-    console.log(`Admin reserved ${adminReservedSet.size} seats in enclosure ${enclosureLetter}`);
+    console.log(
+      `Admin reserved ${adminReservedSet.size} seats in enclosure ${enclosureLetter}`
+    );
 
     // Sort rows by displayOrder
-    const sortedRows = enclosure.rows.sort((a, b) => a.displayOrder - b.displayOrder);
+    const sortedRows = enclosure.rows.sort(
+      (a, b) => a.displayOrder - b.displayOrder
+    );
 
     let attendeeIndex = 0;
 
@@ -1406,17 +1501,21 @@ export class SeatAllocationService {
       // Allocate seats in this row
       for (let seatNum = row.startSeat; seatNum <= row.endSeat; seatNum++) {
         if (attendeeIndex >= attendees.length) break;
-        
+
         // Check if seat is reserved by row configuration
         if (rowReservedSeats.includes(seatNum)) {
-          console.log(`Skipping row-reserved seat: ${enclosureLetter}-${row.letter}-${seatNum}`);
+          console.log(
+            `Skipping row-reserved seat: ${enclosureLetter}-${row.letter}-${seatNum}`
+          );
           continue;
         }
 
         // Check if seat is reserved by admin
         const seatKey = `${row.letter}-${seatNum}`;
         if (adminReservedSet.has(seatKey)) {
-          console.log(`Skipping admin-reserved seat: ${enclosureLetter}-${seatKey}`);
+          console.log(
+            `Skipping admin-reserved seat: ${enclosureLetter}-${seatKey}`
+          );
           continue;
         }
 
@@ -1429,32 +1528,36 @@ export class SeatAllocationService {
             enclosureId: enclosure.id,
             rowLetter: row.letter,
             seatNumber: seatNum,
-            attendeeId: attendee.id
-          }
+            attendeeId: attendee.id,
+          },
         });
 
         attendeeIndex++;
       }
     }
 
-    console.log(`Allocated ${attendeeIndex} seats in enclosure ${enclosureLetter}`);
+    console.log(
+      `Allocated ${attendeeIndex} seats in enclosure ${enclosureLetter}`
+    );
   }
 
   /**
    * Parse reserved seat string: "1,5,10" → [1, 5, 10]
    */
   private parseReservedSeats(reservedStr: string): number[] {
-    if (!reservedStr || reservedStr === '') return [];
+    if (!reservedStr || reservedStr === "") return [];
     return reservedStr
-      .split(',')
-      .map(s => parseInt(s.trim()))
-      .filter(n => !isNaN(n));
+      .split(",")
+      .map((s) => parseInt(s.trim()))
+      .filter((n) => !isNaN(n));
   }
 
   /**
    * Group attendees by their assigned enclosure
    */
-  private groupByEnclosure(attendees: Array<{ id: string; assignedEnclosure: string }>) {
+  private groupByEnclosure(
+    attendees: Array<{ id: string; assignedEnclosure: string }>
+  ) {
     return attendees.reduce((acc, attendee) => {
       const enclosure = attendee.assignedEnclosure;
       if (!acc[enclosure]) acc[enclosure] = [];
@@ -1469,14 +1572,14 @@ export class SeatAllocationService {
   async getTotalSeats(enclosureLetter: string): Promise<number> {
     const enclosure = await this.prisma.enclosure.findUnique({
       where: { letter: enclosureLetter },
-      include: { rows: true }
+      include: { rows: true },
     });
 
     if (!enclosure) return 0;
 
     // Get admin-reserved seat count
     const adminReservedCount = await this.prisma.seatReservation.count({
-      where: { enclosureLetter }
+      where: { enclosureLetter },
     });
 
     // Calculate row-reserved seats
@@ -1501,9 +1604,9 @@ export class SeatAllocationService {
 ```typescript
 // apps/api/src/controllers/allocation.controller.ts
 
-import { Request, Response } from 'express';
-import { SeatAllocationService } from '../services/seatAllocation.service';
-import { prisma } from '../lib/prisma';
+import { Request, Response } from "express";
+import { SeatAllocationService } from "../services/seatAllocation.service";
+import { prisma } from "../lib/prisma";
 
 export class AllocationController {
   private seatService: SeatAllocationService;
@@ -1522,18 +1625,19 @@ export class AllocationController {
       const attendees = await prisma.attendee.findMany({
         where: {
           assignedEnclosure: { not: null },
-          allocation: null // Only attendees without existing allocation
+          allocation: null, // Only attendees without existing allocation
         },
         select: {
           id: true,
           enrollmentId: true,
-          assignedEnclosure: true
-        }
+          assignedEnclosure: true,
+        },
       });
 
       if (attendees.length === 0) {
-        return res.status(400).json({ 
-          error: 'No attendees found for allocation. Either all attendees are already allocated or none have assigned enclosures.' 
+        return res.status(400).json({
+          error:
+            "No attendees found for allocation. Either all attendees are already allocated or none have assigned enclosures.",
         });
       }
 
@@ -1547,18 +1651,18 @@ export class AllocationController {
       const reserved = await prisma.seatReservation.count();
 
       res.json({
-        message: 'Seat allocation completed successfully',
+        message: "Seat allocation completed successfully",
         statistics: {
           attendeesProcessed: attendees.length,
           seatsAllocated: allocated,
-          adminReservedSeats: reserved
-        }
+          adminReservedSeats: reserved,
+        },
       });
     } catch (error) {
-      console.error('Allocation error:', error);
-      res.status(500).json({ 
-        error: 'Seat allocation failed',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      console.error("Allocation error:", error);
+      res.status(500).json({
+        error: "Seat allocation failed",
+        details: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
@@ -1570,12 +1674,12 @@ export class AllocationController {
   async clearAllocations(req: Request, res: Response) {
     try {
       const result = await prisma.seatAllocation.deleteMany({});
-      res.json({ 
-        message: `Cleared ${result.count} seat allocations` 
+      res.json({
+        message: `Cleared ${result.count} seat allocations`,
       });
     } catch (error) {
-      console.error('Clear allocations error:', error);
-      res.status(500).json({ error: 'Failed to clear allocations' });
+      console.error("Clear allocations error:", error);
+      res.status(500).json({ error: "Failed to clear allocations" });
     }
   }
 
@@ -1592,24 +1696,24 @@ export class AllocationController {
         include: {
           allocation: {
             include: {
-              enclosure: true
-            }
-          }
-        }
+              enclosure: true,
+            },
+          },
+        },
       });
 
       if (!attendee) {
-        return res.status(404).json({ error: 'Attendee not found' });
+        return res.status(404).json({ error: "Attendee not found" });
       }
 
       if (!attendee.allocation) {
-        return res.status(404).json({ 
-          error: 'No seat allocated yet',
+        return res.status(404).json({
+          error: "No seat allocated yet",
           attendee: {
             enrollmentId: attendee.enrollmentId,
             name: attendee.name,
-            assignedEnclosure: attendee.assignedEnclosure
-          }
+            assignedEnclosure: attendee.assignedEnclosure,
+          },
         });
       }
 
@@ -1617,19 +1721,19 @@ export class AllocationController {
         attendee: {
           enrollmentId: attendee.enrollmentId,
           name: attendee.name,
-          course: attendee.course
+          course: attendee.course,
         },
         allocation: {
           enclosure: attendee.allocation.enclosureLetter,
           enclosureName: attendee.allocation.enclosure.name,
           row: attendee.allocation.rowLetter,
           seat: attendee.allocation.seatNumber,
-          allocatedAt: attendee.allocation.allocatedAt
-        }
+          allocatedAt: attendee.allocation.allocatedAt,
+        },
       });
     } catch (error) {
-      console.error('Get allocation error:', error);
-      res.status(500).json({ error: 'Failed to fetch allocation' });
+      console.error("Get allocation error:", error);
+      res.status(500).json({ error: "Failed to fetch allocation" });
     }
   }
 }
@@ -1640,10 +1744,10 @@ export class AllocationController {
 ```typescript
 // apps/api/src/controllers/attendee.controller.ts
 
-import { Request, Response } from 'express';
-import { SeatAllocationService } from '../services/seatAllocation.service';
-import { parse } from 'csv-parse/sync';
-import { prisma } from '../lib/prisma';
+import { Request, Response } from "express";
+import { SeatAllocationService } from "../services/seatAllocation.service";
+import { parse } from "csv-parse/sync";
+import { prisma } from "../lib/prisma";
 
 export class AttendeeController {
   private seatService: SeatAllocationService;
@@ -1660,26 +1764,26 @@ export class AttendeeController {
   async uploadAttendees(req: Request, res: Response) {
     try {
       if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+        return res.status(400).json({ error: "No file uploaded" });
       }
 
       // Parse CSV
-      const fileContent = req.file.buffer.toString('utf-8');
+      const fileContent = req.file.buffer.toString("utf-8");
       const records = parse(fileContent, {
         columns: true,
         skip_empty_lines: true,
-        trim: true
+        trim: true,
       });
 
       // Validate CSV has required columns
-      const requiredColumns = ['enrollmentId', 'name', 'enclosure'];
-      const hasAllColumns = requiredColumns.every(col => 
-        records.length > 0 && col in records[0]
+      const requiredColumns = ["enrollmentId", "name", "enclosure"];
+      const hasAllColumns = requiredColumns.every(
+        (col) => records.length > 0 && col in records[0]
       );
 
       if (!hasAllColumns) {
-        return res.status(400).json({ 
-          error: 'CSV must contain: enrollmentId, name, enclosure columns' 
+        return res.status(400).json({
+          error: "CSV must contain: enrollmentId, name, enclosure columns",
         });
       }
 
@@ -1693,15 +1797,15 @@ export class AttendeeController {
             data: {
               enrollmentId: record.enrollmentId,
               name: record.name,
-              course: record.course || '',
-              school: record.school || '',
-              degree: record.degree || '',
-              email: record.email || '',
+              course: record.course || "",
+              school: record.school || "",
+              degree: record.degree || "",
+              email: record.email || "",
               phone: record.phone || null,
               assignedEnclosure: record.enclosure, // Key field!
               crr: record.crr || record.enrollmentId,
-              convocationEligible: true
-            }
+              convocationEligible: true,
+            },
           });
         })
       );
@@ -1710,13 +1814,12 @@ export class AttendeeController {
       await this.allocateSeats(req, res);
 
       return res.status(201).json({
-        message: 'Attendees uploaded and seats allocated successfully',
-        count: attendees.length
+        message: "Attendees uploaded and seats allocated successfully",
+        count: attendees.length,
       });
-
     } catch (error) {
-      console.error('Upload error:', error);
-      return res.status(500).json({ error: 'Failed to upload attendees' });
+      console.error("Upload error:", error);
+      return res.status(500).json({ error: "Failed to upload attendees" });
     }
   }
 
@@ -1729,30 +1832,29 @@ export class AttendeeController {
       const attendees = await prisma.attendee.findMany({
         where: {
           convocationEligible: true,
-          assignedEnclosure: { not: null }
+          assignedEnclosure: { not: null },
         },
         select: {
           id: true,
-          assignedEnclosure: true
-        }
+          assignedEnclosure: true,
+        },
       });
 
       // Run allocation algorithm
       await this.seatService.allocateSeats(
-        attendees.map(a => ({
+        attendees.map((a) => ({
           id: a.id,
-          assignedEnclosure: a.assignedEnclosure!
+          assignedEnclosure: a.assignedEnclosure!,
         }))
       );
 
       return res.status(200).json({
-        message: 'Seat allocation completed',
-        allocated: attendees.length
+        message: "Seat allocation completed",
+        allocated: attendees.length,
       });
-
     } catch (error) {
-      console.error('Allocation error:', error);
-      return res.status(500).json({ error: 'Seat allocation failed' });
+      console.error("Allocation error:", error);
+      return res.status(500).json({ error: "Seat allocation failed" });
     }
   }
 
@@ -1770,20 +1872,20 @@ export class AttendeeController {
             include: {
               enclosure: {
                 include: {
-                  rows: true
-                }
-              }
-            }
-          }
-        }
+                  rows: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!attendee) {
-        return res.status(404).json({ error: 'Attendee not found' });
+        return res.status(404).json({ error: "Attendee not found" });
       }
 
       if (!attendee.allocation) {
-        return res.status(404).json({ error: 'Seat not allocated yet' });
+        return res.status(404).json({ error: "Seat not allocated yet" });
       }
 
       return res.status(200).json({
@@ -1791,24 +1893,23 @@ export class AttendeeController {
           enrollmentId: attendee.enrollmentId,
           name: attendee.name,
           course: attendee.course,
-          school: attendee.school
+          school: attendee.school,
         },
         allocation: {
           enclosure: attendee.allocation.enclosure.letter,
           row: attendee.allocation.row,
           seat: attendee.allocation.seatNumber,
-          entryDirection: attendee.allocation.enclosure.entryDirection
+          entryDirection: attendee.allocation.enclosure.entryDirection,
         },
         enclosureMetadata: {
           letter: attendee.allocation.enclosure.letter,
           entryDirection: attendee.allocation.enclosure.entryDirection,
-          rows: attendee.allocation.enclosure.rows
-        }
+          rows: attendee.allocation.enclosure.rows,
+        },
       });
-
     } catch (error) {
-      console.error('Get seat error:', error);
-      return res.status(500).json({ error: 'Failed to retrieve seat' });
+      console.error("Get seat error:", error);
+      return res.status(500).json({ error: "Failed to retrieve seat" });
     }
   }
 
@@ -1822,21 +1923,18 @@ export class AttendeeController {
       const allocations = await prisma.seatAllocation.findMany({
         where: {
           enclosure: {
-            letter: enclosure
-          }
+            letter: enclosure,
+          },
         },
         include: {
           attendee: {
             select: {
               enrollmentId: true,
-              name: true
-            }
-          }
+              name: true,
+            },
+          },
         },
-        orderBy: [
-          { row: 'asc' },
-          { seatNumber: 'asc' }
-        ]
+        orderBy: [{ row: "asc" }, { seatNumber: "asc" }],
       });
 
       // Group by row
@@ -1847,7 +1945,7 @@ export class AttendeeController {
         acc[alloc.row].push({
           enrollmentNumber: alloc.attendee.enrollmentId,
           name: alloc.attendee.name,
-          seat: alloc.seatNumber.toString()
+          seat: alloc.seatNumber.toString(),
         });
         return acc;
       }, {} as Record<string, any[]>);
@@ -1855,17 +1953,18 @@ export class AttendeeController {
       // Format response
       const rows = Object.entries(groupedByRow).map(([row, attendees]) => ({
         row,
-        attendees
+        attendees,
       }));
 
       return res.status(200).json({
         enclosure,
-        rows
+        rows,
       });
-
     } catch (error) {
-      console.error('Get enclosure error:', error);
-      return res.status(500).json({ error: 'Failed to retrieve enclosure data' });
+      console.error("Get enclosure error:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to retrieve enclosure data" });
     }
   }
 }
@@ -1876,10 +1975,10 @@ export class AttendeeController {
 ```typescript
 // apps/api/src/routes/attendee.routes.ts
 
-import { Router } from 'express';
-import multer from 'multer';
-import { AttendeeController } from '../controllers/attendee.controller';
-import { authMiddleware } from '../middleware/auth';
+import { Router } from "express";
+import multer from "multer";
+import { AttendeeController } from "../controllers/attendee.controller";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -1887,28 +1986,25 @@ const controller = new AttendeeController();
 
 // Upload attendees with enclosure assignments
 router.post(
-  '/upload',
+  "/upload",
   authMiddleware,
-  upload.single('file'),
+  upload.single("file"),
   controller.uploadAttendees.bind(controller)
 );
 
 // Manually trigger seat allocation
 router.post(
-  '/allocate-seats',
+  "/allocate-seats",
   authMiddleware,
   controller.allocateSeats.bind(controller)
 );
 
 // Get attendee seat allocation
-router.get(
-  '/:enrollmentId/seat',
-  controller.getAttendeeSeat.bind(controller)
-);
+router.get("/:enrollmentId/seat", controller.getAttendeeSeat.bind(controller));
 
 // Get all attendees in enclosure (for aerial view)
 router.get(
-  '/enclosure/:enclosure',
+  "/enclosure/:enclosure",
   controller.getAttendeesInEnclosure.bind(controller)
 );
 
@@ -1916,6 +2012,7 @@ export default router;
 ```
 
 ### Deliverables
+
 - ✅ Seat allocation service with admin seat reservation handling
 - ✅ Algorithm that skips both admin-reserved and row-reserved seats
 - ✅ Allocation controller that reads from database (not CSV)
@@ -1931,6 +2028,7 @@ export default router;
 ### Duration: 7-10 days
 
 ### Objectives
+
 - Create District.in-inspired seat visualization
 - Build interactive seat map components
 - Implement enclosure selector
@@ -1974,8 +2072,8 @@ export default router;
 ```typescript
 // apps/web/src/components/attendee/Seat.tsx
 
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SeatProps {
   number: number;
@@ -1992,17 +2090,17 @@ export function Seat({
   isReserved = false,
   isInActiveRow = false,
   onClick,
-  className
+  className,
 }: SeatProps) {
   return (
     <button
       onClick={onClick}
       disabled={isReserved}
       className={cn(
-        'relative group',
-        'w-10 h-10 md:w-12 md:h-12',
-        'transition-all duration-200',
-        'focus:outline-none focus:ring-2 focus:ring-offset-2',
+        "relative group",
+        "w-10 h-10 md:w-12 md:h-12",
+        "transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2",
         className
       )}
       aria-label={`Seat ${number}`}
@@ -2013,12 +2111,12 @@ export function Seat({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={cn(
-          'w-full h-full',
-          'border-2 rounded-t-full transition-colors',
+          "w-full h-full",
+          "border-2 rounded-t-full transition-colors",
           {
-            'border-red-600': isSelected,
-            'border-gray-400': !isSelected && !isReserved,
-            'border-yellow-500': isReserved
+            "border-red-600": isSelected,
+            "border-gray-400": !isSelected && !isReserved,
+            "border-yellow-500": isReserved,
           }
         )}
       >
@@ -2029,23 +2127,23 @@ export function Seat({
           rx="12"
           ry="8"
           className={cn({
-            'fill-red-500': isSelected,
-            'fill-yellow-500': isReserved,
-            'fill-gray-200': !isSelected && !isReserved && isInActiveRow,
-            'fill-white': !isSelected && !isReserved && !isInActiveRow
+            "fill-red-500": isSelected,
+            "fill-yellow-500": isReserved,
+            "fill-gray-200": !isSelected && !isReserved && isInActiveRow,
+            "fill-white": !isSelected && !isReserved && !isInActiveRow,
           })}
         />
-        
+
         {/* Seat base */}
         <rect
           y="7"
           width="24"
           height="21"
           className={cn({
-            'fill-red-500': isSelected,
-            'fill-yellow-500': isReserved,
-            'fill-gray-200': !isSelected && !isReserved && isInActiveRow,
-            'fill-white': !isSelected && !isReserved && !isInActiveRow
+            "fill-red-500": isSelected,
+            "fill-yellow-500": isReserved,
+            "fill-gray-200": !isSelected && !isReserved && isInActiveRow,
+            "fill-white": !isSelected && !isReserved && !isInActiveRow,
           })}
         />
       </svg>
@@ -2053,13 +2151,13 @@ export function Seat({
       {/* Seat number overlay */}
       <span
         className={cn(
-          'absolute inset-0',
-          'flex items-center justify-center',
-          'text-xs font-medium',
-          'pt-2',
+          "absolute inset-0",
+          "flex items-center justify-center",
+          "text-xs font-medium",
+          "pt-2",
           {
-            'text-white': isSelected || isReserved,
-            'text-gray-600': !isSelected && !isReserved
+            "text-white": isSelected || isReserved,
+            "text-gray-600": !isSelected && !isReserved,
           }
         )}
       >
@@ -2067,10 +2165,12 @@ export function Seat({
       </span>
 
       {/* Hover tooltip */}
-      <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 
+      <div
+        className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 
                       hidden group-hover:block
                       bg-gray-900 text-white text-xs rounded py-1 px-2 
-                      whitespace-nowrap z-10">
+                      whitespace-nowrap z-10"
+      >
         Seat {number}
       </div>
     </button>
@@ -2083,11 +2183,11 @@ export function Seat({
 ```typescript
 // apps/web/src/components/attendee/TheaterSeatMap.tsx
 
-'use client';
+"use client";
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Seat } from './Seat';
-import { cn } from '@/lib/utils';
+import React, { useRef, useEffect, useState } from "react";
+import { Seat } from "./Seat";
+import { cn } from "@/lib/utils";
 
 interface Row {
   letter: string;
@@ -2112,7 +2212,7 @@ interface SeatMapProps {
 export function TheaterSeatMap({
   enclosure,
   allocation,
-  className
+  className,
 }: SeatMapProps) {
   const activeRowRef = useRef<HTMLDivElement>(null);
   const activeSeatRef = useRef<HTMLButtonElement>(null);
@@ -2123,9 +2223,9 @@ export function TheaterSeatMap({
     if (!hasScrolled && activeRowRef.current && activeSeatRef.current) {
       setTimeout(() => {
         activeSeatRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
         });
         setHasScrolled(true);
       }, 500);
@@ -2136,19 +2236,21 @@ export function TheaterSeatMap({
   const parseReserved = (reservedStr: string): number[] => {
     if (!reservedStr) return [];
     return reservedStr
-      .split(',')
-      .map(s => parseInt(s.trim()))
-      .filter(n => !isNaN(n));
+      .split(",")
+      .map((s) => parseInt(s.trim()))
+      .filter((n) => !isNaN(n));
   };
 
   // Show only rows around user's seat (context: ±3 rows)
-  const activeRowIndex = enclosure.rows.findIndex(r => r.letter === allocation.row);
+  const activeRowIndex = enclosure.rows.findIndex(
+    (r) => r.letter === allocation.row
+  );
   const startIndex = Math.max(0, activeRowIndex - 3);
   const endIndex = Math.min(enclosure.rows.length, activeRowIndex + 4);
   const visibleRows = enclosure.rows.slice(startIndex, endIndex);
 
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn("space-y-6", className)}>
       {/* Entry Direction Indicator */}
       <div className="flex items-center justify-center space-x-3 text-sm">
         <span className="text-gray-600">Enter from:</span>
@@ -2172,13 +2274,13 @@ export function TheaterSeatMap({
               {/* Row Label */}
               <div
                 className={cn(
-                  'flex-shrink-0 w-12 h-12',
-                  'flex items-center justify-center',
-                  'rounded-md font-bold text-sm',
-                  'transition-colors',
+                  "flex-shrink-0 w-12 h-12",
+                  "flex items-center justify-center",
+                  "rounded-md font-bold text-sm",
+                  "transition-colors",
                   {
-                    'bg-red-500 text-white': isActiveRow,
-                    'bg-gray-100 text-gray-600': !isActiveRow
+                    "bg-red-500 text-white": isActiveRow,
+                    "bg-gray-100 text-gray-600": !isActiveRow,
                   }
                 )}
               >
@@ -2242,10 +2344,10 @@ export function TheaterSeatMap({
 ```typescript
 // apps/web/src/components/attendee/VenueMap.tsx
 
-'use client';
+"use client";
 
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface Enclosure {
   letter: string;
@@ -2263,12 +2365,12 @@ export function VenueMap({
   enclosures,
   activeEnclosure,
   onEnclosureClick,
-  className
+  className,
 }: VenueMapProps) {
   return (
-    <div className={cn('p-6 bg-gray-50 rounded-lg', className)}>
+    <div className={cn("p-6 bg-gray-50 rounded-lg", className)}>
       <h3 className="text-lg font-semibold mb-4 text-center">Venue Layout</h3>
-      
+
       {/* Simplified grid layout of enclosures */}
       <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
         {enclosures.map((enclosure) => (
@@ -2276,16 +2378,16 @@ export function VenueMap({
             key={enclosure.letter}
             onClick={() => onEnclosureClick?.(enclosure.letter)}
             className={cn(
-              'aspect-square rounded-lg',
-              'flex flex-col items-center justify-center',
-              'font-bold text-2xl',
-              'transition-all duration-200',
-              'border-2',
+              "aspect-square rounded-lg",
+              "flex flex-col items-center justify-center",
+              "font-bold text-2xl",
+              "transition-all duration-200",
+              "border-2",
               {
-                'bg-red-500 text-white border-red-600 shadow-lg scale-105':
+                "bg-red-500 text-white border-red-600 shadow-lg scale-105":
                   enclosure.letter === activeEnclosure,
-                'bg-white text-gray-700 border-gray-300 hover:border-red-300':
-                  enclosure.letter !== activeEnclosure
+                "bg-white text-gray-700 border-gray-300 hover:border-red-300":
+                  enclosure.letter !== activeEnclosure,
               }
             )}
           >
@@ -2313,11 +2415,11 @@ export function VenueMap({
 ```typescript
 // apps/web/src/app/attendee/[enrollmentId]/page.tsx
 
-import React from 'react';
-import { notFound } from 'next/navigation';
-import { TheaterSeatMap } from '@/components/attendee/TheaterSeatMap';
-import { VenueMap } from '@/components/attendee/VenueMap';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from "react";
+import { notFound } from "next/navigation";
+import { TheaterSeatMap } from "@/components/attendee/TheaterSeatMap";
+import { VenueMap } from "@/components/attendee/VenueMap";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PageProps {
   params: { enrollmentId: string };
@@ -2326,7 +2428,7 @@ interface PageProps {
 async function getAttendeeSeat(enrollmentId: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/attendees/${enrollmentId}/seat`,
-    { cache: 'no-store' }
+    { cache: "no-store" }
   );
 
   if (!res.ok) return null;
@@ -2358,10 +2460,10 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
           {/* Left: Venue Map */}
           <VenueMap
             enclosures={[
-              { letter: 'A', allocatedFor: 'Students' },
-              { letter: 'B', allocatedFor: 'Students' },
-              { letter: 'C', allocatedFor: 'Faculty' },
-              { letter: 'D', allocatedFor: 'Guests' }
+              { letter: "A", allocatedFor: "Students" },
+              { letter: "B", allocatedFor: "Students" },
+              { letter: "C", allocatedFor: "Faculty" },
+              { letter: "D", allocatedFor: "Guests" },
             ]}
             activeEnclosure={data.allocation.enclosure}
           />
@@ -2429,11 +2531,11 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
               {/* ... */}
             </CardContent>
           </Card>
-          
+
           <VenueMap
             enclosures={[
-              { letter: 'A', allocatedFor: 'Students' },
-              { letter: 'B', allocatedFor: 'Students' }
+              { letter: "A", allocatedFor: "Students" },
+              { letter: "B", allocatedFor: "Students" },
             ]}
             activeEnclosure={data.allocation.enclosure}
             className="max-w-md mx-auto"
@@ -2453,7 +2555,7 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
               enclosure={data.enclosureMetadata}
               allocation={{
                 row: data.allocation.row,
-                seat: parseInt(data.allocation.seat)
+                seat: parseInt(data.allocation.seat),
               }}
             />
           </CardContent>
@@ -2465,6 +2567,7 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
 ```
 
 ### Deliverables
+
 - ✅ Theater-style seat component with SVG
 - ✅ Interactive seat map with auto-scroll
 - ✅ Venue/enclosure selector
@@ -2478,6 +2581,7 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
 ### Duration: 3-4 days
 
 ### Objectives
+
 - Create aerial view for visualizing seat allocations
 - Build analytics dashboard for allocation statistics
 - Add attendee search and filtering capabilities
@@ -2493,8 +2597,8 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
 ```typescript
 // apps/api/src/controllers/allocation.controller.ts
 
-import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
+import { Request, Response } from "express";
+import { prisma } from "../lib/prisma";
 
 export class AllocationController {
   /**
@@ -2511,13 +2615,13 @@ export class AllocationController {
 
       // Get enclosure count
       const totalEnclosures = await prisma.enclosure.count({
-        where: { isActive: true }
+        where: { isActive: true },
       });
 
       // Get breakdown by category
       const byCategory = await prisma.attendee.groupBy({
-        by: ['category'],
-        _count: { id: true }
+        by: ["category"],
+        _count: { id: true },
       });
 
       const categoryMap = byCategory.reduce((acc, item) => {
@@ -2531,23 +2635,24 @@ export class AllocationController {
         include: {
           rows: true,
           _count: {
-            select: { seatAllocations: true }
-          }
+            select: { seatAllocations: true },
+          },
         },
-        orderBy: { displayOrder: 'asc' }
+        orderBy: { displayOrder: "asc" },
       });
 
       const enclosureStats = enclosures.map((enc) => {
         const totalSeats = enc.rows.reduce((sum, row) => {
-          const reserved = row.reservedSeats ? row.reservedSeats.split(',').length : 0;
+          const reserved = row.reservedSeats
+            ? row.reservedSeats.split(",").length
+            : 0;
           return sum + (row.endSeat - row.startSeat + 1 - reserved);
         }, 0);
 
         const allocatedSeats = enc._count.seatAllocations;
         const availableSeats = totalSeats - allocatedSeats;
-        const utilizationRate = totalSeats > 0 
-          ? Math.round((allocatedSeats / totalSeats) * 100) 
-          : 0;
+        const utilizationRate =
+          totalSeats > 0 ? Math.round((allocatedSeats / totalSeats) * 100) : 0;
 
         return {
           letter: enc.letter,
@@ -2555,7 +2660,7 @@ export class AllocationController {
           totalSeats,
           allocatedSeats,
           availableSeats,
-          utilizationRate
+          utilizationRate,
         };
       });
 
@@ -2564,11 +2669,11 @@ export class AllocationController {
         totalAllocated,
         totalEnclosures,
         byCategory: categoryMap,
-        enclosureStats
+        enclosureStats,
       });
     } catch (error) {
-      console.error('Error fetching stats:', error);
-      res.status(500).json({ error: 'Failed to fetch statistics' });
+      console.error("Error fetching stats:", error);
+      res.status(500).json({ error: "Failed to fetch statistics" });
     }
   }
 }
@@ -2577,12 +2682,12 @@ export class AllocationController {
 ```typescript
 // apps/api/src/routes/allocation.routes.ts
 
-import { Router } from 'express';
-import { AllocationController } from '../controllers/allocation.controller';
+import { Router } from "express";
+import { AllocationController } from "../controllers/allocation.controller";
 
 const router = Router();
 
-router.get('/stats', AllocationController.getStats);
+router.get("/stats", AllocationController.getStats);
 
 export default router;
 ```
@@ -2594,10 +2699,10 @@ export default router;
 ```typescript
 // apps/web/src/app/admin/dashboard/page.tsx
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
 
 interface AllocationStats {
   totalAttendees: number;
@@ -2629,11 +2734,11 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('/api/allocations/stats');
+      const res = await fetch("/api/allocations/stats");
       const data = await res.json();
       setStats(data);
     } catch (error) {
-      console.error('Failed to fetch stats:', error);
+      console.error("Failed to fetch stats:", error);
     } finally {
       setLoading(false);
     }
@@ -2666,9 +2771,10 @@ export default function DashboardPage() {
         <Card className="p-6">
           <p className="text-sm text-gray-600">Allocation Rate</p>
           <p className="text-3xl font-bold">
-            {stats 
-              ? Math.round((stats.totalAllocated / stats.totalAttendees) * 100) 
-              : 0}%
+            {stats
+              ? Math.round((stats.totalAllocated / stats.totalAttendees) * 100)
+              : 0}
+            %
           </p>
         </Card>
       </div>
@@ -2691,9 +2797,7 @@ export default function DashboardPage() {
           </div>
           <div className="p-4 bg-purple-50 rounded">
             <p className="text-sm text-gray-600">VIP</p>
-            <p className="text-2xl font-bold">
-              {stats?.byCategory.VIP || 0}
-            </p>
+            <p className="text-2xl font-bold">{stats?.byCategory.VIP || 0}</p>
           </div>
           <div className="p-4 bg-orange-50 rounded">
             <p className="text-sm text-gray-600">Guests</p>
@@ -2712,7 +2816,9 @@ export default function DashboardPage() {
             <div key={enc.letter} className="border-b pb-4 last:border-b-0">
               <div className="flex justify-between items-center mb-2">
                 <div>
-                  <span className="font-bold text-lg">Enclosure {enc.letter}</span>
+                  <span className="font-bold text-lg">
+                    Enclosure {enc.letter}
+                  </span>
                   <span className="ml-2 text-gray-600">- {enc.name}</span>
                 </div>
                 <span className="text-sm font-medium">
@@ -2720,13 +2826,14 @@ export default function DashboardPage() {
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
-                <div 
+                <div
                   className="bg-blue-600 h-3 rounded-full transition-all"
                   style={{ width: `${enc.utilizationRate}%` }}
                 />
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                {enc.availableSeats} seats available ({enc.utilizationRate}% utilized)
+                {enc.availableSeats} seats available ({enc.utilizationRate}%
+                utilized)
               </p>
             </div>
           ))}
@@ -2744,11 +2851,11 @@ export default function DashboardPage() {
 ```typescript
 // apps/web/src/app/admin/aerial-view/page.tsx
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface RowData {
   row: string;
@@ -2768,7 +2875,9 @@ interface Enclosure {
 
 export default function AerialViewPage() {
   const [enclosures, setEnclosures] = useState<Enclosure[]>([]);
-  const [selectedEnclosure, setSelectedEnclosure] = useState<string | null>(null);
+  const [selectedEnclosure, setSelectedEnclosure] = useState<string | null>(
+    null
+  );
   const [rowData, setRowData] = useState<RowData[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -2778,14 +2887,14 @@ export default function AerialViewPage() {
 
   const fetchEnclosures = async () => {
     try {
-      const res = await fetch('/api/enclosures');
+      const res = await fetch("/api/enclosures");
       const data = await res.json();
       setEnclosures(data.enclosures);
       if (data.enclosures.length > 0) {
         selectEnclosure(data.enclosures[0].letter);
       }
     } catch (error) {
-      console.error('Failed to fetch enclosures:', error);
+      console.error("Failed to fetch enclosures:", error);
     }
   };
 
@@ -2797,7 +2906,7 @@ export default function AerialViewPage() {
       const data = await res.json();
       setRowData(data.rows || []);
     } catch (error) {
-      console.error('Failed to fetch enclosure data:', error);
+      console.error("Failed to fetch enclosure data:", error);
     } finally {
       setLoading(false);
     }
@@ -2805,7 +2914,9 @@ export default function AerialViewPage() {
 
   return (
     <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-6">Aerial View - Seat Allocations</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Aerial View - Seat Allocations
+      </h1>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Enclosure Selector */}
@@ -2815,7 +2926,9 @@ export default function AerialViewPage() {
             {enclosures.map((enc) => (
               <Button
                 key={enc.letter}
-                variant={selectedEnclosure === enc.letter ? 'default' : 'outline'}
+                variant={
+                  selectedEnclosure === enc.letter ? "default" : "outline"
+                }
                 className="w-full justify-start"
                 onClick={() => selectEnclosure(enc.letter)}
               >
@@ -2854,7 +2967,9 @@ export default function AerialViewPage() {
                           key={attendee.enrollmentNumber}
                           className="p-3 bg-gray-50 rounded border hover:bg-gray-100 transition"
                         >
-                          <p className="font-bold text-sm">Seat {attendee.seat}</p>
+                          <p className="font-bold text-sm">
+                            Seat {attendee.seat}
+                          </p>
                           <p className="text-xs text-gray-600 mt-1">
                             {attendee.enrollmentNumber}
                           </p>
@@ -2890,13 +3005,13 @@ export default function AerialViewPage() {
 ```typescript
 // apps/web/src/app/admin/search/page.tsx
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface AttendeeResult {
   id: string;
@@ -2909,7 +3024,7 @@ interface AttendeeResult {
 }
 
 export default function SearchPage() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<AttendeeResult[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -2918,11 +3033,13 @@ export default function SearchPage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/attendees/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(
+        `/api/attendees/search?q=${encodeURIComponent(query)}`
+      );
       const data = await res.json();
       setResults(data.results || []);
     } catch (error) {
-      console.error('Search failed:', error);
+      console.error("Search failed:", error);
     } finally {
       setLoading(false);
     }
@@ -2938,7 +3055,7 @@ export default function SearchPage() {
             placeholder="Search by enrollment number or name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             className="flex-1"
           />
           <Button onClick={handleSearch} disabled={loading}>
@@ -2953,7 +3070,7 @@ export default function SearchPage() {
       ) : results.length > 0 ? (
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
-            Found {results.length} result{results.length !== 1 ? 's' : ''}
+            Found {results.length} result{results.length !== 1 ? "s" : ""}
           </p>
           {results.map((attendee) => (
             <Card key={attendee.id} className="p-4">
@@ -3014,21 +3131,21 @@ export class AttendeeController {
     try {
       const { q } = req.query;
 
-      if (!q || typeof q !== 'string') {
-        return res.status(400).json({ error: 'Query parameter required' });
+      if (!q || typeof q !== "string") {
+        return res.status(400).json({ error: "Query parameter required" });
       }
 
       const attendees = await prisma.attendee.findMany({
         where: {
           OR: [
-            { enrollmentNumber: { contains: q, mode: 'insensitive' } },
-            { name: { contains: q, mode: 'insensitive' } }
-          ]
+            { enrollmentNumber: { contains: q, mode: "insensitive" } },
+            { name: { contains: q, mode: "insensitive" } },
+          ],
         },
         include: {
-          seatAllocation: true
+          seatAllocation: true,
         },
-        take: 50 // Limit results
+        take: 50, // Limit results
       });
 
       const results = attendees.map((a) => ({
@@ -3038,19 +3155,20 @@ export class AttendeeController {
         category: a.category,
         enclosure: a.seatAllocation?.enclosureLetter,
         row: a.seatAllocation?.rowLetter,
-        seat: a.seatAllocation?.seatNumber
+        seat: a.seatAllocation?.seatNumber,
       }));
 
       res.json({ results });
     } catch (error) {
-      console.error('Search error:', error);
-      res.status(500).json({ error: 'Search failed' });
+      console.error("Search error:", error);
+      res.status(500).json({ error: "Search failed" });
     }
   }
 }
 ```
 
 ### Deliverables
+
 - ✅ Statistics API endpoint with enclosure breakdown
 - ✅ Admin dashboard with utilization metrics
 - ✅ Aerial view with interactive enclosure selection
@@ -3070,19 +3188,19 @@ export class AttendeeController {
 ```typescript
 // apps/api/src/tests/seatAllocation.test.ts
 
-import { describe, it, expect } from 'bun:test';
-import { SeatAllocationService } from '../services/seatAllocation.service';
+import { describe, it, expect } from "bun:test";
+import { SeatAllocationService } from "../services/seatAllocation.service";
 
-describe('SeatAllocationService', () => {
-  it('should allocate seats correctly', async () => {
+describe("SeatAllocationService", () => {
+  it("should allocate seats correctly", async () => {
     // Test cases
   });
 
-  it('should skip reserved seats', async () => {
+  it("should skip reserved seats", async () => {
     // Test reserved seat logic
   });
 
-  it('should handle multiple enclosures', async () => {
+  it("should handle multiple enclosures", async () => {
     // Test enclosure grouping
   });
 });
@@ -3093,16 +3211,16 @@ describe('SeatAllocationService', () => {
 ```typescript
 // apps/web/src/components/attendee/__tests__/Seat.test.tsx
 
-import { render, screen } from '@testing-library/react';
-import { Seat } from '../Seat';
+import { render, screen } from "@testing-library/react";
+import { Seat } from "../Seat";
 
-describe('Seat Component', () => {
-  it('renders seat number', () => {
+describe("Seat Component", () => {
+  it("renders seat number", () => {
     render(<Seat number={15} />);
-    expect(screen.getByText('15')).toBeInTheDocument();
+    expect(screen.getByText("15")).toBeInTheDocument();
   });
 
-  it('applies selected styles', () => {
+  it("applies selected styles", () => {
     render(<Seat number={15} isSelected />);
     // Assert red color
   });
@@ -3126,23 +3244,27 @@ Create comprehensive documentation:
 ## For Administrators
 
 ### Uploading Attendee Data
+
 1. Prepare CSV with columns: `enrollmentId, name, course, school, degree, email, enclosure`
 2. Navigate to Admin > Attendees > Upload
 3. Select CSV file
 4. System automatically allocates seats upon upload
 
 ### Managing Enclosures
+
 1. Go to Admin > Enclosures
 2. Create new enclosure with row configuration
 3. Set reserved seats (e.g., "1,5,10")
 
 ### Viewing Allocations
+
 - Use Aerial View to see all attendees by enclosure
 - Export seat assignments as CSV
 
 ## For Students
 
 ### Finding Your Seat
+
 1. Visit `/attendee/[your-enrollment-id]`
 2. View your enclosure, row, and seat number
 3. Use the interactive seat map to locate your exact position
@@ -3151,19 +3273,24 @@ Create comprehensive documentation:
 ## API Reference
 
 ### POST /api/attendees/upload
+
 Upload attendee CSV with enclosure assignments
 
 ### POST /api/attendees/allocate-seats
+
 Manually trigger seat allocation
 
 ### GET /api/attendees/:enrollmentId/seat
+
 Get seat allocation for specific attendee
 
 ### GET /api/attendees/enclosure/:enclosure
+
 Get all attendees in an enclosure
 ```
 
 ### Deliverables
+
 - ✅ Unit and integration tests
 - ✅ Performance optimizations
 - ✅ User documentation
@@ -3192,19 +3319,19 @@ JWT_SECRET="..."
 ```typescript
 // Add indexes for performance
 await prisma.$runCommandRaw({
-  createIndexes: 'attendees',
+  createIndexes: "attendees",
   indexes: [
-    { key: { enrollmentId: 1 }, name: 'enrollmentId_idx' },
-    { key: { assignedEnclosure: 1 }, name: 'enclosure_idx' }
-  ]
+    { key: { enrollmentId: 1 }, name: "enrollmentId_idx" },
+    { key: { assignedEnclosure: 1 }, name: "enclosure_idx" },
+  ],
 });
 
 await prisma.$runCommandRaw({
-  createIndexes: 'seat_allocations',
+  createIndexes: "seat_allocations",
   indexes: [
-    { key: { enclosureId: 1, row: 1 }, name: 'enclosure_row_idx' },
-    { key: { attendeeId: 1 }, name: 'attendee_idx', unique: true }
-  ]
+    { key: { enclosureId: 1, row: 1 }, name: "enclosure_row_idx" },
+    { key: { attendeeId: 1 }, name: "attendee_idx", unique: true },
+  ],
 });
 ```
 
@@ -3216,6 +3343,7 @@ await prisma.$runCommandRaw({
 - Monitor API performance
 
 ### Deliverables
+
 - ✅ Production deployment
 - ✅ Database indexes
 - ✅ Monitoring setup
@@ -3225,15 +3353,15 @@ await prisma.$runCommandRaw({
 
 ## Implementation Timeline
 
-| Phase | Duration | Dependencies |
-|-------|----------|--------------|
-| Phase 1: Database Schema & Enclosure Management | 3-4 days | None |
-| Phase 2: Backend Allocation Algorithm | 5-7 days | Phase 1 |
-| Phase 3: Frontend Theater Components | 7-10 days | Phase 2 |
-| Phase 4: Aerial View & Analytics Dashboard | 3-4 days | Phase 2, 3 |
-| Phase 5: Testing & Documentation | 3-4 days | Phase 2, 3, 4 |
-| Phase 6: Deployment & Optimization | 2-3 days | Phase 5 |
-| **Total** | **23-32 days** | |
+| Phase                                           | Duration       | Dependencies  |
+| ----------------------------------------------- | -------------- | ------------- |
+| Phase 1: Database Schema & Enclosure Management | 3-4 days       | None          |
+| Phase 2: Backend Allocation Algorithm           | 5-7 days       | Phase 1       |
+| Phase 3: Frontend Theater Components            | 7-10 days      | Phase 2       |
+| Phase 4: Aerial View & Analytics Dashboard      | 3-4 days       | Phase 2, 3    |
+| Phase 5: Testing & Documentation                | 3-4 days       | Phase 2, 3, 4 |
+| Phase 6: Deployment & Optimization              | 2-3 days       | Phase 5       |
+| **Total**                                       | **23-32 days** |               |
 
 **Note**: Phase 1 now includes admin UI for enclosure management (CRUD operations), as enclosures are managed through the frontend rather than CSV uploads.
 
@@ -3247,6 +3375,7 @@ await prisma.$runCommandRaw({
 **Your stack**: Node.js API
 
 **Decision**: Implement in Node.js API directly
+
 - **Pros**: Simpler architecture, no AWS dependency, easier debugging
 - **Cons**: Not as scalable for massive concurrent allocations
 - **Recommendation**: Start with API, move to background jobs if needed
@@ -3254,6 +3383,7 @@ await prisma.$runCommandRaw({
 ### Seat Allocation Trigger
 
 **Options**:
+
 1. **Immediate**: Run allocation on CSV upload (recommended for start)
 2. **Deferred**: Manual trigger after review
 3. **Scheduled**: Nightly batch process
@@ -3272,18 +3402,23 @@ await prisma.$runCommandRaw({
 ## Risk Mitigation
 
 ### Risk 1: Double Allocation
+
 **Mitigation**: Unique constraint on `SeatAllocation` (enclosureId + row + seatNumber)
 
 ### Risk 2: CSV Format Errors
+
 **Mitigation**: Strict validation + error reporting in upload API
 
 ### Risk 3: Performance with Large Data
-**Mitigation**: 
+
+**Mitigation**:
+
 - Pagination on frontend
 - Database indexing
 - Redis caching for enclosure configs
 
 ### Risk 4: Concurrent Uploads
+
 **Mitigation**: Transaction locks during allocation, queue system for concurrent requests
 
 ---
@@ -3326,6 +3461,7 @@ enrollmentId,name,course,school,degree,email,phone,enclosure
 ### B. API Response Examples
 
 **GET /api/attendees/210101001/seat**
+
 ```json
 {
   "attendee": {
@@ -3354,6 +3490,7 @@ enrollmentId,name,course,school,degree,email,phone,enclosure
 ### C. District.in UI Reference
 
 Key design elements to replicate:
+
 1. **Seat Icon**: Rounded top (theater seat style)
 2. **Color Coding**: Red (selected), Gray (available), Yellow (reserved)
 3. **Hover Effects**: Tooltip on hover with seat details
@@ -3371,11 +3508,13 @@ This implementation plan provides a complete roadmap for building an automatic s
 **Estimated Total Effort**: 23-32 working days (1-1.5 months)
 
 **Recommended Team**:
+
 - 1 Backend Developer (Phases 1-2, 5-6)
 - 1 Frontend Developer (Phases 3-4, 5)
 - 1 Full-stack Developer (All phases - you!)
 
 **Next Steps**:
+
 1. Review and approve this plan
 2. Set up project tracking (GitHub Projects/Jira)
 3. Begin Phase 1: Database Schema
@@ -3383,7 +3522,7 @@ This implementation plan provides a complete roadmap for building an automatic s
 
 ---
 
-*Document Version: 1.0*  
-*Created: January 2025*  
-*Author: AI Assistant*  
-*Status: Ready for Implementation*
+_Document Version: 1.0_  
+_Created: January 2025_  
+_Author: AI Assistant_  
+_Status: Ready for Implementation_
