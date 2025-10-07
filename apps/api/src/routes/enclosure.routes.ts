@@ -13,6 +13,7 @@ router.get('/', controller.getAllEnclosures.bind(controller));
 router.get('/:id', controller.getEnclosure.bind(controller));
 router.post('/', controller.createEnclosure.bind(controller));
 router.put('/:id', controller.updateEnclosure.bind(controller));
+router.patch('/:id/layout', controller.updateEnclosureLayout.bind(controller));
 router.delete('/:id', controller.deleteEnclosure.bind(controller));
 
 export default router;

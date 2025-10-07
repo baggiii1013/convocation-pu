@@ -212,6 +212,59 @@ export class EnclosureController {
   }
 
   /**
+   * PATCH /api/enclosures/:id/layout - Update enclosure spatial layout only
+   */
+  async updateEnclosureLayout(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { positionX, positionY, width, height, color } = req.body;
+
+      // console.log(`Updating enclosure layout for ID: ${id}`, { positionX, positionY, width, height, color });
+
+      // Check if enclosure exists
+      const existing = await prisma.enclosure.findUnique({
+        where: { id }
+      });
+
+      if (!existing) {
+        console.error(`Enclosure not found: ${id}`);
+        return res.status(404).json({ error: 'Enclosure not found' });
+      }
+
+      // Build update data object
+      const updateData: any = {};
+      if (positionX !== undefined) updateData.positionX = positionX;
+      if (positionY !== undefined) updateData.positionY = positionY;
+      if (width !== undefined) updateData.width = width;
+      if (height !== undefined) updateData.height = height;
+      if (color !== undefined) updateData.color = color;
+
+      // console.log(`Updating enclosure ${existing.letter} with data:`, updateData);
+
+      // Update only spatial fields
+      const enclosure = await prisma.enclosure.update({
+        where: { id },
+        data: updateData,
+        include: {
+          rows: {
+            orderBy: { displayOrder: 'asc' }
+          }
+        }
+      });
+
+      // console.log(`Successfully updated enclosure ${enclosure.letter}:`, {
+      //   positionX: enclosure.positionX,
+      //   positionY: enclosure.positionY
+      // });
+
+      return res.json(enclosure);
+    } catch (error) {
+      console.error('Update enclosure layout error:', error);
+      return res.status(500).json({ error: 'Failed to update enclosure layout' });
+    }
+  }
+
+  /**
    * DELETE /api/enclosures/:id - Delete enclosure
    */
   async deleteEnclosure(req: Request, res: Response) {

@@ -5068,11 +5068,19 @@ export namespace Prisma {
   export type EnclosureAvgAggregateOutputType = {
     displayOrder: number | null
     totalSeats: number | null
+    positionX: number | null
+    positionY: number | null
+    width: number | null
+    height: number | null
   }
 
   export type EnclosureSumAggregateOutputType = {
     displayOrder: number | null
     totalSeats: number | null
+    positionX: number | null
+    positionY: number | null
+    width: number | null
+    height: number | null
   }
 
   export type EnclosureMinAggregateOutputType = {
@@ -5084,6 +5092,11 @@ export namespace Prisma {
     displayOrder: number | null
     totalSeats: number | null
     isActive: boolean | null
+    positionX: number | null
+    positionY: number | null
+    width: number | null
+    height: number | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5097,6 +5110,11 @@ export namespace Prisma {
     displayOrder: number | null
     totalSeats: number | null
     isActive: boolean | null
+    positionX: number | null
+    positionY: number | null
+    width: number | null
+    height: number | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5110,6 +5128,11 @@ export namespace Prisma {
     displayOrder: number
     totalSeats: number
     isActive: number
+    positionX: number
+    positionY: number
+    width: number
+    height: number
+    color: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5119,11 +5142,19 @@ export namespace Prisma {
   export type EnclosureAvgAggregateInputType = {
     displayOrder?: true
     totalSeats?: true
+    positionX?: true
+    positionY?: true
+    width?: true
+    height?: true
   }
 
   export type EnclosureSumAggregateInputType = {
     displayOrder?: true
     totalSeats?: true
+    positionX?: true
+    positionY?: true
+    width?: true
+    height?: true
   }
 
   export type EnclosureMinAggregateInputType = {
@@ -5135,6 +5166,11 @@ export namespace Prisma {
     displayOrder?: true
     totalSeats?: true
     isActive?: true
+    positionX?: true
+    positionY?: true
+    width?: true
+    height?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5148,6 +5184,11 @@ export namespace Prisma {
     displayOrder?: true
     totalSeats?: true
     isActive?: true
+    positionX?: true
+    positionY?: true
+    width?: true
+    height?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5161,6 +5202,11 @@ export namespace Prisma {
     displayOrder?: true
     totalSeats?: true
     isActive?: true
+    positionX?: true
+    positionY?: true
+    width?: true
+    height?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5261,6 +5307,11 @@ export namespace Prisma {
     displayOrder: number
     totalSeats: number
     isActive: boolean
+    positionX: number | null
+    positionY: number | null
+    width: number | null
+    height: number | null
+    color: string | null
     createdAt: Date
     updatedAt: Date
     _count: EnclosureCountAggregateOutputType | null
@@ -5293,6 +5344,11 @@ export namespace Prisma {
     displayOrder?: boolean
     totalSeats?: boolean
     isActive?: boolean
+    positionX?: boolean
+    positionY?: boolean
+    width?: boolean
+    height?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
@@ -5311,11 +5367,16 @@ export namespace Prisma {
     displayOrder?: boolean
     totalSeats?: boolean
     isActive?: boolean
+    positionX?: boolean
+    positionY?: boolean
+    width?: boolean
+    height?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "name" | "allocatedFor" | "entryDirection" | "displayOrder" | "totalSeats" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["enclosure"]>
+  export type EnclosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "letter" | "name" | "allocatedFor" | "entryDirection" | "displayOrder" | "totalSeats" | "isActive" | "positionX" | "positionY" | "width" | "height" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["enclosure"]>
   export type EnclosureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rows?: boolean | Enclosure$rowsArgs<ExtArgs>
     seatAllocations?: boolean | Enclosure$seatAllocationsArgs<ExtArgs>
@@ -5337,6 +5398,11 @@ export namespace Prisma {
       displayOrder: number
       totalSeats: number
       isActive: boolean
+      positionX: number | null
+      positionY: number | null
+      width: number | null
+      height: number | null
+      color: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["enclosure"]>
@@ -5741,6 +5807,11 @@ export namespace Prisma {
     readonly displayOrder: FieldRef<"Enclosure", 'Int'>
     readonly totalSeats: FieldRef<"Enclosure", 'Int'>
     readonly isActive: FieldRef<"Enclosure", 'Boolean'>
+    readonly positionX: FieldRef<"Enclosure", 'Float'>
+    readonly positionY: FieldRef<"Enclosure", 'Float'>
+    readonly width: FieldRef<"Enclosure", 'Float'>
+    readonly height: FieldRef<"Enclosure", 'Float'>
+    readonly color: FieldRef<"Enclosure", 'String'>
     readonly createdAt: FieldRef<"Enclosure", 'DateTime'>
     readonly updatedAt: FieldRef<"Enclosure", 'DateTime'>
   }
@@ -12219,6 +12290,11 @@ export namespace Prisma {
     displayOrder: 'displayOrder',
     totalSeats: 'totalSeats',
     isActive: 'isActive',
+    positionX: 'positionX',
+    positionY: 'positionY',
+    width: 'width',
+    height: 'height',
+    color: 'color',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -12437,13 +12513,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -12454,6 +12523,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
     
   /**
    * Deep Input Types
@@ -12751,6 +12827,11 @@ export namespace Prisma {
     displayOrder?: IntFilter<"Enclosure"> | number
     totalSeats?: IntFilter<"Enclosure"> | number
     isActive?: BoolFilter<"Enclosure"> | boolean
+    positionX?: FloatNullableFilter<"Enclosure"> | number | null
+    positionY?: FloatNullableFilter<"Enclosure"> | number | null
+    width?: FloatNullableFilter<"Enclosure"> | number | null
+    height?: FloatNullableFilter<"Enclosure"> | number | null
+    color?: StringNullableFilter<"Enclosure"> | string | null
     createdAt?: DateTimeFilter<"Enclosure"> | Date | string
     updatedAt?: DateTimeFilter<"Enclosure"> | Date | string
     rows?: RowListRelationFilter
@@ -12766,6 +12847,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
     isActive?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     rows?: RowOrderByRelationAggregateInput
@@ -12784,6 +12870,11 @@ export namespace Prisma {
     displayOrder?: IntFilter<"Enclosure"> | number
     totalSeats?: IntFilter<"Enclosure"> | number
     isActive?: BoolFilter<"Enclosure"> | boolean
+    positionX?: FloatNullableFilter<"Enclosure"> | number | null
+    positionY?: FloatNullableFilter<"Enclosure"> | number | null
+    width?: FloatNullableFilter<"Enclosure"> | number | null
+    height?: FloatNullableFilter<"Enclosure"> | number | null
+    color?: StringNullableFilter<"Enclosure"> | string | null
     createdAt?: DateTimeFilter<"Enclosure"> | Date | string
     updatedAt?: DateTimeFilter<"Enclosure"> | Date | string
     rows?: RowListRelationFilter
@@ -12799,6 +12890,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
     isActive?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EnclosureCountOrderByAggregateInput
@@ -12820,6 +12916,11 @@ export namespace Prisma {
     displayOrder?: IntWithAggregatesFilter<"Enclosure"> | number
     totalSeats?: IntWithAggregatesFilter<"Enclosure"> | number
     isActive?: BoolWithAggregatesFilter<"Enclosure"> | boolean
+    positionX?: FloatNullableWithAggregatesFilter<"Enclosure"> | number | null
+    positionY?: FloatNullableWithAggregatesFilter<"Enclosure"> | number | null
+    width?: FloatNullableWithAggregatesFilter<"Enclosure"> | number | null
+    height?: FloatNullableWithAggregatesFilter<"Enclosure"> | number | null
+    color?: StringNullableWithAggregatesFilter<"Enclosure"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Enclosure"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Enclosure"> | Date | string
   }
@@ -13556,6 +13657,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     rows?: RowCreateNestedManyWithoutEnclosureInput
@@ -13571,6 +13677,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
@@ -13585,6 +13696,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUpdateManyWithoutEnclosureNestedInput
@@ -13599,6 +13715,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
@@ -13614,6 +13735,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13626,6 +13752,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13638,6 +13769,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14472,6 +14608,18 @@ export namespace Prisma {
     not?: NestedEnumDirectionFilter<$PrismaModel> | $Enums.Direction
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
   export type RowListRelationFilter = {
     every?: RowWhereInput
     some?: RowWhereInput
@@ -14501,6 +14649,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
     isActive?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14508,6 +14661,10 @@ export namespace Prisma {
   export type EnclosureAvgOrderByAggregateInput = {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
   }
 
   export type EnclosureMaxOrderByAggregateInput = {
@@ -14519,6 +14676,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
     isActive?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14532,6 +14694,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
     isActive?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14539,6 +14706,10 @@ export namespace Prisma {
   export type EnclosureSumOrderByAggregateInput = {
     displayOrder?: SortOrder
     totalSeats?: SortOrder
+    positionX?: SortOrder
+    positionY?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
   }
 
   export type EnumEnclosureTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -14559,6 +14730,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDirectionFilter<$PrismaModel>
     _max?: NestedEnumDirectionFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type RowEnclosureIdLetterCompoundUniqueInput = {
@@ -15057,6 +15245,15 @@ export namespace Prisma {
     set?: $Enums.Direction
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+    unset?: boolean
+  }
+
   export type RowUpdateManyWithoutEnclosureNestedInput = {
     create?: XOR<RowCreateWithoutEnclosureInput, RowUncheckedCreateWithoutEnclosureInput> | RowCreateWithoutEnclosureInput[] | RowUncheckedCreateWithoutEnclosureInput[]
     connectOrCreate?: RowCreateOrConnectWithoutEnclosureInput | RowCreateOrConnectWithoutEnclosureInput[]
@@ -15372,6 +15569,18 @@ export namespace Prisma {
     not?: NestedEnumDirectionFilter<$PrismaModel> | $Enums.Direction
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
   export type NestedEnumEnclosureTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.EnclosureType | EnumEnclosureTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EnclosureType[] | ListEnumEnclosureTypeFieldRefInput<$PrismaModel>
@@ -15390,6 +15599,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDirectionFilter<$PrismaModel>
     _max?: NestedEnumDirectionFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -15417,18 +15643,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-    isSet?: boolean
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
     isSet?: boolean
   }
 
@@ -15655,6 +15869,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     rows?: RowCreateNestedManyWithoutEnclosureInput
@@ -15669,6 +15888,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     rows?: RowUncheckedCreateNestedManyWithoutEnclosureInput
@@ -15739,6 +15963,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUpdateManyWithoutEnclosureNestedInput
@@ -15752,6 +15981,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rows?: RowUncheckedUpdateManyWithoutEnclosureNestedInput
@@ -15923,6 +16157,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seatAllocations?: SeatAllocationCreateNestedManyWithoutEnclosureInput
@@ -15937,6 +16176,11 @@ export namespace Prisma {
     displayOrder?: number
     totalSeats?: number
     isActive?: boolean
+    positionX?: number | null
+    positionY?: number | null
+    width?: number | null
+    height?: number | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     seatAllocations?: SeatAllocationUncheckedCreateNestedManyWithoutEnclosureInput
@@ -15966,6 +16210,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seatAllocations?: SeatAllocationUpdateManyWithoutEnclosureNestedInput
@@ -15979,6 +16228,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     totalSeats?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    positionX?: NullableFloatFieldUpdateOperationsInput | number | null
+    positionY?: NullableFloatFieldUpdateOperationsInput | number | null
+    width?: NullableFloatFieldUpdateOperationsInput | number | null
+    height?: NullableFloatFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seatAllocations?: SeatAllocationUncheckedUpdateManyWithoutEnclosureNestedInput

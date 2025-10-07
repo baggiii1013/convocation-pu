@@ -1,5 +1,5 @@
+import { AerialVenueWrapper } from '@/components/attendee/AerialVenueWrapper';
 import { TheaterSeatMap } from '@/components/attendee/TheaterSeatMap';
-import { VenueMap } from '@/components/attendee/VenueMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { notFound } from 'next/navigation';
 import React from 'react';
@@ -51,22 +51,29 @@ export default async function AttendeeSeatPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3 mb-8">
-          {/* Venue Map */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="text-xl">Venue Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <VenueMap
-                enclosures={enclosures}
-                activeEnclosure={data.allocation.enclosureLetter}
-              />
-            </CardContent>
-          </Card>
+        {/* Aerial Venue View - Full Width */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-2xl">Convocation Ground - Aerial View</CardTitle>
+            <p className="text-sm text-gray-600 mt-1">
+              Click on any enclosure to view detailed seat layout
+            </p>
+          </CardHeader>
+          <CardContent>
+            <AerialVenueWrapper
+              enclosures={enclosures}
+              userAllocation={{
+                enclosureLetter: data.allocation.enclosureLetter,
+                rowLetter: data.allocation.rowLetter,
+                seatNumber: data.allocation.seatNumber
+              }}
+            />
+          </CardContent>
+        </Card>
 
+        <div className="grid gap-6 lg:grid-cols-3 mb-8">
           {/* Attendee Details */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-3">
             <CardHeader>
               <CardTitle className="text-xl">Your Details</CardTitle>
             </CardHeader>

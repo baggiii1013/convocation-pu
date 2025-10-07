@@ -167,6 +167,11 @@ exports.Prisma.EnclosureScalarFieldEnum = {
   displayOrder: 'displayOrder',
   totalSeats: 'totalSeats',
   isActive: 'isActive',
+  positionX: 'positionX',
+  positionY: 'positionY',
+  width: 'width',
+  height: 'height',
+  color: 'color',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
