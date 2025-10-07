@@ -367,74 +367,166 @@ export class AttendeeService {
         errors: [] as any[]
       }
     };
+
+    // Batch size for processing to avoid memory issues
+    const BATCH_SIZE = 200;
     
-    for (let i = 0; i < data.length; i++) {
-      const row = data[i];
-      if (!row) continue;
+    try {
+      // Get all enrollment IDs from the input data
+      const enrollmentIds = data.map(row => row.enrollmentId).filter(Boolean);
       
-      const rowNumber = i + 2; // +2 for header and 0-indexing
+      // Fetch all existing attendees in one query
+      const existingAttendees = await prisma.attendee.findMany({
+        where: {
+          enrollmentId: { in: enrollmentIds }
+        },
+        select: { enrollmentId: true }
+      });
       
-      try {
-        // Check for existing attendee
-        const existing = await prisma.attendee.findUnique({
-          where: { enrollmentId: row.enrollmentId }
-        });
+      // Create a Set for fast lookup
+      const existingEnrollmentIds = new Set(
+        existingAttendees.map(a => a.enrollmentId)
+      );
+      
+      // Separate data into batches for create and update
+      const toCreate: any[] = [];
+      const toUpdate: any[] = [];
+      
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        if (!row) continue;
         
-        if (existing) {
-          if (options.updateExisting) {
-            // Update existing record
-            const updateData = {
-              ...row,
-              assignedEnclosure: row.assignedEnclosure || row.enclosure,
-              enclosure: undefined
-            };
-            const updated = await prisma.attendee.update({
-              where: { enrollmentId: row.enrollmentId },
-              data: updateData,
-              include: {
-                account: true,
-                allocation: true
-              }
-            });
-            results.results.imported.push(updated);
-            results.summary.successful++;
-          } else if (options.skipDuplicates) {
-            // Skip duplicate
-            results.summary.skipped++;
-          } else {
-            // Report as error
-            results.results.errors.push({
-              row: rowNumber,
-              data: row,
-              error: `Duplicate enrollment ID: ${row.enrollmentId}`
-            });
-            results.summary.failed++;
-          }
-        } else {
-          // Create new record
-          const createData = {
+        const rowNumber = i + 2; // +2 for header and 0-indexing
+        
+        try {
+          const processedRow = {
             ...row,
             assignedEnclosure: row.assignedEnclosure || row.enclosure,
             enclosure: undefined
           };
-          const created = await prisma.attendee.create({
-            data: createData,
+          
+          const exists = existingEnrollmentIds.has(row.enrollmentId);
+          
+          if (exists) {
+            if (options.updateExisting) {
+              toUpdate.push({ rowNumber, data: processedRow });
+            } else if (options.skipDuplicates) {
+              results.summary.skipped++;
+            } else {
+              results.results.errors.push({
+                row: rowNumber,
+                data: row,
+                error: `Duplicate enrollment ID: ${row.enrollmentId}`
+              });
+              results.summary.failed++;
+            }
+          } else {
+            toCreate.push({ rowNumber, data: processedRow });
+          }
+        } catch (error) {
+          results.results.errors.push({
+            row: rowNumber,
+            data: row,
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+          results.summary.failed++;
+        }
+      }
+      
+      // Process creates in batches
+      for (let i = 0; i < toCreate.length; i += BATCH_SIZE) {
+        const batch = toCreate.slice(i, i + BATCH_SIZE);
+        
+        try {
+          // MongoDB doesn't support skipDuplicates in createMany, so we remove it
+          const created = await prisma.attendee.createMany({
+            data: batch.map(item => item.data)
+          });
+          
+          results.summary.successful += created.count;
+          
+          // Fetch created records to return (optional, can be skipped for performance)
+          if (i === 0) { // Only fetch first batch to avoid memory issues
+            const createdRecords = await prisma.attendee.findMany({
+              where: {
+                enrollmentId: {
+                  in: batch.map(item => item.data.enrollmentId)
+                }
+              },
+              include: {
+                account: true,
+                allocation: true
+              },
+              take: 100 // Limit to avoid memory issues
+            });
+            results.results.imported.push(...createdRecords);
+          }
+        } catch (error) {
+          // If batch fails, try individually to identify problematic records
+          for (const item of batch) {
+            try {
+              const created = await prisma.attendee.create({
+                data: item.data,
+                include: {
+                  account: true,
+                  allocation: true
+                }
+              });
+              results.results.imported.push(created);
+              results.summary.successful++;
+            } catch (createError) {
+              results.results.errors.push({
+                row: item.rowNumber,
+                data: item.data,
+                error: createError instanceof Error ? createError.message : 'Unknown error'
+              });
+              results.summary.failed++;
+            }
+          }
+        }
+      }
+      
+      // Process updates in batches (updates need to be done individually in Prisma)
+      for (let i = 0; i < toUpdate.length; i += BATCH_SIZE) {
+        const batch = toUpdate.slice(i, i + BATCH_SIZE);
+        
+        // Use Promise.allSettled for parallel updates
+        const updatePromises = batch.map(item =>
+          prisma.attendee.update({
+            where: { enrollmentId: item.data.enrollmentId },
+            data: item.data,
             include: {
               account: true,
               allocation: true
             }
-          });
-          results.results.imported.push(created);
-          results.summary.successful++;
+          })
+          .then(updated => ({ status: 'fulfilled', value: updated, item }))
+          .catch(error => ({ status: 'rejected', reason: error, item }))
+        );
+        
+        const batchResults = await Promise.allSettled(updatePromises);
+        
+        for (const result of batchResults) {
+          if (result.status === 'fulfilled') {
+            const value = result.value as any;
+            if (value.status === 'fulfilled') {
+              results.results.imported.push(value.value);
+              results.summary.successful++;
+            } else {
+              results.results.errors.push({
+                row: value.item.rowNumber,
+                data: value.item.data,
+                error: value.reason instanceof Error ? value.reason.message : 'Unknown error'
+              });
+              results.summary.failed++;
+            }
+          }
         }
-      } catch (error) {
-        results.results.errors.push({
-          row: rowNumber,
-          data: row,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
-        results.summary.failed++;
       }
+      
+    } catch (error) {
+      logger.error('Error in bulkCreate:', error);
+      throw error;
     }
     
     logger.info(`Bulk create completed: ${JSON.stringify(results.summary)}`);

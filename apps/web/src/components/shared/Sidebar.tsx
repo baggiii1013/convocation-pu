@@ -215,7 +215,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     },
     {
       name: 'Seat Allocations',
-      href: '/admin/allocations',
+      href: '/admin/dashboard',
       icon: (
         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path

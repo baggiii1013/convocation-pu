@@ -3,12 +3,15 @@
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import {
-    AlertCircle,
-    BarChart3,
-    CheckCircle,
-    MapPin,
-    RefreshCw,
-    Users
+  AlertCircle,
+  BarChart3,
+  CheckCircle,
+  Loader2,
+  MapPin,
+  Play,
+  RefreshCw,
+  Trash2,
+  Users
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -33,6 +36,12 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<AllocationStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [allocating, setAllocating] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [allocationMessage, setAllocationMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -56,6 +65,85 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const handleAllocateSeats = async () => {
+    if (!confirm('Are you sure you want to run seat allocation? This will assign seats to all unallocated attendees.')) {
+      return;
+    }
+
+    setAllocating(true);
+    setAllocationMessage(null);
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/allocations/allocate-seats`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to allocate seats');
+      }
+
+      setAllocationMessage({
+        type: 'success',
+        text: `Success! ${data.data.allocated} seats allocated${data.data.failed > 0 ? `, ${data.data.failed} failed` : ''}`,
+      });
+
+      // Refresh stats after allocation
+      await fetchStats();
+    } catch (error) {
+      console.error('Allocation error:', error);
+      setAllocationMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to allocate seats',
+      });
+    } finally {
+      setAllocating(false);
+    }
+  };
+
+  const handleClearAllocations = async () => {
+    if (!confirm('WARNING: This will clear ALL seat allocations! This action cannot be undone. Are you sure?')) {
+      return;
+    }
+
+    setClearing(true);
+    setAllocationMessage(null);
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/allocations/clear`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to clear allocations');
+      }
+
+      setAllocationMessage({
+        type: 'success',
+        text: `Cleared ${data.data.count} seat allocations`,
+      });
+
+      // Refresh stats after clearing
+      await fetchStats();
+    } catch (error) {
+      console.error('Clear error:', error);
+      setAllocationMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to clear allocations',
+      });
+    } finally {
+      setClearing(false);
     }
   };
 
@@ -101,16 +189,108 @@ export default function DashboardPage() {
               Overview of seat assignments across all enclosures
             </p>
           </div>
-          <Button 
-            onClick={fetchStats} 
-            disabled={refreshing}
-            variant="outline"
-            className="gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              onClick={fetchStats} 
+              disabled={refreshing}
+              variant="outline"
+              className="gap-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
+
+        {/* Allocation Actions */}
+        <Card className="mb-8 border-l-4 border-l-blue-500">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Play className="w-5 h-5" />
+              Seat Allocation Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Status Message */}
+              {allocationMessage && (
+                <div className={`p-4 rounded-lg ${
+                  allocationMessage.type === 'success' 
+                    ? 'bg-green-50 border border-green-200 text-green-800' 
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}>
+                  <p className="font-medium">{allocationMessage.text}</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <Button
+                    onClick={handleAllocateSeats}
+                    disabled={allocating || clearing}
+                    className="w-full gap-2 bg-green-600 hover:bg-green-700"
+                  >
+                    {allocating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Allocating...
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4" />
+                        Run Seat Allocation
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Automatically assign seats to all unallocated attendees
+                  </p>
+                </div>
+
+                <div className="flex-1">
+                  <Button
+                    onClick={handleClearAllocations}
+                    disabled={allocating || clearing}
+                    variant="outline"
+                    className="w-full gap-2 border-red-300 text-red-600 hover:bg-red-50"
+                  >
+                    {clearing ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Clearing...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4" />
+                        Clear All Allocations
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Remove all seat assignments (cannot be undone)
+                  </p>
+                </div>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex gap-3">
+                  <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-800">
+                    <p className="font-semibold mb-1">How Seat Allocation Works:</p>
+                    <ul className="list-disc list-inside space-y-1 text-blue-700">
+                      <li>Attendees must have an assigned enclosure in the database</li>
+                      <li>Seats are assigned sequentially within each enclosure</li>
+                      <li>Reserved seats (admin + row reservations) are automatically skipped</li>
+                      <li>Only attendees with convocationEligible = true are processed</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

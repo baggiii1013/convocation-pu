@@ -21,6 +21,7 @@ export const uploadService = {
       '/api/v1/attendees/upload',
       formData,
       {
+        timeout: 300000, // 5 minutes for large file uploads (5000+ students) - optimized batch processing should complete faster
         headers: {
           'Content-Type': 'multipart/form-data'
         },

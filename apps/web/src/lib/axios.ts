@@ -16,7 +16,7 @@ if (!process.env.NEXT_PUBLIC_API_URL) {
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 10000,
+  timeout: 30000, // 30 seconds default timeout
   withCredentials: true, // Important: allows cookies to be sent
   headers: {
     'Content-Type': 'application/json',

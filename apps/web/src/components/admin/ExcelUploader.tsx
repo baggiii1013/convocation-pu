@@ -52,7 +52,7 @@ export function ExcelUploader({ onUploadComplete }: ExcelUploaderProps) {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
       'application/vnd.ms-excel': ['.xls']
     },
-    maxSize: 10 * 1024 * 1024, // 10MB
+    maxSize: 50 * 1024 * 1024, // 50MB - increased to handle large datasets (5000+ students)
     multiple: false
   });
   

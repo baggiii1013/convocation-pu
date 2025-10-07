@@ -19,6 +19,6 @@ export const uploadExcel = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
+    fileSize: 50 * 1024 * 1024, // 50MB - increased to handle large datasets (5000+ students)
   }
 });
