@@ -114,3 +114,44 @@ export function generateId(): string {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/**
+ * Generate consistent color from string (for avatars)
+ */
+export function stringToColor(str: string): string {
+  const colors = [
+    '#6D49FD', // primary-500
+    '#00D4FF', // accent-blue
+    '#FF4D8F', // accent-pink
+    '#00E676', // accent-green
+    '#FF9800', // accent-orange
+    '#A78BFA', // primary-400
+  ];
+  
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+}
+
+/**
+ * Check if device is mobile
+ */
+export function isMobile(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 768;
+}
+
+/**
+ * Copy text to clipboard
+ */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}

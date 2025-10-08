@@ -5,6 +5,7 @@
 /* ==========================================
    CSS CUSTOM PROPERTIES - Design System
    District.in Inspired Color Palette
+   DARK MODE ONLY
    ========================================== */
 
 :root {
@@ -27,24 +28,7 @@
   --accent-orange: 255 152 0;   /* #FF9800 */
   --accent-red: 255 59 48;      /* #FF3B30 */
 
-  /* Light Theme */
-  --background: 255 255 255;     /* #FFFFFF */
-  --foreground: 10 10 15;        /* #0A0A0F */
-  --card: 255 255 255;           /* #FFFFFF */
-  --card-foreground: 10 10 15;   /* #0A0A0F */
-  --surface: 248 249 251;        /* #F8F9FB */
-  --border: 229 231 235;         /* #E5E7EB */
-  --muted: 243 244 246;          /* #F3F4F6 */
-  --muted-foreground: 107 114 128; /* #6B7280 */
-  --ring: 109 73 253;            /* Primary color */
-
-  /* Legacy support */
-  --primary: 109 73 253;
-  --primary-foreground: 255 255 255;
-}
-
-.dark {
-  /* Dark Theme */
+  /* Dark Theme Colors (Always Active) */
   --background: 10 10 15;        /* #0A0A0F */
   --foreground: 255 255 255;     /* #FFFFFF */
   --card: 36 36 51;              /* #242433 */
@@ -53,8 +37,10 @@
   --border: 45 45 64;            /* #2D2D40 */
   --muted: 47 47 69;             /* #2F2F45 */
   --muted-foreground: 160 160 184; /* #A0A0B8 */
-  --ring: 109 73 253;
+  --ring: 109 73 253;            /* Primary color */
 
+  /* Legacy support */
+  --primary: 109 73 253;
   --primary-foreground: 255 255 255;
 }
 
@@ -68,9 +54,9 @@
   }
   
   body {
-    @apply bg-light-bg dark:bg-dark-bg text-foreground;
+    @apply bg-dark-bg text-foreground;
     @apply font-sans antialiased;
-    @apply selection:bg-primary-500/20 selection:text-primary-700 dark:selection:text-primary-300;
+    @apply selection:bg-primary-500/20 selection:text-primary-300;
   }
 
   /* Smooth scrolling */
@@ -84,7 +70,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-light-surface dark:bg-dark-surface;
+    @apply bg-dark-surface;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -93,7 +79,7 @@
 
   /* Focus visible styles */
   :focus-visible {
-    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-light-bg dark:ring-offset-dark-bg;
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-dark-bg;
   }
 }
 
@@ -104,11 +90,11 @@
 @layer components {
   /* Glassmorphism */
   .glass {
-    @apply bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20;
+    @apply bg-white/5 backdrop-blur-md border border-white/20;
   }
 
   .glass-card {
-    @apply bg-white/50 dark:bg-dark-card/50 backdrop-blur-lg border border-white/30 dark:border-dark-border;
+    @apply bg-dark-card/50 backdrop-blur-lg border border-dark-border;
   }
 
   /* Gradient backgrounds */

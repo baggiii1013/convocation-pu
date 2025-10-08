@@ -5,10 +5,10 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class', // Enable class-based dark mode
+  darkMode: 'class', // Keep for compatibility but always dark
   theme: {
     extend: {
-      // Colors - District.in inspired palette
+      // Colors - District.in inspired palette (DARK MODE ONLY)
       colors: {
         // Primary purple palette
         primary: {
@@ -33,7 +33,7 @@ module.exports = {
           red: '#FF3B30',
         },
 
-        // Dark theme colors
+        // Dark theme colors (always active)
         dark: {
           bg: '#0A0A0F',
           surface: '#1A1A24',
@@ -42,24 +42,19 @@ module.exports = {
           hover: '#2F2F45',
         },
 
-        // Light theme colors
-        light: {
-          bg: '#FFFFFF',
-          surface: '#F8F9FB',
-          card: '#FFFFFF',
-          border: '#E5E7EB',
-          hover: '#F3F4F6',
+        // Semantic colors using CSS variables
+        background: 'rgb(var(--background) / <alpha-value>)',
+        foreground: 'rgb(var(--foreground) / <alpha-value>)',
+        card: {
+          DEFAULT: 'rgb(var(--card) / <alpha-value>)',
+          foreground: 'rgb(var(--card-foreground) / <alpha-value>)',
         },
-
-        // Legacy support (gradually migrate to new colors)
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        card: 'var(--card)',
-        'card-foreground': 'var(--card-foreground)',
-        muted: 'var(--muted)',
-        'muted-foreground': 'var(--muted-foreground)',
-        border: 'var(--border)',
-        ring: 'var(--ring)',
+        muted: {
+          DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+          foreground: 'rgb(var(--muted-foreground) / <alpha-value>)',
+        },
+        border: 'rgb(var(--border) / <alpha-value>)',
+        ring: 'rgb(var(--ring) / <alpha-value>)',
       },
 
       // Typography
