@@ -1,29 +1,29 @@
-import About from '@/components/About';
-import EventDetails from '@/components/EventDetails';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import Hero from '@/components/Hero';
-import VIPGuests from '@/components/VIPGuests';
+import { About } from '@/components/landing/About';
+import { EventInfo } from '@/components/landing/EventInfo';
+import { Footer } from '@/components/landing/Footer';
+import { Hero } from '@/components/landing/Hero';
+import { Statistics } from '@/components/landing/Statistics';
+import { VIPGuests } from '@/components/landing/VIPGuests';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      
-      <main className="flex-1">
-        {/* Hero Section */}
-        <Hero />
+    <div className="min-h-screen">
+      {/* Hero Section with full-screen design */}
+      <Hero />
 
-        {/* About Section */}
-        <About />
+      {/* Event Information Cards */}
+      <EventInfo />
 
-        {/* VIP Guests Section */}
-        <VIPGuests />
+      {/* Statistics Section */}
+      <Statistics />
 
-        {/* Event Details Section */}
-        <EventDetails />
-      </main>
+      {/* About Section */}
+      <About />
 
+      {/* VIP Guests Section */}
+      <VIPGuests />
+
+      {/* Footer */}
       <Footer />
     </div>
   );
