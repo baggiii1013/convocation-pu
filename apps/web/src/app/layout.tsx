@@ -1,5 +1,4 @@
 import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -30,34 +29,32 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className="antialiased bg-dark-bg text-foreground">
-        <ThemeProvider>
-          <AuthProvider>
-            {children}
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: 'var(--card)',
-                  color: 'var(--foreground)',
-                  border: '1px solid var(--border)',
+        <AuthProvider>
+          {children}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'var(--card)',
+                color: 'var(--foreground)',
+                border: '1px solid var(--border)',
+              },
+              success: {
+                iconTheme: {
+                  primary: 'var(--gold)',
+                  secondary: 'var(--card)',
                 },
-                success: {
-                  iconTheme: {
-                    primary: 'var(--gold)',
-                    secondary: 'var(--card)',
-                  },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: 'var(--card)',
                 },
-                error: {
-                  iconTheme: {
-                    primary: '#ef4444',
-                    secondary: 'var(--card)',
-                  },
-                },
-              }}
-            />
-          </AuthProvider>
-        </ThemeProvider>
+              },
+            }}
+          />
+        </AuthProvider>
       </body>
     </html>
   );
