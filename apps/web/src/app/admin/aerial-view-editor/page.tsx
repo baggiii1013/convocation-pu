@@ -231,8 +231,8 @@ export default function AerialViewEditorPage() {
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• Click and drag enclosures to reposition them</li>
                     <li>• Enclosures are highlighted with a blue border when hovering</li>
-                    <li>• Changes are tracked but not saved until you click "Save Layout"</li>
-                    <li>• Click "Discard Changes" to reset to the last saved positions</li>
+                    <li>• Changes are tracked but not saved until you click &quot;Save Layout&quot;</li>
+                    <li>• Click &quot;Discard Changes&quot; to reset to the last saved positions</li>
                   </ul>
                 </div>
               </div>

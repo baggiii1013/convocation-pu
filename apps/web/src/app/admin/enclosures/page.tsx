@@ -46,7 +46,7 @@ export default function EnclosureManagementPage() {
       });
       const data = await res.json();
       setEnclosures(data);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to load enclosures');
     }
   };
@@ -75,8 +75,9 @@ export default function EnclosureManagementPage() {
       fetchEnclosures();
       setIsEditing(false);
       setCurrentEnclosure(null);
-    } catch (error: any) {
-      toast.error(error.message || 'Operation failed');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Operation failed';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -96,8 +97,9 @@ export default function EnclosureManagementPage() {
       }
       toast.success('Enclosure deleted');
       fetchEnclosures();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to delete');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete';
+      toast.error(errorMessage);
     }
   };
 
@@ -157,7 +159,7 @@ export default function EnclosureManagementPage() {
                     Edit
                   </Button>
                   <Button
-                    variant="destructive"
+                    variant="danger"
                     size="sm"
                     onClick={() => handleDelete(enclosure.id!)}
                     className="flex items-center gap-2"
@@ -258,7 +260,7 @@ function EnclosureForm({
     });
   };
 
-  const updateRow = (index: number, field: keyof Row, value: any) => {
+  const updateRow = (index: number, field: keyof Row, value: string | number) => {
     const newRows = [...formData.rows];
     newRows[index] = { ...newRows[index], [field]: value };
     setFormData({ ...formData, rows: newRows });
@@ -431,7 +433,7 @@ function EnclosureForm({
 
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="danger"
                       size="sm"
                       onClick={() => removeRow(index)}
                       disabled={formData.rows.length === 1}

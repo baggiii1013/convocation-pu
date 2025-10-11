@@ -8,6 +8,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface ProfileFormData {
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  bio?: string;
+}
+
 export default function ProfilePage() {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +37,7 @@ export default function ProfilePage() {
     role: user.role || "Attendee",
   };
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: ProfileFormData) => {
     console.log("Saving profile:", data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsEditing(false);

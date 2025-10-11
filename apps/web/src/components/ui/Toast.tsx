@@ -2,30 +2,33 @@ import { cn } from '@/lib/utils';
 import { AlertCircle, CheckCircle2, Info, X, XCircle } from 'lucide-react';
 import toast, { Toaster as HotToaster, ToastBar } from 'react-hot-toast';
 
+// Toast options type
+type ToastOptions = Record<string, unknown>;
+
 // Toast notification function with variants
 export const showToast = {
-  success: (message: string, options?: any) => {
+  success: (message: string, options?: ToastOptions) => {
     toast.success(message, {
       duration: 4000,
       icon: <CheckCircle2 className="h-5 w-5 text-accent-green" />,
       ...options,
     });
   },
-  error: (message: string, options?: any) => {
+  error: (message: string, options?: ToastOptions) => {
     toast.error(message, {
       duration: 5000,
       icon: <XCircle className="h-5 w-5 text-accent-red" />,
       ...options,
     });
   },
-  warning: (message: string, options?: any) => {
+  warning: (message: string, options?: ToastOptions) => {
     toast(message, {
       duration: 4000,
       icon: <AlertCircle className="h-5 w-5 text-accent-orange" />,
       ...options,
     });
   },
-  info: (message: string, options?: any) => {
+  info: (message: string, options?: ToastOptions) => {
     toast(message, {
       duration: 4000,
       icon: <Info className="h-5 w-5 text-accent-blue" />,
@@ -37,7 +40,7 @@ export const showToast = {
     messages: {
       loading: string;
       success: string | ((data: T) => string);
-      error: string | ((error: any) => string);
+      error: string | ((error: unknown) => string);
     }
   ) => {
     return toast.promise(promise, {

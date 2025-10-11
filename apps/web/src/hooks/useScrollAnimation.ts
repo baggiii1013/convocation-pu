@@ -1,7 +1,7 @@
 "use client";
 
 import { useInView } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export function useScrollAnimation(options = {}) {
   const ref = useRef(null);

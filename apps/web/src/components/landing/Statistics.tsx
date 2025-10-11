@@ -17,38 +17,35 @@ const stats: StatItem[] = [
 ];
 
 function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const countMotion = useMotionValue(0);
+  const rounded = useTransform(countMotion, (latest) => Math.round(latest));
   const [displayValue, setDisplayValue] = React.useState('0');
   const [hasAnimated, setHasAnimated] = React.useState(false);
   const ref = React.useRef<HTMLSpanElement>(null);
 
   React.useEffect(() => {
+    const currentRef = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
+          const animation = animate(countMotion, value, { duration: 2 });
           setHasAnimated(true);
-          const controls = animate(count, value, {
-            duration: 2,
-            ease: 'easeOut',
-          });
-
-          return () => controls.stop();
+          return () => animation.stop();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-  }, [count, value, hasAnimated]);
+  }, [countMotion, value, hasAnimated]);
 
   React.useEffect(() => {
     const unsubscribe = rounded.on('change', (latest) => {

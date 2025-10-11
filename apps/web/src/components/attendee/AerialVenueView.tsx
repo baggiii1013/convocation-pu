@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { MapPin, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface Enclosure {
   id?: string;

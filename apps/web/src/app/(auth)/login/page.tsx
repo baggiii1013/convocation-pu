@@ -287,7 +287,7 @@ function LoginForm() {
                     </Button>
 
                     <p className="text-center text-sm text-primary-200">
-                      Don't have an account?{' '}
+                      Don&apos;t have an account?{' '}
                       <span className="text-white font-medium">Contact your administrator</span>
                     </p>
                   </CardFooter>

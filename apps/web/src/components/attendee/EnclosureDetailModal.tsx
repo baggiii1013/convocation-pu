@@ -39,7 +39,6 @@ export function EnclosureDetailModal({
   isOpen
 }: EnclosureDetailProps) {
   const [selectedSeat, setSelectedSeat] = useState<{ row: string; seat: number } | null>(null);
-  const [seatStatuses, setSeatStatuses] = useState<Record<string, SeatStatus>>({});
 
   useEffect(() => {
     if (isOpen) {
@@ -63,12 +62,8 @@ export function EnclosureDetailModal({
 
   // Get seat status
   const getSeatStatus = (rowLetter: string, seatNumber: number): SeatStatus => {
-    const key = `${rowLetter}-${seatNumber}`;
     if (userAllocation?.rowLetter === rowLetter && userAllocation?.seatNumber === seatNumber) {
       return 'user';
-    }
-    if (seatStatuses[key]) {
-      return seatStatuses[key];
     }
     // For demo: randomly mark some as occupied (in real app, fetch from API)
     return Math.random() > 0.7 ? 'occupied' : 'available';

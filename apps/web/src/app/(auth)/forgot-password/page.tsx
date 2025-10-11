@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
       setSubmittedEmail(data.email);
       setIsSuccess(true);
       toast.success('Password reset email sent successfully!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to send reset email. Please try again.');
     } finally {
       setIsLoading(false);
@@ -134,7 +134,7 @@ export default function ForgotPasswordPage() {
                   </div>
                   <CardTitle className="text-2xl text-white text-center">Forgot your password?</CardTitle>
                   <CardDescription className="text-primary-100 text-center">
-                    No worries! Enter your email address and we'll send you a link to reset your password.
+                    No worries! Enter your email address and we&apos;ll send you a link to reset your password.
                   </CardDescription>
                 </CardHeader>
 
@@ -208,14 +208,14 @@ export default function ForgotPasswordPage() {
 
                     <h3 className="text-2xl font-bold text-white mb-3">Check your email</h3>
                     <p className="text-primary-100 mb-6 leading-relaxed">
-                      We've sent a password reset link to
+                      We&apos;ve sent a password reset link to
                       <br />
                       <span className="font-semibold text-white">{submittedEmail}</span>
                     </p>
 
                     <div className="bg-white/10 rounded-xl p-4 mb-6 border border-white/10">
                       <p className="text-sm text-primary-100">
-                        Didn't receive the email? Check your spam folder or{' '}
+                        Didn&apos;t receive the email? Check your spam folder or{' '}
                         <button 
                           onClick={() => setIsSuccess(false)}
                           className="text-accent-blue hover:text-accent-pink font-medium transition-colors"

@@ -525,7 +525,7 @@ function DeleteConfirmDialog({ account, onClose, onConfirm }: { account: Account
             Cancel
           </Button>
           <Button
-            variant="destructive"
+            variant="danger"
             onClick={handleConfirm}
             disabled={isDeleting}
             className="bg-red-600 hover:bg-red-700"

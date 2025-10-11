@@ -52,7 +52,7 @@ export default function ReserveSeatsPage() {
       });
       const data = await res.json();
       setEnclosures(data);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to load enclosures');
     }
   };
@@ -64,7 +64,7 @@ export default function ReserveSeatsPage() {
       });
       const data = await res.json();
       setReservations(data.reservations || []);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to load reservations');
     }
   };
@@ -223,7 +223,7 @@ export default function ReserveSeatsPage() {
                 placeholder="e.g., 1,5,10 or 1-10"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Comma-separated or range (e.g., "1,5,10" or "1-10" or "1,5-10,15")
+                Comma-separated or range (e.g., &quot;1,5,10&quot; or &quot;1-10&quot; or &quot;1,5-10,15&quot;)
               </p>
             </div>
 
@@ -282,7 +282,7 @@ export default function ReserveSeatsPage() {
                       </div>
                     </div>
                     <Button
-                      variant="destructive"
+                      variant="danger"
                       size="sm"
                       onClick={() => removeReservation(reservation.id)}
                     >

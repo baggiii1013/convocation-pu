@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import React from 'react';
 
 interface PageProps {
-  params: { enrollmentId: string };
+  params: Promise<{ enrollmentId: string }>;
 }
 
 async function getAttendeeSeat(enrollmentId: string) {
@@ -29,8 +29,9 @@ async function getAllEnclosures() {
 }
 
 export default async function AttendeeSeatPage({ params }: PageProps) {
+  const { enrollmentId } = await params;
   const [data, enclosures] = await Promise.all([
-    getAttendeeSeat(params.enrollmentId),
+    getAttendeeSeat(enrollmentId),
     getAllEnclosures()
   ]);
 

@@ -101,7 +101,7 @@ export function TheaterSeatMap({
           {visibleRows.map((row, rowIndex) => {
             const isActiveRow = row.letter === allocation.rowLetter;
             const reservedSeats = parseReserved(row.reservedSeats);
-            const actualRowIndex = startIndex + rowIndex;
+            const _actualRowIndex = startIndex + rowIndex;
 
             return (
               <div

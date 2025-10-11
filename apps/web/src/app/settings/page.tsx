@@ -3,18 +3,15 @@
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
   const { user } = useAuth();
-  const { resolvedTheme, setTheme } = useTheme();
 
   const handleThemeToggle = () => {
-    const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    toast.success(`Switched to ${newTheme} mode`);
+    // Theme is locked to dark mode
+    toast('Dark mode is enabled by default', { icon: 'ℹ️' });
   };
 
   if (!user) {
@@ -49,7 +46,7 @@ export default function SettingsPage() {
               <div>
                 <h3 className="font-medium text-foreground">Theme</h3>
                 <p className="text-sm text-muted-foreground">
-                  Currently using {resolvedTheme} mode
+                  Currently using dark mode
                 </p>
               </div>
               <Button
@@ -57,7 +54,7 @@ export default function SettingsPage() {
                 variant="outline"
                 className="border-gold/20 hover:border-gold/40"
               >
-                {resolvedTheme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+                Dark Mode (Default)
               </Button>
             </div>
           </CardContent>

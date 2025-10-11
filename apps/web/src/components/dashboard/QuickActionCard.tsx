@@ -16,7 +16,6 @@ export function QuickActionCard({
   description,
   icon: Icon,
   href,
-  color = "text-primary-500",
 }: QuickActionCardProps) {
   return (
     <Link href={href}>

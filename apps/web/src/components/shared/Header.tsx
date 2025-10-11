@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import { getInitials } from '@/lib/utils';
 import Link from 'next/link';
@@ -9,7 +8,6 @@ import { useState } from 'react';
 
 export function Header() {
   const { user, logout, isAuthenticated } = useAuth();
-  const { theme, setTheme } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogout = async () => {
@@ -18,7 +16,7 @@ export function Header() {
   };
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    // Theme is locked to dark mode
   };
 
   return (

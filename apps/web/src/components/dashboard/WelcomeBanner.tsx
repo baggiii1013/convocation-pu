@@ -29,7 +29,7 @@ export function WelcomeBanner() {
             </h2>
           </div>
           <p className="text-lg text-white/90">
-            Here's what's happening with your convocation today.
+            Here&apos;s what&apos;s happening with your convocation today.
           </p>
         </div>
 

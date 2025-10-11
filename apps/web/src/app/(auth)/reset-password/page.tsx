@@ -63,14 +63,15 @@ function ResetPasswordForm() {
     return Math.min(strength, 100);
   };
 
-  // Update strength when password changes
-  useState(() => {
+  // Watch password field for real-time strength updates
+  watch((formData) => {
+    const password = formData.password;
     if (password) {
       setPasswordStrength(calculatePasswordStrength(password));
     }
   });
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
+  const onSubmit = async (_data: ResetPasswordFormData) => {
     if (!token) {
       toast.error('Invalid or missing reset token');
       return;
@@ -89,7 +90,7 @@ function ResetPasswordForm() {
       setTimeout(() => {
         router.push('/login?message=Password reset successfully. Please sign in.');
       }, 2000);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to reset password. Please try again.');
     } finally {
       setIsLoading(false);
