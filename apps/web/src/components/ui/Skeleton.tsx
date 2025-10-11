@@ -1,22 +1,69 @@
-import { cn } from "@/lib/utils"
+"use client";
 
-interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+
+interface SkeletonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd'> {
   variant?: "text" | "circular" | "rectangular"
+  animation?: "pulse" | "wave" | "shimmer"
 }
 
-function Skeleton({ className, variant = "rectangular", ...props }: SkeletonProps) {
+function Skeleton({ className, variant = "rectangular", animation = "shimmer", ...props }: SkeletonProps) {
+  const baseClasses = cn(
+    variant === "circular" && "rounded-full",
+    variant === "text" && "rounded-md h-4",
+    variant === "rectangular" && "rounded-lg",
+  );
+
+  if (animation === "wave") {
+    return (
+      <motion.div
+        className={cn(
+          "bg-gray-200 dark:bg-gray-800",
+          baseClasses,
+          className
+        )}
+        animate={{
+          backgroundPosition: ["200% 0", "-200% 0"],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+          backgroundSize: "200% 100%",
+        }}
+      />
+    );
+  }
+
+  if (animation === "pulse") {
+    return (
+      <div
+        className={cn(
+          "animate-pulse bg-gray-200 dark:bg-gray-800",
+          baseClasses,
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+
+  // Default shimmer animation
   return (
     <div
       className={cn(
         "animate-shimmer bg-gradient-to-r from-dark-surface via-dark-hover to-dark-surface bg-[length:200%_100%]",
-        variant === "circular" && "rounded-full",
-        variant === "text" && "rounded-md h-4",
-        variant === "rectangular" && "rounded-lg",
+        baseClasses,
         className
       )}
       {...props}
     />
-  )
+  );
 }
 
 // Pre-built skeleton layouts
@@ -68,4 +115,5 @@ function SkeletonText({ lines = 3 }: { lines?: number }) {
   )
 }
 
-export { Skeleton, SkeletonCard, SkeletonTable, SkeletonText }
+export { Skeleton, SkeletonCard, SkeletonTable, SkeletonText };
+

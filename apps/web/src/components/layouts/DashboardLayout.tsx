@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import * as React from 'react';
+import { PageTransition } from '../animations/PageTransition';
 import { BottomNav } from './BottomNav';
 import { Breadcrumb } from './Breadcrumb';
 import { Header } from './Header';
@@ -64,18 +65,20 @@ export function DashboardLayout({
           )}
 
           {/* Page Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className={cn(
-              'container mx-auto px-4 py-6 md:px-6',
-              'pb-24 lg:pb-6', // Extra padding for mobile bottom nav
-              className
-            )}
-          >
-            {children}
-          </motion.div>
+          <PageTransition>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={cn(
+                'container mx-auto px-4 py-6 md:px-6',
+                'pb-24 lg:pb-6', // Extra padding for mobile bottom nav
+                className
+              )}
+            >
+              {children}
+            </motion.div>
+          </PageTransition>
         </main>
 
         {/* Bottom Navigation (Mobile) */}

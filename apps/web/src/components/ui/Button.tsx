@@ -1,13 +1,16 @@
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Loader2 } from "lucide-react"
-import * as React from "react"
+"use client";
 
-import { cn } from "@/lib/utils"
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   // Base styles - District.in inspired
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-98 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-98 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -54,6 +57,7 @@ export interface ButtonProps
   loading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  enableRipple?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -69,19 +73,64 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       children,
       disabled,
+      enableRipple = true,
+      onClick,
       ...props
     },
     ref
   ) => {
+    const [ripples, setRipples] = React.useState<Array<{ x: number; y: number; id: number }>>([]);
     const Comp = asChild ? Slot : "button"
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (enableRipple && !disabled && !loading) {
+        const button = e.currentTarget;
+        const rect = button.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const newRipple = { x, y, id: Date.now() };
+        setRipples((prev) => [...prev, newRipple]);
+        
+        setTimeout(() => {
+          setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
+        }, 600);
+      }
+      
+      onClick?.(e);
+    };
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={disabled || loading}
+        onClick={handleClick}
         {...props}
       >
+        {/* Ripple Effect */}
+        {enableRipple && ripples.map((ripple) => (
+          <motion.span
+            key={ripple.id}
+            className="absolute rounded-full bg-white/30 pointer-events-none"
+            style={{
+              left: ripple.x,
+              top: ripple.y,
+              width: 0,
+              height: 0,
+            }}
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={{
+              width: 200,
+              height: 200,
+              opacity: 0,
+              x: -100,
+              y: -100,
+            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          />
+        ))}
+        
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         {!loading && leftIcon && <span className="inline-flex">{leftIcon}</span>}
         {children}
@@ -92,4 +141,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };
+

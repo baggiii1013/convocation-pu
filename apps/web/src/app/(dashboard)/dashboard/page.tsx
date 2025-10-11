@@ -1,3 +1,4 @@
+import { StaggerChildren, StaggerItem } from "@/components/animations/StaggerChildren";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { QuickActionCard } from "@/components/dashboard/QuickActionCard";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -5,12 +6,8 @@ import { WelcomeBanner } from "@/components/dashboard/WelcomeBanner";
 import {
   BarChart3,
   Calendar,
-  CheckCircle2,
-  MapPin,
-  Settings,
   Upload,
   UserPlus,
-  Users,
 } from "lucide-react";
 import { Suspense } from "react";
 
@@ -67,47 +64,55 @@ async function DashboardContent() {
       <WelcomeBanner />
 
       {/* Stats Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatsCard
-          title="Total Attendees"
-          value={stats.totalAttendees.toLocaleString()}
-          change={stats.totalAttendeesChange}
-          trend={stats.totalAttendeesTrend}
-          icon={Users}
-          iconColor="text-primary-600"
-          iconBgColor="bg-primary-100 dark:bg-primary-900/30"
-        />
+      <StaggerChildren className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerItem>
+          <StatsCard
+            title="Total Attendees"
+            value={stats.totalAttendees.toLocaleString()}
+            change={stats.totalAttendeesChange}
+            trend={stats.totalAttendeesTrend}
+            iconName="Users"
+            iconColor="text-primary-600"
+            iconBgColor="bg-primary-100 dark:bg-primary-900/30"
+          />
+        </StaggerItem>
 
-        <StatsCard
-          title="Upcoming Events"
-          value={stats.upcomingEvents}
-          change={stats.upcomingEventsChange}
-          trend={stats.upcomingEventsTrend}
-          icon={Calendar}
-          iconColor="text-accent-blue"
-          iconBgColor="bg-blue-100 dark:bg-blue-900/30"
-        />
+        <StaggerItem>
+          <StatsCard
+            title="Upcoming Events"
+            value={stats.upcomingEvents}
+            change={stats.upcomingEventsChange}
+            trend={stats.upcomingEventsTrend}
+            iconName="Calendar"
+            iconColor="text-accent-blue"
+            iconBgColor="bg-blue-100 dark:bg-blue-900/30"
+          />
+        </StaggerItem>
 
-        <StatsCard
-          title="Checked In"
-          value={stats.checkedIn.toLocaleString()}
-          change={stats.checkedInChange}
-          trend={stats.checkedInTrend}
-          icon={CheckCircle2}
-          iconColor="text-green-600"
-          iconBgColor="bg-green-100 dark:bg-green-900/30"
-        />
+        <StaggerItem>
+          <StatsCard
+            title="Checked In"
+            value={stats.checkedIn.toLocaleString()}
+            change={stats.checkedInChange}
+            trend={stats.checkedInTrend}
+            iconName="CheckCircle2"
+            iconColor="text-green-600"
+            iconBgColor="bg-green-100 dark:bg-green-900/30"
+          />
+        </StaggerItem>
 
-        <StatsCard
-          title="Active Venues"
-          value={stats.venues}
-          change={stats.venuesChange}
-          trend={stats.venuesTrend}
-          icon={MapPin}
-          iconColor="text-orange-600"
-          iconBgColor="bg-orange-100 dark:bg-orange-900/30"
-        />
-      </div>
+        <StaggerItem>
+          <StatsCard
+            title="Active Venues"
+            value={stats.venues}
+            change={stats.venuesChange}
+            trend={stats.venuesTrend}
+            iconName="MapPin"
+            iconColor="text-orange-600"
+            iconBgColor="bg-orange-100 dark:bg-orange-900/30"
+          />
+        </StaggerItem>
+      </StaggerChildren>
 
       {/* Quick Actions and Activity Feed */}
       <div className="grid gap-6 lg:grid-cols-2">
