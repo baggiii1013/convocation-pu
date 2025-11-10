@@ -62,9 +62,12 @@ api.interceptors.response.use(
       if (isSkipRefreshEndpoint || isLoggedOut) {
         // For refresh and logout endpoints, don't attempt refresh
         if (typeof window !== 'undefined') {
-          // Only redirect to login if we're not already on auth pages
+          // Only redirect to login if we're not on public pages
           const currentPath = window.location.pathname;
-          if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+          const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/help', '/faq', '/privacy', '/terms'];
+          const isPublicPath = publicPaths.includes(currentPath);
+          
+          if (!isPublicPath) {
             window.location.href = '/login';
           }
         }
@@ -83,9 +86,12 @@ api.interceptors.response.use(
         // Refresh failed, set logged out state and redirect to login
         isLoggedOut = true;
         if (typeof window !== 'undefined') {
-          // Only redirect to login if we're not already on auth pages
+          // Only redirect to login if we're not on public pages
           const currentPath = window.location.pathname;
-          if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+          const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/help', '/faq', '/privacy', '/terms'];
+          const isPublicPath = publicPaths.includes(currentPath);
+          
+          if (!isPublicPath) {
             window.location.href = '/login';
           }
         }

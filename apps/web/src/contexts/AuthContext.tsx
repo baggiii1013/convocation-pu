@@ -110,6 +110,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // Check if we're on a public page - if so, skip auth check unless cookies exist
+        if (typeof window !== 'undefined') {
+          const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/help', '/faq', '/privacy', '/terms'];
+          const isPublicPath = publicPaths.includes(window.location.pathname);
+          
+          // Check if refresh token cookie exists
+          const hasRefreshToken = document.cookie.includes('refreshToken=');
+          
+          // Skip auth check on public pages if no refresh token exists
+          if (isPublicPath && !hasRefreshToken) {
+            setLoading(false);
+            return;
+          }
+        }
+        
         // Try to get user profile - if cookies are valid, this will succeed
         const response = await api.get('/api/v1/auth/profile');
         const userData = response.data.data;

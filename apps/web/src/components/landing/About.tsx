@@ -48,7 +48,7 @@ export function About() {
                 <div className="text-center p-8">
                   <div className="text-6xl mb-4">🎓</div>
                   <p className="text-gray-700 dark:text-gray-300 font-medium">
-                    Punjab University Campus
+                    Parul University Campus
                   </p>
                 </div>
               </div>
@@ -64,7 +64,7 @@ export function About() {
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-xl">
-                  15+
+                  10+
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Years of</p>
@@ -83,14 +83,14 @@ export function About() {
           >
             <div className="mb-4">
               <span className="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wide">
-                About Punjab University
+                About Parul University
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Shaping Future Leaders Since 2010
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-              Punjab University has been at the forefront of education, nurturing talent and fostering innovation. 
+              Parul University has been at the forefront of education, nurturing talent and fostering innovation. 
               Our commitment to academic excellence and holistic development has made us one of the leading 
               institutions in the region.
             </p>
