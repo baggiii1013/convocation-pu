@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/Button';
-import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
-import * as React from 'react';
+import { Button } from "@/components/ui/Button";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar, MapPin } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
 
 export function Hero() {
   return (
@@ -23,7 +24,7 @@ export function Hero() {
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         className="absolute top-20 left-20 w-96 h-96 bg-primary-400 rounded-full blur-3xl opacity-30"
       />
@@ -36,7 +37,7 @@ export function Hero() {
         transition={{
           duration: 25,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         className="absolute bottom-20 right-20 w-96 h-96 bg-accent-blue rounded-full blur-3xl opacity-30"
       />
@@ -52,7 +53,10 @@ export function Hero() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white mb-8"
           >
             <span className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
-            <span className="text-sm font-medium">Registration Now Open</span>
+            <a href="ums.paruluniversity.ac.in" target="_blank"
+                rel="noopener noreferrer" className="text-sm font-medium">
+              Registration Now Open , Last date November 10 2025
+            </a>
           </motion.div>
 
           {/* Main Heading */}
@@ -76,7 +80,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto"
           >
-            Join us in celebrating the achievements of our graduates as they embark on their journey to shape the future.
+            Join us in celebrating the achievements of our graduates as they
+            embark on their journey to shape the future.
           </motion.p>
 
           {/* Event Details */}
@@ -88,12 +93,16 @@ export function Hero() {
           >
             <div className="flex items-center gap-2 text-white/90">
               <Calendar className="w-5 h-5" />
-              <span className="text-sm md:text-base font-medium">December 15, 2025</span>
+              <span className="text-sm md:text-base font-medium">
+                December 15, 2025
+              </span>
             </div>
             <div className="hidden sm:block w-px h-6 bg-white/30" />
             <div className="flex items-center gap-2 text-white/90">
               <MapPin className="w-5 h-5" />
-              <span className="text-sm md:text-base font-medium">Dhoom Ground, PU Campus</span>
+              <span className="text-sm md:text-base font-medium">
+                Dhoom Ground, PU Campus
+              </span>
             </div>
           </motion.div>
 
@@ -104,21 +113,25 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Button
-              size="lg"
-              variant="default"
-              className="bg-white text-primary-600 hover:bg-white/90 min-w-[200px]"
-            >
-              Register Now
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white/10 min-w-[200px]"
-            >
-              Learn More
-            </Button>
+            <a href="https://ums.paruluniversity.ac.in" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="default"
+                className="bg-white text-primary-600 hover:bg-white/90 min-w-[200px]"
+              >
+                Register Now
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </a>
+            <a href="#event-info">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10 min-w-[200px] my-2"
+              >
+                Learn More
+              </Button>
+            </a>
           </motion.div>
 
           {/* Scroll Indicator */}
@@ -133,7 +146,7 @@ export function Hero() {
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
               className="flex flex-col items-center gap-2 text-white/60"
             >

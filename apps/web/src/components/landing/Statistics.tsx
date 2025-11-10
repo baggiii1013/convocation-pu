@@ -12,7 +12,7 @@ interface StatItem {
 const stats: StatItem[] = [
   { value: 20000, label: 'Graduates', suffix: '+' },
   { value: 50, label: 'Departments', suffix: '+' },
-  { value: 15, label: 'Years of Excellence', suffix: '' },
+  { value: 10, label: 'Years of Excellence', suffix: '' },
   { value: 95, label: 'Placement Rate', suffix: '%' },
 ];
 
