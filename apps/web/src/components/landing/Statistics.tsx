@@ -102,18 +102,18 @@ export function Statistics() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4">
             Our Impact in Numbers
           </h2>
-          <p className="text-lg text-white/90 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto px-2">
             Celebrating excellence and achievements across the university
           </p>
         </motion.div>
 
         {/* Statistics Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
@@ -123,11 +123,11 @@ export function Statistics() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="text-center"
             >
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                <div className="text-5xl md:text-6xl font-bold text-white mb-2">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <div className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2 break-words">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-base md:text-lg text-white/90 font-medium">
+                <div className="text-xs md:text-base lg:text-lg text-white/90 font-medium">
                   {stat.label}
                 </div>
               </div>
@@ -141,9 +141,9 @@ export function Statistics() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 text-center"
+          className="mt-12 md:mt-16 text-center"
         >
-          <p className="text-white/80 text-lg max-w-3xl mx-auto">
+          <p className="text-white/80 text-sm md:text-lg max-w-3xl mx-auto px-2 leading-relaxed">
             Join thousands of successful alumni who have made their mark in various fields around the world
           </p>
         </motion.div>
