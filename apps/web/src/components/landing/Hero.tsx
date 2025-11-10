@@ -93,7 +93,7 @@ export function Hero() {
             <div className="hidden sm:block w-px h-6 bg-white/30" />
             <div className="flex items-center gap-2 text-white/90">
               <MapPin className="w-5 h-5" />
-              <span className="text-sm md:text-base font-medium">Main Auditorium, PU Campus</span>
+              <span className="text-sm md:text-base font-medium">Dhoom Ground, PU Campus</span>
             </div>
           </motion.div>
 

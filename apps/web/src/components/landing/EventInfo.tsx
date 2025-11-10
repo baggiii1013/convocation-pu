@@ -23,14 +23,14 @@ const eventDetails = [
   {
     icon: MapPin,
     title: 'Venue',
-    value: 'Main Auditorium',
-    description: 'Punjab University Campus',
+    value: 'Dhoom Ground',
+    description: 'Parul University Campus',
     color: 'from-accent-pink to-pink-600',
   },
   {
     icon: Users,
     title: 'Attendees',
-    value: '2,000+ Expected',
+    value: '20,000+ Expected',
     description: 'Students, Faculty & Guests',
     color: 'from-accent-green to-green-600',
   },

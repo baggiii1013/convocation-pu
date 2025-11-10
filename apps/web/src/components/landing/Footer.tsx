@@ -72,7 +72,7 @@ export function Footer() {
                   PU
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Punjab University</h3>
+                  <h3 className="text-xl font-bold">Parul University</h3>
                   <p className="text-sm text-gray-400">Convocation 2025</p>
                 </div>
               </div>

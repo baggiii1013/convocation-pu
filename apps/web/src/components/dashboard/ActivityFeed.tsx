@@ -74,11 +74,11 @@ const typeLabels = {
 
 export function ActivityFeed() {
   return (
-    <Card variant="default" padding="none">
-      <CardHeader>
+    <Card variant="default" padding="none" className="h-full">
+      <CardHeader className="p-6 pb-4">
         <CardTitle>Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="px-6 pb-6">
         <div className="space-y-6">
           {activities.map((activity, index) => (
             <div key={activity.id} className="relative">

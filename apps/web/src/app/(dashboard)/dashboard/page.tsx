@@ -38,9 +38,9 @@ async function getDashboardStats() {
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
+    <>
       {/* Welcome Banner Skeleton */}
-      <div className="h-48 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800" />
+      <div className="h-48 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800 mb-6" />
       
       {/* Stats Cards Skeleton */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -51,7 +51,7 @@ function DashboardSkeleton() {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -59,7 +59,7 @@ async function DashboardContent() {
   const stats = await getDashboardStats();
 
   return (
-    <>
+    <div className="space-y-8">
       {/* Welcome Banner */}
       <WelcomeBanner />
 
@@ -115,7 +115,7 @@ async function DashboardContent() {
       </StaggerChildren>
 
       {/* Quick Actions and Activity Feed */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-8 lg:grid-cols-2">
         {/* Quick Actions */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -152,17 +152,15 @@ async function DashboardContent() {
         {/* Activity Feed */}
         <ActivityFeed />
       </div>
-    </>
+    </div>
   );
 }
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      <Suspense fallback={<DashboardSkeleton />}>
-        <DashboardContent />
-      </Suspense>
-    </div>
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
 

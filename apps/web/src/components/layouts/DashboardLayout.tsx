@@ -71,8 +71,8 @@ export function DashboardLayout({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               className={cn(
-                'container mx-auto px-4 py-6 md:px-6',
-                'pb-24 lg:pb-6', // Extra padding for mobile bottom nav
+                'container mx-auto px-4 py-8 md:px-6 md:py-10',
+                'pb-24 lg:pb-10', // Extra padding for mobile bottom nav
                 className
               )}
             >

@@ -12,7 +12,7 @@ export function WelcomeBanner() {
   return (
     <Card
       variant="gradient"
-      padding="lg"
+      padding="none"
       className="relative overflow-hidden border-none"
     >
       {/* Background Pattern */}
@@ -20,7 +20,7 @@ export function WelcomeBanner() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-6 md:p-8">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-yellow-300" />
@@ -28,7 +28,7 @@ export function WelcomeBanner() {
               Welcome back, {firstName}!
             </h2>
           </div>
-          <p className="text-lg text-white/90">
+          <p className="text-base md:text-lg text-white/90">
             Here&apos;s what&apos;s happening with your convocation today.
           </p>
         </div>
