@@ -26,10 +26,10 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-  { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
+  { icon: Facebook, href: 'https://www.facebook.com/ParulUniversity/', label: 'Facebook' },
+  { icon: Twitter, href: 'https://x.com/ParulUniversity', label: 'Twitter' },
+  { icon: Instagram, href: 'https://www.instagram.com/ParulUniversity', label: 'Instagram' },
+  { icon: Linkedin, href: 'https://linkedin.com/school/paruluniversity/', label: 'LinkedIn' },
 ];
 
 const contactInfo = [

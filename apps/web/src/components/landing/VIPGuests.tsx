@@ -3,6 +3,7 @@
 import { Card, CardContent } from '@/components/ui/Card';
 import { motion } from 'framer-motion';
 import { Linkedin, Twitter } from 'lucide-react';
+import Image from 'next/image';
 import * as React from 'react';
 
 interface Guest {
@@ -30,11 +31,11 @@ const guests: Guest[] = [
     },
   },
   {
-    name: 'Prof. Anjali Sharma',
+    name: 'Mrs. Sania Mirza',
     title: 'Guest of Honor',
-    role: 'Dean of Engineering',
-    bio: 'Leading researcher in computer science and artificial intelligence',
-    image: '/guests/guest-2.jpg',
+    role: 'Former professional tennis player',
+    bio: 'Sania Mirza  is an Indian former professional tennis player. A former doubles world No. 1, she won six major titles – three in womens doubles and three in mixed doubles.',
+    image: 'https://cdn.shopify.com/s/files/1/0719/3886/7511/files/278_2_600x600.webp?v=1691218604',
     social: {
       linkedin: '#',
       twitter: '#',
@@ -110,17 +111,14 @@ export function VIPGuests() {
                 <CardContent className="p-0">
                   {/* Guest Image */}
                   <div className="relative aspect-[3/4] bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 overflow-hidden">
-                    {/* Placeholder for guest image */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center p-8">
-                        <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-6xl">
-                          👤
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300 font-medium">
-                          {guest.name}
-                        </p>
-                      </div>
-                    </div>
+                    {/* Guest image */}
+                    <Image
+                      src={guest.image}
+                      alt={guest.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     
                     {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
