@@ -76,20 +76,37 @@ const itemVariants = {
 
 export function VIPGuests() {
   return (
-    <section className="py-20 bg-light-bg dark:bg-dark-bg">
-      <div className="container mx-auto px-4">
+    <section className="relative py-24 bg-gradient-to-b from-light-bg via-primary-50/30 to-light-bg dark:from-dark-bg dark:via-primary-950/20 dark:to-dark-bg overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-200/30 dark:bg-primary-800/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary-200/30 dark:bg-secondary-800/20 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="inline-block mb-4"
+          >
+            <span className="px-4 py-2 text-sm font-semibold bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full border border-primary-200 dark:border-primary-800">
+              ✨ Special Guests
+            </span>
+          </motion.div>
+          <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-primary-700 to-gray-900 dark:from-white dark:via-primary-400 dark:to-white bg-clip-text text-transparent mb-6">
             Distinguished Guests
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Meet the eminent personalities who will grace the convocation ceremony
           </p>
         </motion.div>
@@ -100,74 +117,113 @@ export function VIPGuests() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
         >
           {guests.map((guest, index) => (
-            <motion.div key={index} variants={itemVariants}>
+            <motion.div 
+              key={index} 
+              variants={itemVariants}
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <Card
                 variant="elevated"
-                className="group hover:shadow-2xl transition-all duration-300 overflow-hidden h-full"
+                className="group hover:shadow-2xl hover:shadow-primary-500/20 dark:hover:shadow-primary-500/30 transition-all duration-500 overflow-hidden h-full border-2 border-transparent hover:border-primary-300 dark:hover:border-primary-700 bg-white dark:bg-gray-900"
               >
                 <CardContent className="p-0">
                   {/* Guest Image */}
-                  <div className="relative aspect-[3/4] bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 overflow-hidden">
+                  <div className="relative aspect-[3/4] bg-gradient-to-br from-primary-100 via-primary-200 to-secondary-200 dark:from-primary-900 dark:via-primary-800 dark:to-secondary-900 overflow-hidden">
                     {/* Guest image */}
                     <Image
                       src={guest.image}
                       alt={guest.name}
                       fill
-                      className="object-cover"
+                      className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Gradient overlay - always visible, enhanced on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 group-hover:via-black/30 transition-all duration-500" />
                     
-                    {/* Title badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block px-3 py-1 text-xs font-semibold bg-white/90 dark:bg-black/90 text-primary-600 dark:text-primary-400 rounded-full">
+                    {/* Decorative shine effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                    </div>
+                    
+                    {/* Title badge with better styling */}
+                    <motion.div 
+                      className="absolute top-4 left-4"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <span className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-full shadow-lg backdrop-blur-sm border border-white/20">
+                        <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
                         {guest.title}
                       </span>
-                    </div>
+                    </motion.div>
 
-                    {/* Social links on hover */}
-                    <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {/* Social links - improved positioning and style */}
+                    <div className="absolute bottom-4 right-4 flex gap-3 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                       {guest.social.linkedin && (
-                        <a
+                        <motion.a
                           href={guest.social.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${guest.name}'s LinkedIn profile`}
-                          className="w-10 h-10 rounded-full bg-white/90 dark:bg-black/90 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-colors duration-200"
+                          className="w-11 h-11 rounded-full bg-white/95 dark:bg-black/95 flex items-center justify-center hover:bg-primary-500 hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
                         >
-                          <Linkedin className="w-5 h-5" />
-                        </a>
+                          <Linkedin className="w-5 h-5 text-primary-600 hover:text-white transition-colors" />
+                        </motion.a>
                       )}
                       {guest.social.twitter && (
-                        <a
+                        <motion.a
                           href={guest.social.twitter}
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${guest.name}'s Twitter profile`}
-                          className="w-10 h-10 rounded-full bg-white/90 dark:bg-black/90 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-colors duration-200"
+                          className="w-11 h-11 rounded-full bg-white/95 dark:bg-black/95 flex items-center justify-center hover:bg-primary-500 hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
                         >
-                          <Twitter className="w-5 h-5" />
-                        </a>
+                          <Twitter className="w-5 h-5 text-primary-600 hover:text-white transition-colors" />
+                        </motion.a>
                       )}
+                    </div>
+
+                    {/* Name overlay at bottom - visible on hover */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                      <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">
+                        {guest.name}
+                      </h3>
+                      <p className="text-sm text-primary-300 font-semibold">
+                        {guest.role}
+                      </p>
                     </div>
                   </div>
 
                   {/* Guest Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                      {guest.name}
-                    </h3>
-                    <p className="text-sm text-primary-600 dark:text-primary-400 font-medium mb-3">
-                      {guest.role}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {guest.bio}
-                    </p>
+                  <div className="p-6 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+                    <div className="space-y-4">
+                      {/* Info visible when not hovering */}
+                      <div className="group-hover:opacity-0 transition-opacity duration-300">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                          {guest.name}
+                        </h3>
+                        <p className="text-sm text-primary-600 dark:text-primary-400 font-semibold mb-3 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
+                          {guest.role}
+                        </p>
+                      </div>
+                      
+                      {/* Bio */}
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
+                        {guest.bio}
+                      </p>
+                    </div>
+
+                    {/* Decorative bottom border */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
                   </div>
                 </CardContent>
               </Card>
@@ -181,11 +237,18 @@ export function VIPGuests() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-16 text-center"
+          className="mt-20 text-center"
         >
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            More distinguished guests will be announced soon. Stay tuned for updates.
-          </p>
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-secondary-500/20 blur-xl" />
+            <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl px-8 py-6 border border-primary-200 dark:border-primary-800 shadow-lg">
+              <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-medium flex items-center justify-center gap-3">
+                <span className="text-2xl">🎭</span>
+                <span>More distinguished guests will be announced soon. Stay tuned for updates.</span>
+                <span className="text-2xl">✨</span>
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
