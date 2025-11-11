@@ -123,7 +123,7 @@ export function Hero() {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </a>
-            <a href="#event-info">
+            <a href="https://www.instagram.com/paruluniversity/?hl=en" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
                 variant="outline"

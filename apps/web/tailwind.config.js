@@ -59,9 +59,10 @@ module.exports = {
 
       // Typography
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['SpotifyMix', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['SpotifyMix', 'SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+        spotify: ['SpotifyMix', 'Inter', 'system-ui', 'sans-serif'],
       },
 
       fontSize: {
