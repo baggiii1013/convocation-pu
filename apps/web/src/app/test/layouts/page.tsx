@@ -13,7 +13,6 @@ export default function LayoutTest() {
         { title: 'Testing', href: '/test' },
         { title: 'Layouts' }
       ]}
-      notificationCount={5}
     >
       {/* Page Header */}
       <div className="mb-8">

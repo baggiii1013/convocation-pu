@@ -1,31 +1,23 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Bell, Menu, Search, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
 
 interface HeaderProps {
   onMenuClick?: () => void;
-  showSearch?: boolean;
-  notificationCount?: number;
   className?: string;
 }
 
 export function Header({ 
   onMenuClick, 
-  showSearch = true, 
-  notificationCount = 0,
   className 
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = React.useState(false);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -71,84 +63,15 @@ export function Header({
           </span>
         </Link>
 
-        {/* Search Bar (Desktop) */}
-        {showSearch && (
-          <>
-            <div className="hidden flex-1 md:block md:max-w-md lg:max-w-lg">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-full pl-10"
-                />
-              </div>
-            </div>
-
-            {/* Search Button (Mobile) */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              aria-label="Toggle search"
-            >
-              {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
-            </Button>
-          </>
-        )}
-
         {/* Spacer */}
         <div className="flex-1" />
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
-          {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            {notificationCount > 0 && (
-              <Badge
-                variant="error"
-                size="sm"
-                className="absolute -right-1 -top-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
-              >
-                {notificationCount > 9 ? '9+' : notificationCount}
-              </Badge>
-            )}
-          </Button>
-
-          {/* Theme Toggle */}
-          <ThemeToggle />
-
           {/* User Menu */}
           <UserMenu />
         </div>
       </div>
-
-      {/* Mobile Search Overlay */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-light-border dark:border-dark-border md:hidden"
-          >
-            <div className="p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-full pl-10"
-                  autoFocus
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 }

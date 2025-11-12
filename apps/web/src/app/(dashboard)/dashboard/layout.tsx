@@ -10,8 +10,6 @@ export default function DashboardRootLayout({
       breadcrumbs={[
         { title: "Dashboard", href: "/dashboard" },
       ]}
-      showSearch={true}
-      notificationCount={0}
     >
       {children}
     </DashboardLayout>

@@ -17,16 +17,12 @@ interface BreadcrumbItem {
 interface DashboardLayoutProps {
   children: React.ReactNode;
   breadcrumbs?: BreadcrumbItem[];
-  showSearch?: boolean;
-  notificationCount?: number;
   className?: string;
 }
 
 export function DashboardLayout({
   children,
   breadcrumbs,
-  showSearch = true,
-  notificationCount = 0,
   className,
 }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
@@ -49,8 +45,6 @@ export function DashboardLayout({
         {/* Header */}
         <Header
           onMenuClick={() => setSidebarOpen(true)}
-          showSearch={showSearch}
-          notificationCount={notificationCount}
         />
 
         {/* Main Content */}
