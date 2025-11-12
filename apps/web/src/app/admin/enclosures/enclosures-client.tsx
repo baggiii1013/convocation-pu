@@ -46,7 +46,8 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
       });
       const data = await res.json();
       setEnclosures(data);
-    } catch (_error) {
+    } catch (error) {
+      console.error('Failed to load enclosures:', error);
       toast.error('Failed to load enclosures');
     }
   };

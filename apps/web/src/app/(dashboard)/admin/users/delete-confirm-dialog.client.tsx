@@ -2,10 +2,8 @@
 
 import { Button } from '@/components/ui/Button';
 import type { Account } from '@/services/account.service';
-import { AccountService } from '@/services/account.service';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 interface DeleteConfirmDialogProps {
   account: Account;

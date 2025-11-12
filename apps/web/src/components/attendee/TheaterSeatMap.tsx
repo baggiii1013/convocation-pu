@@ -98,10 +98,9 @@ export function TheaterSeatMap({
       {/* Seat Map */}
       <div className="overflow-x-auto pb-4">
         <div className="min-w-max space-y-3 px-4">
-          {visibleRows.map((row, rowIndex) => {
+          {visibleRows.map((row) => {
             const isActiveRow = row.letter === allocation.rowLetter;
             const reservedSeats = parseReserved(row.reservedSeats);
-            const _actualRowIndex = startIndex + rowIndex;
 
             return (
               <div

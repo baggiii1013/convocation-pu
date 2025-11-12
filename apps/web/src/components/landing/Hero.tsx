@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, MapPin } from "lucide-react";
-import Link from "next/link";
 import * as React from "react";
 
 export function Hero() {

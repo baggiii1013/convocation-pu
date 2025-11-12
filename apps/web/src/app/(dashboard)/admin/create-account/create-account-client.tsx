@@ -59,7 +59,9 @@ export function CreateAccountClient() {
     try {
       setIsLoading(true);
       
-      const { confirmPassword: _confirmPassword, ...accountData } = data;
+      // Destructure to remove confirmPassword from the data sent to API
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { confirmPassword, ...accountData } = data;
       
       await api.post('/api/v1/auth/admin/create-account', accountData);
       

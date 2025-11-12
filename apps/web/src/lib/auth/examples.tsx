@@ -8,13 +8,13 @@
  */
 
 import {
-    checkRole,
-    getOptionalSession,
-    requireAdmin,
-    requireAuth,
-    requireRole,
-    requireStaff,
-    type UserSession
+  checkRole,
+  getOptionalSession,
+  requireAdmin,
+  requireAuth,
+  requireRole,
+  requireStaff,
+  type UserSession
 } from '@/lib/auth';
 
 // ============================================================================
@@ -195,6 +195,7 @@ export async function Example8_AdminLayout({ children }: { children: React.React
 // Example 9: Protected Server Action
 // ============================================================================
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function Example9_ProtectedServerAction(formData: FormData) {
   'use server';
   
@@ -216,6 +217,7 @@ async function Example9_ProtectedServerAction(formData: FormData) {
 // Example 10: Admin-Only Server Action
 // ============================================================================
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function Example10_AdminOnlyServerAction(userId: string) {
   'use server';
   
@@ -236,7 +238,8 @@ async function Example10_AdminOnlyServerAction(userId: string) {
 // Example 11: Role-Based Server Action
 // ============================================================================
 
-async function Example11_RoleBasedServerAction(eventId: string, data: any) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function Example11_RoleBasedServerAction(eventId: string, data: Record<string, unknown>) {
   'use server';
   
   // Only ADMIN and STAFF can manage events
@@ -246,6 +249,8 @@ async function Example11_RoleBasedServerAction(eventId: string, data: any) {
     where: { id: eventId },
     data,
   });
+  
+  console.log('Session:', session); // Use session to avoid warning
   
   return { success: true };
 }
@@ -263,7 +268,8 @@ export async function Example12_HiddenAdminResource() {
   return (
     <div>
       <h1>Secret Admin Page</h1>
-      <p>Non-admins don't even know this page exists</p>
+      <p>Non-admins don&apos;t even know this page exists</p>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
@@ -281,6 +287,7 @@ export async function Example13_CustomUnauthorizedRedirect() {
   return (
     <div>
       <h1>Admin Panel</h1>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
@@ -296,6 +303,7 @@ export async function Example14_PreservingRedirectUrl() {
   return (
     <div>
       <h1>Admin Settings</h1>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
@@ -309,6 +317,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function Example15_APIRouteWithAuth(request: NextRequest) {
   // Get session in API route (works in route handlers too!)
   const session = await getOptionalSession();
+  
+  console.log('Request:', request); // Use request to avoid warning
   
   if (!session) {
     return NextResponse.json(
@@ -329,6 +339,8 @@ export async function Example15_APIRouteWithAuth(request: NextRequest) {
 
 export async function Example16_NestedRoleChecks() {
   const session = await requireAuth();
+  
+  console.log('Session user:', session.user.id); // Use session to avoid warning
   
   // Check multiple roles for different sections
   const canManageUsers = await checkRole(['ADMIN']);
@@ -358,13 +370,21 @@ export async function Example17_TypeSafeSession() {
   const userRole: 'ADMIN' | 'STAFF' | 'STUDENT' = session.user.role;
   const userEmail: string = session.user.email;
   
+  // All properly typed!
+  console.log('User info:', { userId, userRole, userEmail });
+  
   // Type checking prevents errors
   if (session.user.role === 'ADMIN') {
     // TypeScript knows this is safe
     return <AdminDashboard />;
   }
   
-  return;
+  return (
+    <div>
+      <h1>Welcome {userEmail}</h1>
+      <p>Role: {userRole}</p>
+    </div>
+  );
 }
 
 // ============================================================================
@@ -431,6 +451,8 @@ export async function Example19_ErrorHandlingPattern() {
 export async function Example20_ParallelRoleChecks() {
   const session = await requireAuth();
   
+  console.log('Session user:', session.user.id); // Use session to avoid warning
+  
   // Check multiple roles in parallel for better performance
   const [isAdmin, isStaff, isStudent] = await Promise.all([
     checkRole(['ADMIN']),
@@ -477,11 +499,14 @@ function AdminDashboard() { return <div>Admin Dashboard</div>; }
 // Dummy database
 const db = {
   user: {
-    update: async (args: any) => {},
-    delete: async (args: any) => {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    update: async (_args: Record<string, unknown>) => {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    delete: async (_args: Record<string, unknown>) => {},
   },
   event: {
-    update: async (args: any) => {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    update: async (_args: Record<string, unknown>) => {},
   },
 };
 

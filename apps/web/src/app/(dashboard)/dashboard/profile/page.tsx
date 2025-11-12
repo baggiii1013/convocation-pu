@@ -29,11 +29,11 @@ export default function ProfilePage() {
   }
 
   const userProfile = {
-    name: `${user.firstName} ${user.lastName}`,
+    name: user.name,
     email: user.email,
     phone: "+1 (555) 123-4567",
     address: "123 University Ave, City, State",
-    avatar: undefined,
+    avatar: user.profileImageURL,
     role: user.role || "Attendee",
   };
 

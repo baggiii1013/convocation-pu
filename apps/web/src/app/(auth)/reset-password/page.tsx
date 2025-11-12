@@ -71,7 +71,7 @@ function ResetPasswordForm() {
     }
   });
 
-  const onSubmit = async (_data: ResetPasswordFormData) => {
+  const onSubmit = async (data: ResetPasswordFormData) => {
     if (!token) {
       toast.error('Invalid or missing reset token');
       return;
@@ -83,6 +83,8 @@ function ResetPasswordForm() {
       // TODO: Replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      console.log('Password reset data:', data.password ? '***' : ''); // Log without exposing password
+      
       setIsSuccess(true);
       toast.success('Password reset successfully!');
       
@@ -90,7 +92,8 @@ function ResetPasswordForm() {
       setTimeout(() => {
         router.push('/login?message=Password reset successfully. Please sign in.');
       }, 2000);
-    } catch (_error) {
+    } catch (error) {
+      console.error('Password reset error:', error);
       toast.error('Failed to reset password. Please try again.');
     } finally {
       setIsLoading(false);

@@ -7,7 +7,7 @@
  * ⚠️ SERVER-ONLY: These functions MUST NOT be imported in client components.
  */
 
-import { verifyAccessToken, type AccessTokenPayload } from '@/lib/jwt';
+import { verifyAccessToken } from '@/lib/jwt';
 import { cookies } from 'next/headers';
 import 'server-only';
 

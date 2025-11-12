@@ -54,7 +54,6 @@ export async function middleware(request: NextRequest) {
   // Extract token from cookies
   const cookieHeader = request.headers.get('cookie') || undefined;
   const accessToken = extractTokenFromCookie(cookieHeader, 'accessToken');
-  const refreshToken = extractTokenFromCookie(cookieHeader, 'refreshToken');
 
   // If it's a public route
   if (isPublicRoute) {
@@ -64,7 +63,7 @@ export async function middleware(request: NextRequest) {
         // Verify token is valid before redirecting
         await verifyAccessToken(accessToken);
         return NextResponse.redirect(new URL('/dashboard', request.url));
-      } catch (error) {
+      } catch {
         // Token is invalid, clear it and allow access to login/register
         const response = NextResponse.next();
         response.cookies.delete('accessToken');

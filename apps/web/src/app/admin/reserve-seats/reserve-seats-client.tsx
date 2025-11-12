@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { AlertCircle, Trash2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface Enclosure {
@@ -53,7 +53,7 @@ interface ReserveSeatsClientProps {
  */
 export function ReserveSeatsClient({ initialEnclosures, initialReservations }: ReserveSeatsClientProps) {
   // Ensure enclosures is always an array
-  const [enclosures, setEnclosures] = useState<Enclosure[]>(
+  const [enclosures] = useState<Enclosure[]>(
     Array.isArray(initialEnclosures) ? initialEnclosures : []
   );
   const [selectedEnclosure, setSelectedEnclosure] = useState('');
@@ -63,18 +63,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
   const [reservations, setReservations] = useState<Reservation[]>(initialReservations);
   const [loading, setLoading] = useState(false);
 
-  const fetchEnclosures = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
-        credentials: 'include',
-      });
-      const data = await res.json();
-      // Handle both array response and wrapped object response
-      setEnclosures(Array.isArray(data) ? data : (data.data || data || []));
-    } catch (_error) {
-      toast.error('Failed to load enclosures');
-    }
-  };
+  // Removed unused fetchEnclosures function since we use initialEnclosures
 
   const fetchReservations = async () => {
     try {
@@ -83,7 +72,8 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
       });
       const data = await res.json();
       setReservations(data.reservations || []);
-    } catch (_error) {
+    } catch (error) {
+      console.error('Failed to load reservations:', error);
       toast.error('Failed to load reservations');
     }
   };

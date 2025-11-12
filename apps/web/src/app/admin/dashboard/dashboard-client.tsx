@@ -13,7 +13,6 @@ import {
     Trash2,
     Users
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 interface AllocationStats {
@@ -38,7 +37,6 @@ interface DashboardClientProps {
 }
 
 export function DashboardClient({ initialStats }: DashboardClientProps) {
-  const router = useRouter();
   const [stats, setStats] = useState<AllocationStats>(initialStats);
   const [refreshing, setRefreshing] = useState(false);
   const [allocating, setAllocating] = useState(false);

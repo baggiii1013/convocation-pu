@@ -7,7 +7,8 @@ import { Sparkles } from "lucide-react";
 
 export function WelcomeBanner() {
   const { user } = useAuth();
-  const firstName = user?.firstName || "User";
+  // Extract first name from full name or use default
+  const firstName = user?.name.split(' ')[0] || "User";
 
   return (
     <Card
