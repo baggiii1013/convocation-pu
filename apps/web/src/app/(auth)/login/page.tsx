@@ -3,8 +3,9 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { useAuth } from '@/hooks/useAuth';
+import api from '@/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { CheckCircle2, GraduationCap, Lock, Mail, Shield, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -24,7 +25,6 @@ type LoginFormData = z.infer<typeof loginSchema>;
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,11 +51,26 @@ function LoginForm() {
       setIsLoading(true);
       setError(null);
       
-      await login(data.email, data.password);
+      // Call login API directly
+      await api.post('/api/v1/auth/login', {
+        email: data.email,
+        password: data.password,
+      });
+      
       toast.success('Welcome back! Login successful.');
+      
+      // Refresh the page to trigger server-side session fetch
       router.push(redirectTo);
+      router.refresh();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Login failed';
+      let errorMessage = 'Login failed. Please try again.';
+      
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {

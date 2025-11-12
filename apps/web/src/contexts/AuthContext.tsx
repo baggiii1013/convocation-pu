@@ -1,97 +1,55 @@
 'use client';
 
 import api from '@/lib/axios';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
-// Types
-export interface User {
+/**
+ * Minimal user information for client-side display
+ * No sensitive data or auth tokens
+ */
+export interface UserInfo {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  displayName: string;
+  name: string;
   role: 'ADMIN' | 'STAFF' | 'STUDENT';
   profileImageURL?: string;
-  accountState: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | 'PENDING_VERIFICATION';
-  isActive: boolean;
 }
 
+/**
+ * Simplified auth context - only for displaying user info
+ * Authentication logic lives server-side
+ */
 export interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
-  hasRole: (roles: string | string[]) => boolean;
+  user: UserInfo | null;
+  logout: () => Promise<void>;
 }
 
-// Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Auth provider component
 interface AuthProviderProps {
   children: ReactNode;
+  initialUser?: UserInfo | null;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+/**
+ * Lightweight Auth Provider
+ * 
+ * This provider:
+ * - Accepts initial user data from the server (via layout.tsx)
+ * - Provides logout functionality
+ * - Does NOT handle authentication, loading states, or role checks
+ * 
+ * All auth logic happens server-side using Phase 2 utilities
+ */
+export function AuthProvider({ children, initialUser = null }: AuthProviderProps) {
+  const [user, setUser] = useState<UserInfo | null>(initialUser);
   const router = useRouter();
 
-  // Check if user is authenticated
-  const isAuthenticated = !!user;
-
-  // Check if user has specific role(s)
-  const hasRole = (roles: string | string[]): boolean => {
-    if (!user) return false;
-    const roleArray = Array.isArray(roles) ? roles : [roles];
-    return roleArray.includes(user.role);
-  };
-
-  // Login function
-  const login = async (email: string, password: string): Promise<void> => {
-    try {
-      setLoading(true);
-      
-      const response = await api.post('/api/v1/auth/login', {
-        email,
-        password,
-      });
-
-      const { user: userData } = response.data.data;
-
-      // Set user data (no need to store tokens - they're in httpOnly cookies)
-      setUser({
-        id: userData.id,
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        displayName: userData.displayName || `${userData.firstName} ${userData.lastName}`,
-        role: userData.role.toUpperCase() as 'ADMIN' | 'STAFF' | 'STUDENT',
-        profileImageURL: userData.profileImageURL,
-        accountState: userData.accountState || 'ACTIVE',
-        isActive: userData.isActive !== false,
-      });
-    } catch (error: unknown) {
-      console.error('Login error:', error);
-      
-      // Clear any existing user state
-      setUser(null);
-      
-      if (axios.isAxiosError(error)) {
-        throw new Error(
-          error.response?.data?.message || 'Login failed. Please try again.'
-        );
-      }
-      throw new Error('Login failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Logout function
+  /**
+   * Logout function
+   * Calls the server logout endpoint and clears local state
+   */
   const logout = async () => {
     try {
       // Call logout endpoint to invalidate token on server
@@ -106,63 +64,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // Check authentication status on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Check if we're on a public page - if so, skip auth check unless cookies exist
-        if (typeof window !== 'undefined') {
-          const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/help', '/faq', '/privacy', '/terms'];
-          const isPublicPath = publicPaths.includes(window.location.pathname);
-          
-          // Check if refresh token cookie exists
-          const hasRefreshToken = document.cookie.includes('refreshToken=');
-          
-          // Skip auth check on public pages if no refresh token exists
-          if (isPublicPath && !hasRefreshToken) {
-            setLoading(false);
-            return;
-          }
-        }
-        
-        // Try to get user profile - if cookies are valid, this will succeed
-        const response = await api.get('/api/v1/auth/profile');
-        const userData = response.data.data;
-
-        setUser({
-          id: userData.id,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          displayName: userData.displayName,
-          role: userData.role,
-          profileImageURL: userData.profileImageURL,
-          accountState: userData.accountState,
-          isActive: userData.isActive,
-        });
-      } catch (error) {
-        // Only log error if it's not a 401 (which is expected when not logged in)
-        if (axios.isAxiosError(error) && error.response?.status !== 401) {
-          console.error('Auth check error:', error);
-        }
-        
-        // Clear user state if authentication fails
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
   const value: AuthContextType = {
     user,
-    loading,
-    login,
     logout,
-    isAuthenticated,
-    hasRole,
   };
 
   return (
@@ -172,7 +76,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
-// Custom hook to use auth context
+/**
+ * Hook to access auth context
+ * Only provides user info and logout - no auth logic
+ */
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   

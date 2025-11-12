@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/contexts/AuthContext';
+import { getServerSession } from '@/lib/auth/session';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -21,15 +22,27 @@ export const viewport: Viewport = {
   themeColor: "#0A0A0F", // Dark mode only
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get session from server
+  const session = await getServerSession();
+
+  // Transform to UserInfo format
+  const initialUser = session ? {
+    id: session.user.id,
+    email: session.user.email,
+    name: session.user.name || session.user.email,
+    role: session.user.role,
+    profileImageURL: undefined,
+  } : null;
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className="antialiased bg-dark-bg text-foreground">
-        <AuthProvider>
+        <AuthProvider initialUser={initialUser}>
           {children}
           <Toaster
             position="top-right"
