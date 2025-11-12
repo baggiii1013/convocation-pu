@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    Calendar,
-    ChevronLeft,
-    ChevronRight,
-    FileText,
-    Home,
-    Settings,
-    Users,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Home,
+  Settings,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,12 +40,28 @@ const navItems: NavItem[] = [
 export function Sidebar({ isOpen = true, onClose, className }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  // Detect if we're on mobile
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // On desktop, sidebar should always be visible (in the flow)
+  // On mobile, it's controlled by isOpen prop
+  const shouldBeVisible = isMobile ? isOpen : true;
 
   return (
     <>
       {/* Overlay for mobile */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && isMobile && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -59,16 +75,17 @@ export function Sidebar({ isOpen = true, onClose, className }: SidebarProps) {
 
       {/* Sidebar */}
       <motion.aside
-        initial={{ x: -280 }}
+        initial={false}
         animate={{ 
-          x: isOpen ? 0 : -280,
+          x: shouldBeVisible ? 0 : -280,
           width: isCollapsed ? 80 : 280 
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className={cn(
-          'fixed left-0 top-0 z-50 h-screen border-r border-light-border dark:border-dark-border',
+          'h-screen border-r border-light-border dark:border-dark-border',
           'bg-light-card dark:bg-dark-card',
-          'lg:sticky lg:block',
+          // On mobile: fixed position, controlled by isOpen
+          'fixed left-0 top-0 z-50 lg:relative',
           className
         )}
       >
