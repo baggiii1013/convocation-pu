@@ -1,18 +1,34 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
-interface UserMenuProps {
-  userName?: string;
-  userEmail?: string;
-  userImage?: string;
-}
+export function UserMenu() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
-export function UserMenu({ userName = 'John Doe', userEmail = 'john@example.com', userImage }: UserMenuProps) {
+  // Use actual user data or fallback to defaults
+  const userName = user?.name || 'Guest User';
+  const userEmail = user?.email || 'guest@example.com';
+  const userImage = user?.profileImageURL;
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const handleProfile = () => {
+    router.push('/dashboard/profile');
+  };
+
+  const handleSettings = () => {
+    router.push('/settings');
+  };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -48,6 +64,7 @@ export function UserMenu({ userName = 'John Doe', userEmail = 'john@example.com'
           sideOffset={5}
         >
           <DropdownMenu.Item
+            onClick={handleProfile}
             className={cn(
               'flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer',
               'text-sm text-foreground transition-colors',
@@ -60,6 +77,7 @@ export function UserMenu({ userName = 'John Doe', userEmail = 'john@example.com'
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
+            onClick={handleSettings}
             className={cn(
               'flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer',
               'text-sm text-foreground transition-colors',
@@ -74,6 +92,7 @@ export function UserMenu({ userName = 'John Doe', userEmail = 'john@example.com'
           <DropdownMenu.Separator className="h-px bg-light-border dark:bg-dark-border my-1" />
 
           <DropdownMenu.Item
+            onClick={handleLogout}
             className={cn(
               'flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer',
               'text-sm text-red-600 dark:text-red-400 transition-colors',

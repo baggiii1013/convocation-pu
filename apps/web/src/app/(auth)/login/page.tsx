@@ -52,15 +52,29 @@ function LoginForm() {
       setError(null);
       
       // Call login API directly
-      await api.post('/api/v1/auth/login', {
+      const response = await api.post('/api/v1/auth/login', {
         email: data.email,
         password: data.password,
       });
       
       toast.success('Welcome back! Login successful.');
       
-      // Refresh the page to trigger server-side session fetch
-      router.push(redirectTo);
+      // Get user role from response and redirect accordingly
+      const userRole = response.data?.data?.user?.role || response.data?.user?.role;
+      
+      let redirectPath = redirectTo;
+      
+      // If no custom redirect specified, determine based on role
+      if (redirectTo === '/dashboard') {
+        if (userRole === 'ADMIN' || userRole === 'STAFF') {
+          redirectPath = '/admin/dashboard';
+        } else {
+          redirectPath = '/dashboard';
+        }
+      }
+      
+      // Redirect to appropriate dashboard
+      router.push(redirectPath);
       router.refresh();
     } catch (err) {
       let errorMessage = 'Login failed. Please try again.';

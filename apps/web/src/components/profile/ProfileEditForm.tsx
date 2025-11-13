@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { useState } from "react";
-import { toast } from "sonner";
+// import { toast } from "s//onner";
 
 interface ProfileFormData {
   name: string;
@@ -56,17 +56,17 @@ export function ProfileEditForm({
     e.preventDefault();
 
     if (!validateForm()) {
-      toast.error("Please fix the errors in the form");
+      // toast.error("Please fix the errors in the form");
       return;
     }
 
     try {
       setLoading(true);
       await onSave(formData);
-      toast.success("Profile updated successfully!");
+      // toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error saving profile:", error);
-      toast.error("Failed to update profile. Please try again.");
+      // toast.error("Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
     }

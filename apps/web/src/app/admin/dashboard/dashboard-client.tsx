@@ -1,5 +1,6 @@
 'use client';
 
+import DashboardBento from "@/components/DashboardBento";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import {
@@ -156,10 +157,10 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Seat Allocation Dashboard
+              Admin Dashboard
             </h1>
             <p className="text-gray-600">
-              Overview of seat assignments across all enclosures
+              Quick access to all system features
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -173,6 +174,35 @@ export function DashboardClient({ initialStats }: DashboardClientProps) {
               Refresh
             </Button>
           </div>
+        </div>
+
+        {/* Dashboard Bento - Quick Navigation */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Access</h2>
+          <DashboardBento 
+            userRole="admin"
+            enableStars={true}
+            enableSpotlight={true}
+            enableBorderGlow={true}
+            enableTilt={false}
+            clickEffect={true}
+            enableMagnetism={true}
+            spotlightRadius={300}
+            particleCount={8}
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-200 my-8"></div>
+
+        {/* Section Title */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Seat Allocation Overview
+          </h2>
+          <p className="text-gray-600">
+            Overview of seat assignments across all enclosures
+          </p>
         </div>
 
         {/* Allocation Actions */}

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 interface ProfileFormData {
   name: string;
@@ -46,7 +46,7 @@ export default function ProfilePage() {
 
   const handleCancel = () => {
     setIsEditing(false);
-    toast.info("Changes discarded");
+    toast("Changes discarded");
   };
 
   return (
