@@ -147,8 +147,9 @@ export function AerialVenueView({
     const draggedPosition = enclosurePositions[enclosure.letter];
     const x = draggedPosition?.x ?? enclosure.positionX ?? position.x;
     const y = draggedPosition?.y ?? enclosure.positionY ?? position.y;
-    const width = enclosure.width ?? 15;
-    const height = enclosure.height ?? 15;
+    // Fixed size for all enclosures - consistent 22% width and height
+    const width = 22;
+    const height = 22;
     const color = enclosure.color ?? '#3B82F6';
 
     return {
@@ -163,10 +164,19 @@ export function AerialVenueView({
   };
 
   return (
-    <div className={cn('relative w-full min-h-[600px] h-[600px] bg-gradient-to-b from-green-50 to-green-100 rounded-xl overflow-hidden shadow-2xl border-4 border-gray-300', className)}>
+    <div className={cn('relative w-full min-h-[600px] h-[600px] bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800 rounded-xl overflow-hidden shadow-2xl border border-slate-500', className)}>
+      {/* Decorative Pattern Overlay */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 51px),
+                           repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 51px)`
+        }}></div>
+      </div>
+      
       {/* Edit Mode Indicator */}
       {editMode && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg text-sm font-semibold flex items-center gap-2">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg text-sm font-semibold flex items-center gap-2">
           <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
           Edit Mode: Drag enclosures to reposition
         </div>
@@ -229,18 +239,18 @@ export function AerialVenueView({
         >
           {/* Stage - Top Center */}
           <div className="absolute top-[8%] left-1/2 transform -translate-x-1/2 z-10">
-            <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white px-12 py-6 rounded-lg shadow-2xl border-4 border-yellow-400">
+            <div className="bg-gradient-to-b from-amber-600 via-amber-500 to-amber-700 text-white px-12 py-6 rounded-lg shadow-2xl border-2 border-amber-400">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                <span className="text-xl font-bold uppercase tracking-wider">Main Stage</span>
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
+                <span className="text-xl font-bold uppercase tracking-wider drop-shadow-lg">Main Stage</span>
+                <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
               </div>
-              <div className="text-center text-xs text-gray-300 mt-2">Convocation Ceremony</div>
+              <div className="text-center text-xs text-amber-100 mt-2 font-medium">Convocation Ceremony</div>
             </div>
             {/* Stage lights */}
             <div className="absolute -top-2 left-0 right-0 flex justify-around">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-2 h-2 bg-yellow-400 rounded-full shadow-lg"></div>
+                <div key={i} className="w-2 h-2 bg-yellow-300 rounded-full shadow-lg"></div>
               ))}
             </div>
           </div>
@@ -279,7 +289,7 @@ export function AerialVenueView({
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 bg-gradient-to-br from-black/20 to-black/40 rounded-lg">
                   {/* Letter Badge */}
                   <div className={cn(
-                    "text-5xl md:text-6xl font-black mb-1 drop-shadow-lg",
+                    "text-6xl md:text-7xl font-black mb-2 drop-shadow-2xl",
                     isActive && "text-yellow-300"
                   )}>
                     {enclosure.letter}
@@ -287,19 +297,19 @@ export function AerialVenueView({
                   
                   {/* Name */}
                   {enclosure.name && (
-                    <div className="text-xs md:text-sm font-bold uppercase tracking-wide drop-shadow">
+                    <div className="text-sm md:text-base font-bold uppercase tracking-wide drop-shadow-lg">
                       {enclosure.name}
                     </div>
                   )}
                   
                   {/* Type */}
-                  <div className="text-[10px] md:text-xs font-medium opacity-90 mt-1">
+                  <div className="text-xs md:text-sm font-semibold opacity-95 mt-1">
                     {enclosure.allocatedFor}
                   </div>
 
                   {/* Seat Count */}
                   {enclosure.totalSeats && (
-                    <div className="absolute bottom-2 left-2 right-2 text-center text-[10px] bg-black/50 rounded px-2 py-1">
+                    <div className="absolute bottom-3 left-3 right-3 text-center text-xs font-semibold bg-black/60 rounded-lg px-3 py-1.5 backdrop-blur-sm">
                       {enclosure.totalSeats} seats
                     </div>
                   )}
@@ -320,12 +330,12 @@ export function AerialVenueView({
 
           {/* Ground Decorations - Entry Gates */}
           <div className="absolute top-[50%] left-[5%] transform -translate-y-1/2">
-            <div className="bg-gray-700 text-white px-3 py-2 rounded-r-lg shadow-lg text-xs font-semibold">
+            <div className="bg-slate-800 text-white px-4 py-3 rounded-r-lg shadow-xl text-sm font-bold border-l-4 border-blue-400">
               ← West Entry
             </div>
           </div>
           <div className="absolute top-[50%] right-[5%] transform -translate-y-1/2">
-            <div className="bg-gray-700 text-white px-3 py-2 rounded-l-lg shadow-lg text-xs font-semibold">
+            <div className="bg-slate-800 text-white px-4 py-3 rounded-l-lg shadow-xl text-sm font-bold border-r-4 border-blue-400">
               East Entry →
             </div>
           </div>
@@ -333,28 +343,28 @@ export function AerialVenueView({
           {/* Pathways - Visual guides */}
           <div className="absolute inset-0 pointer-events-none">
             {/* Horizontal center path */}
-            <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-400/30 transform -translate-y-1/2"></div>
+            <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-400/20 transform -translate-y-1/2"></div>
             {/* Vertical center path */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-400/30 transform -translate-x-1/2"></div>
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-slate-400/20 transform -translate-x-1/2"></div>
           </div>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-50 bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg max-w-xs">
-        <h4 className="text-xs font-bold text-gray-800 mb-2">Legend</h4>
-        <div className="space-y-1 text-xs">
+      <div className="absolute bottom-4 left-4 z-50 bg-slate-800/95 backdrop-blur-sm rounded-lg p-3 shadow-xl border border-slate-600 max-w-xs">
+        <h4 className="text-xs font-bold text-white mb-2">Legend</h4>
+        <div className="space-y-1.5 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-yellow-400 rounded border-2 border-white"></div>
-            <span className="text-gray-700">Your Enclosure</span>
+            <div className="w-4 h-4 bg-yellow-400 rounded border-2 border-white shadow"></div>
+            <span className="text-gray-200">Your Enclosure</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
-            <span className="text-gray-700">Other Enclosures</span>
+            <div className="w-4 h-4 bg-blue-500 rounded shadow"></div>
+            <span className="text-gray-200">Other Enclosures</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-800 rounded"></div>
-            <span className="text-gray-700">Main Stage</span>
+            <div className="w-4 h-4 bg-amber-500 rounded shadow"></div>
+            <span className="text-gray-200">Main Stage</span>
           </div>
         </div>
         <div className="mt-2 pt-2 border-t border-gray-200 text-[10px] text-gray-600">

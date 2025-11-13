@@ -311,7 +311,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
         </div>
         <Button 
           onClick={handleCreate} 
-          className="gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+          className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
         >
           <Plus className="w-5 h-5" />
           New Enclosure
@@ -340,7 +340,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                 variant="outline"
                 size="sm"
                 disabled={loading}
-                className="gap-2 border-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+                className="gap-2"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
@@ -350,7 +350,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                 variant="outline"
                 size="sm"
                 disabled={enclosures.length === 0}
-                className="gap-2 border-2 border-blue-500 text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                className="gap-2 disabled:opacity-50"
               >
                 <Download className="w-4 h-4" />
                 Export
@@ -361,7 +361,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                   variant="danger"
                   size="sm"
                   disabled={loading}
-                  className="gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
+                  className="gap-2"
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete Selected ({selectedEnclosures.size})
@@ -372,7 +372,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                 variant="danger"
                 size="sm"
                 disabled={loading || enclosures.length === 0}
-                className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white disabled:opacity-50"
+                className="gap-2 disabled:opacity-50"
               >
                 <X className="w-4 h-4" />
                 Clear All
@@ -388,7 +388,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                   type="checkbox"
                   checked={selectedEnclosures.size === filteredEnclosures.length && filteredEnclosures.length > 0}
                   onChange={toggleSelectAll}
-                  className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="text-sm font-medium text-gray-700">
                   Select All
@@ -408,11 +408,11 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
       {/* Enclosure List */}
       <div className="grid gap-6">
         {filteredEnclosures.map((enclosure) => (
-          <Card key={enclosure.id} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white dark:bg-dark-card">
+          <Card key={enclosure.id} className="border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden bg-white dark:bg-dark-card">
             {/* Decorative top border */}
-            <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+            <div className="h-1 bg-blue-600"></div>
               
-              <CardHeader className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
+              <CardHeader className="bg-gray-50/50 dark:bg-gray-800/50">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     {/* Selection Checkbox */}
@@ -420,21 +420,21 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                       type="checkbox"
                       checked={selectedEnclosures.has(enclosure.id!)}
                       onChange={() => toggleSelectEnclosure(enclosure.id!)}
-                      className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
+                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
                       aria-label={`Select enclosure ${enclosure.letter}`}
                     />
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg">
+                    <div className="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center text-3xl font-bold shadow-md">
                       {enclosure.letter}
                     </div>
                     <div>
-                      <CardTitle className="text-2xl font-bold text-gray-900">
+                      <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
                         {enclosure.name || `Enclosure ${enclosure.letter}`}
                       </CardTitle>
                       <div className="flex flex-wrap items-center gap-2 mt-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900 dark:text-blue-200">
                           {enclosure.allocatedFor}
                         </span>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200 dark:bg-gray-800 dark:text-gray-200">
                           Entry: {enclosure.entryDirection}
                         </span>
                       </div>
@@ -445,7 +445,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => handleDuplicate(enclosure)}
-                      className="gap-2 hover:bg-green-50 hover:border-green-300 transition-all duration-300"
+                      className="gap-2"
                     >
                       <Copy className="w-4 h-4" />
                       Duplicate
@@ -454,7 +454,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => handleEdit(enclosure)}
-                      className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                      className="gap-2"
                     >
                       <Edit className="w-4 h-4" />
                       Edit
@@ -463,7 +463,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                       variant="danger"
                       size="sm"
                       onClick={() => handleDelete(enclosure.id!)}
-                      className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white transition-all duration-300"
+                      className="gap-2"
                     >
                       <Trash2 className="w-4 h-4" />
                       Delete
@@ -473,42 +473,42 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                  <div className="text-center p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300">
-                    <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <div className="text-center p-5 bg-blue-50 rounded-lg border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
+                    <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                       {enclosure.totalSeats || 0}
                     </div>
-                    <div className="text-sm font-semibold text-gray-600 mt-1">Total Seats</div>
+                    <div className="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-1">Total Seats</div>
                   </div>
-                  <div className="text-center p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200 hover:shadow-lg transition-all duration-300">
-                    <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+                  <div className="text-center p-5 bg-green-50 rounded-lg border border-green-200 dark:bg-green-900/20 dark:border-green-800">
+                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">
                       {enclosure.allocatedSeats || 0}
                     </div>
-                    <div className="text-sm font-semibold text-gray-600 mt-1">Allocated</div>
+                    <div className="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-1">Allocated</div>
                   </div>
-                  <div className="text-center p-5 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300">
-                    <div className="text-3xl font-bold text-gray-700">
+                  <div className="text-center p-5 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                    <div className="text-3xl font-bold text-gray-700 dark:text-gray-300">
                       {enclosure.rows?.length || 0}
                     </div>
-                    <div className="text-sm font-semibold text-gray-600 mt-1">Rows</div>
+                    <div className="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-1">Rows</div>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-1 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full"></div>
-                    <h4 className="font-bold text-gray-900">Row Configuration</h4>
+                    <div className="h-6 w-1 bg-blue-600 rounded-full"></div>
+                    <h4 className="font-bold text-gray-900 dark:text-white">Row Configuration</h4>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {enclosure.rows?.map((row) => (
                       <div 
                         key={row.letter} 
-                        className="p-3 bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-lg text-sm hover:border-indigo-300 hover:shadow-md transition-all duration-300"
+                        className="p-3 bg-white border border-gray-200 rounded-lg text-sm hover:border-blue-300 hover:shadow-sm transition-all duration-200 dark:bg-gray-800 dark:border-gray-700"
                       >
-                        <div className="font-bold text-gray-900">Row {row.letter}</div>
-                        <div className="text-gray-600 text-xs mt-1">
+                        <div className="font-bold text-gray-900 dark:text-white">Row {row.letter}</div>
+                        <div className="text-gray-600 dark:text-gray-400 text-xs mt-1">
                           Seats: {row.startSeat}-{row.endSeat}
                         </div>
                         {row.reservedSeats && (
-                          <div className="text-red-600 font-semibold text-xs mt-1">
+                          <div className="text-red-600 dark:text-red-400 font-semibold text-xs mt-1">
                             Reserved: {row.reservedSeats}
                           </div>
                         )}
@@ -522,15 +522,15 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
 
           {/* Empty States */}
           {filteredEnclosures.length === 0 && enclosures.length > 0 && (
-            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-gradient-to-br from-white to-gray-50 rounded-2xl">
+            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-white dark:bg-dark-card rounded-xl">
               <CardContent>
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                  <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                     <Search className="w-10 h-10 text-gray-400" />
                   </div>
                   <div>
-                    <p className="text-xl font-semibold text-gray-900 mb-2">No Matching Enclosures</p>
-                    <p className="text-gray-500 mb-6">Try adjusting your search query</p>
+                    <p className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Matching Enclosures</p>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search query</p>
                   </div>
                   <Button 
                     onClick={() => setSearchQuery('')}
@@ -546,19 +546,19 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
           )}
 
           {enclosures.length === 0 && (
-            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-gradient-to-br from-white to-gray-50 rounded-2xl">
+            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-white dark:bg-dark-card rounded-xl">
               <CardContent>
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
-                    <Plus className="w-10 h-10 text-indigo-600" />
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                    <Plus className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-xl font-semibold text-gray-900 mb-2">No Enclosures Found</p>
-                    <p className="text-gray-500 mb-6">Create your first enclosure to get started</p>
+                    <p className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Enclosures Found</p>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6">Create your first enclosure to get started</p>
                   </div>
                   <Button 
                     onClick={handleCreate}
-                    className="gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Plus className="w-5 h-5" />
                     Create First Enclosure

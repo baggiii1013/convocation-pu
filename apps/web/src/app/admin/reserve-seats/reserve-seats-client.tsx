@@ -260,16 +260,16 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Reservation Form - Enhanced */}
-        <Card className="border-0 shadow-xl bg-white dark:bg-dark-card overflow-hidden">
+        <Card className="border border-gray-200 shadow-md bg-gray-50 dark:bg-dark-card overflow-hidden">
           {/* Decorative top border */}
-          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+          {/* <div className="h-1 bg-blue-600"></div> */}
           
-          <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/20 border-b border-gray-100 dark:border-dark-border">
+          <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border">
             <CardTitle className="flex items-center gap-3 text-2xl">
-              <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg shadow-lg">
+              <div className="p-2 bg-blue-600 rounded-lg shadow-md">
                 <Plus className="w-6 h-6 text-white" />
               </div>
-              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <span className="text-gray-900 dark:text-white">
                 Create Seat Reservation
               </span>
             </CardTitle>
@@ -281,7 +281,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
               setSelectedEnclosure(value);
               setSelectedRow(''); // Reset row when enclosure changes
             }}>
-              <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors">
+              <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-blue-500 transition-colors">
                 <SelectValue placeholder="Select enclosure" />
               </SelectTrigger>
                 <SelectContent>
@@ -295,13 +295,13 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             </div>
 
             <div>
-              <Label htmlFor="row" className="text-sm font-semibold text-gray-700">Row *</Label>
+              <Label htmlFor="row" className="text-sm font-semibold  dark:text-gray-300">Row *</Label>
               <Select
                 value={selectedRow}
                 onValueChange={setSelectedRow}
                 disabled={!selectedEnclosure}
               >
-                <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <SelectValue placeholder="Select row" />
                 </SelectTrigger>
                 <SelectContent>
@@ -315,38 +315,37 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             </div>
 
             <div>
-              <Label htmlFor="seats" className="text-sm font-semibold text-gray-700">Seat Numbers *</Label>
+              <Label htmlFor="seats" className="text-sm font-semibold  dark:text-gray-300">Seat Numbers *</Label>
               <Input
                 id="seats"
                 value={seatNumbers}
                 onChange={(e) => setSeatNumbers(e.target.value)}
                 placeholder="e.g., 1,5,10 or 1-10"
-                className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors"
+                className="mt-2 border-2 border-gray-200 focus:border-blue-500 transition-colors"
               />
               <p className="text-xs text-gray-500 mt-2 flex items-start gap-1">
-                <span className="text-emerald-600 font-semibold">💡</span>
+                <span className="text-blue-600 font-semibold">💡</span>
                 Comma-separated or range (e.g., &quot;1,5,10&quot; or &quot;1-10&quot; or &quot;1,5-10,15&quot;)
               </p>
             </div>
 
             <div>
-              <Label htmlFor="reservedFor" className="text-sm font-semibold text-gray-700">Reserved For (Optional)</Label>
+              <Label htmlFor="reservedFor" className="text-sm font-semibold  dark:text-gray-300">Reserved For (Optional)</Label>
               <Input
                 id="reservedFor"
                 value={reservedFor}
                 onChange={(e) => setReservedFor(e.target.value)}
                 placeholder="e.g., VIP, Special Guest"
-                className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors"
+                className="mt-2 border-2 border-gray-200 focus:border-blue-500 transition-colors"
               />
             </div>
 
-            <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl p-4 shadow-lg">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full blur-2xl"></div>
-              <div className="relative flex items-start gap-3">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 p-2 bg-blue-600 rounded-lg shadow-md">
                   <AlertCircle className="w-5 h-5 text-white" />
                 </div>
-                <div className="flex-1 text-sm text-blue-900">
+                <div className="flex-1 text-sm text-blue-900 dark:text-blue-200">
                   <p className="font-bold mb-1">Important Note</p>
                   <p>Reserved seats will be skipped during automatic seat allocation. Make sure to reserve seats before running the allocation algorithm.</p>
                 </div>
@@ -356,7 +355,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             <Button 
               onClick={handleReserve} 
               disabled={loading} 
-              className="w-full gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {loading ? (
                 <>
@@ -374,15 +373,15 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
         </Card>
 
         {/* Reservations List - Enhanced */}
-        <Card className="border-0 shadow-xl bg-white overflow-hidden">
+        <Card className="border border-gray-200 shadow-md bg-dark-card overflow-hidden">
           {/* Decorative top border */}
-          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+          {/* <div className="h-1 bg-blue-600"></div> */}
           
-          <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 border-b border-gray-100">
+          <CardHeader className="bg-dark-card border-b border-blue-100">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-xl font-bold text-gray-900">Current Reservations</CardTitle>
+              <CardTitle className="text-xl font-bold text-primary-500">Current Reservations</CardTitle>
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold text-blue-600">
                   {reservations.length}
                 </span>
                 <span className="text-sm text-gray-600">reserved</span>
@@ -395,7 +394,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                 onClick={fetchReservations}
                 variant="outline"
                 size="sm"
-                className="gap-2 border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+                className="gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 Refresh
@@ -405,7 +404,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                 variant="outline"
                 size="sm"
                 disabled={reservations.length === 0}
-                className="gap-2 border-2 border-blue-500 text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                className="gap-2 disabled:opacity-50"
               >
                 <Download className="w-4 h-4" />
                 Export CSV
@@ -415,7 +414,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                 variant="danger"
                 size="sm"
                 disabled={loading || reservations.length === 0}
-                className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white disabled:opacity-50"
+                className="gap-2 disabled:opacity-50"
               >
                 <X className="w-4 h-4" />
                 Clear All
@@ -429,7 +428,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by enclosure, row, seat number, or reserved for..."
-                  className="border-2 border-gray-200 focus:border-emerald-500"
+                  className="border-2 border-gray-200 focus:border-blue-500"
                 />
                 {searchQuery && (
                   <p className="text-sm text-gray-600 mt-2">
@@ -443,7 +442,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
               {filteredReservations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
                     <AlertCircle className="w-8 h-8 text-gray-400" />
                   </div>
                   <p className="text-lg font-semibold text-gray-900 mb-1">
@@ -457,11 +456,11 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                 filteredReservations.map((reservation) => (
                   <div
                     key={reservation.id}
-                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50"
+                    className="flex items-center justify-between p-4 border border-gray-300 rounded-lg hover:border-blue-400 hover:shadow-md transition-all duration-300 bg-gray-100 dark:bg-gray-800"
                   >
                     <div className="flex-1">
-                      <div className="font-bold text-gray-900 text-lg">
-                        <span className="inline-flex items-center px-2 py-1 bg-emerald-100 text-emerald-800 rounded-lg mr-2 text-sm font-semibold">
+                      <div className="font-bold text-gray-900 dark:text-white text-lg">
+                        <span className="inline-flex items-center px-2 py-1 bg-blue-600 text-white rounded-lg mr-2 text-sm font-semibold">
                           {reservation.enclosureLetter}
                         </span>
                         Row {reservation.rowLetter} • Seat {reservation.seatNumber}
@@ -480,7 +479,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                       variant="danger"
                       size="sm"
                       onClick={() => removeReservation(reservation.id)}
-                      className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="gap-2"
                     >
                       <Trash2 className="w-4 h-4" />
                       Remove
@@ -494,12 +493,12 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
       </div>
 
       {/* Reservations by Enclosure Summary - Enhanced */}
-      <Card className="mt-8 border-0 shadow-xl bg-white overflow-hidden">
+      <Card className="mt-8 border border-gray-200 shadow-md bg-dark-card overflow-hidden">
         {/* Decorative top border */}
-        <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+        {/* <div className="h-1 bg-blue-600"></div> */}
         
-        <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 border-b border-gray-100">
-          <CardTitle className="text-xl font-bold text-gray-900">
+        <CardHeader className=" border-b border-blue-100">
+          <CardTitle className="text-xl font-bold text-primary-500">
             Reservations Summary by Enclosure
           </CardTitle>
         </CardHeader>
@@ -512,18 +511,18 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
               return (
                 <div 
                   key={enclosure.id} 
-                  className="p-5 bg-gradient-to-br from-white to-emerald-50 border-2 border-emerald-200 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                  className="p-5 bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-800 rounded-lg text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                 >
-                  <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-blue-600 text-white rounded-lg flex items-center justify-center text-xl font-bold shadow-md">
                     {enclosure.letter}
                   </div>
                   <div className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
                     {enclosure.name || `Enclosure ${enclosure.letter}`}
                   </div>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mt-2">
+                  <div className="text-3xl font-bold text-blue-700 dark:text-blue-400 mt-2">
                     {enclosureReservations.length}
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">Reserved Seats</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">Reserved Seats</div>
                 </div>
               );
             })}

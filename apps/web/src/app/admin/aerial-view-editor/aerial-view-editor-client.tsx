@@ -284,22 +284,22 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-dark-bg py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 Aerial View Layout Editor
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Manage the convocation ground layout and enclosure positions
               </p>
             </div>
             <div className="flex items-center gap-3">
               {pendingChanges.size > 0 && (
-                <span className="text-sm text-amber-600 font-medium">
+                <span className="text-sm text-amber-600 dark:text-amber-500 font-medium">
                   {pendingChanges.size} unsaved change{pendingChanges.size > 1 ? 's' : ''}
                 </span>
               )}
@@ -328,7 +328,7 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                 variant="outline"
                 size="sm"
                 disabled={saving || loading}
-                className="gap-2 text-orange-600 hover:text-orange-700 border-orange-300 hover:border-orange-400"
+                className="gap-2"
               >
                 <RotateCcw className="w-4 h-4" />
                 Reset All
@@ -345,14 +345,14 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
 
           {/* Status Messages */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {saveSuccess && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
               <CheckCircle className="w-5 h-5 flex-shrink-0" />
               <span>Layout saved successfully!</span>
             </div>
@@ -361,17 +361,17 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
 
         {/* Instructions */}
         {editMode && (
-          <Card className="mb-6 border-blue-200 bg-blue-50">
+          <Card className="mb-6 border-blue-300 dark:border-blue-800 bg-blue-100 dark:bg-blue-900/30">
             <CardContent className="py-4">
               <div className="flex items-start gap-3">
-                <div className="bg-blue-100 rounded-full p-2 flex-shrink-0">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-blue-600 rounded-full p-2 flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">Edit Mode Active</h3>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Edit Mode Active</h3>
+                  <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                     <li>• Click and drag enclosures to reposition them</li>
                     <li>• Enclosures are highlighted with a blue border when hovering</li>
                     <li>• Changes are tracked but not saved until you click &quot;Save Layout&quot;</li>
@@ -384,10 +384,10 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
         )}
 
         {/* Aerial View */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-xl">Convocation Ground - Aerial View</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+        <Card className="mb-6 bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border">
+          <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border mb-8">
+            <CardTitle className="text-xl text-gray-900 dark:text-white">Convocation Ground - Aerial View</CardTitle>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
               {editMode 
                 ? 'Drag enclosures to reposition them'
                 : 'Click on any enclosure to view detailed seat layout'}
@@ -404,12 +404,12 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
 
         {/* Action Buttons */}
         {pendingChanges.size > 0 && (
-          <Card>
+          <Card className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
             <CardContent className="py-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-gray-900">Unsaved Changes</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="font-semibold text-gray-900 dark:text-white">Unsaved Changes</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     You have {pendingChanges.size} enclosure{pendingChanges.size > 1 ? 's' : ''} with modified positions
                   </p>
                 </div>
@@ -424,7 +424,7 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                   <Button
                     onClick={handleSaveLayout}
                     disabled={saving}
-                    className="min-w-[140px]"
+                    className="min-w-[140px] bg-blue-600 hover:bg-blue-700"
                   >
                     {saving ? (
                       <>
@@ -445,12 +445,12 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
         )}
 
         {/* Enclosure List */}
-        <Card className="mt-6">
-          <CardHeader>
+        <Card className="mt-6 bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border">
+          <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border mb-[32px]">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Enclosures Overview</CardTitle>
+              <CardTitle className="text-lg text-gray-900 dark:text-white">Enclosures Overview</CardTitle>
               {enclosures.length > 0 && (
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
                   {filteredEnclosures.length} of {enclosures.length} enclosures
                 </span>
               )}
@@ -470,22 +470,22 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
           <CardContent>
             {filteredEnclosures.length === 0 && searchQuery ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="w-8 h-8 text-gray-400" />
                 </div>
-                <p className="text-gray-600 mb-2">No matching enclosures</p>
-                <p className="text-sm text-gray-500">Try adjusting your search query</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">No matching enclosures</p>
+                <p className="text-sm text-gray-500 dark:text-gray-500">Try adjusting your search query</p>
               </div>
             ) : filteredEnclosures.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-600">No enclosures available</p>
+                <p className="text-gray-600 dark:text-gray-400">No enclosures available</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredEnclosures.map((enc) => (
                   <div
                     key={enc.id}
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border-2 rounded-lg p-4 hover:shadow-md transition-shadow bg-gray-100 dark:bg-gray-800"
                     style={{ borderColor: enc.color || '#3B82F6' }}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -496,19 +496,19 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                         {enc.letter}
                       </span>
                       {pendingChanges.has(enc.letter) && (
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded">
+                        <span className="text-xs bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-1 rounded font-semibold">
                           Modified
                         </span>
                       )}
                     </div>
-                    <p className="text-sm font-medium text-gray-900 mb-1">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
                       {enc.name || `Enclosure ${enc.letter}`}
                     </p>
-                    <p className="text-xs text-gray-600 mb-2">{enc.allocatedFor}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{enc.allocatedFor}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
                       Position: ({(enc.positionX || 0).toFixed(1)}%, {(enc.positionY || 0).toFixed(1)}%)
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
                       {enc.totalSeats || 0} seats
                     </p>
                   </div>
