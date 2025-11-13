@@ -1,4 +1,5 @@
 import { requireAdmin } from '@/lib/auth';
+import { cookies } from 'next/headers';
 import { ReserveSeatsClient } from './reserve-seats-client';
 
 interface Enclosure {
@@ -47,9 +48,15 @@ export default async function ReserveSeatsPage() {
   // Enforce admin-only access
   await requireAdmin();
 
+  // Get auth token from cookies
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
+
   // Fetch initial enclosures
   const enclosuresRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
-    credentials: 'include',
+    headers: accessToken ? {
+      'Cookie': `accessToken=${accessToken}`,
+    } : {},
     cache: 'no-store', // Don't cache to ensure fresh data
   });
   const enclosuresData = await enclosuresRes.json();
@@ -60,7 +67,9 @@ export default async function ReserveSeatsPage() {
 
   // Fetch initial reservations
   const reservationsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/reservations`, {
-    credentials: 'include',
+    headers: accessToken ? {
+      'Cookie': `accessToken=${accessToken}`,
+    } : {},
     cache: 'no-store', // Don't cache to ensure fresh data
   });
   const reservationsData = await reservationsRes.json();

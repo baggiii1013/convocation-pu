@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { AlertCircle, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, Download, Plus, RefreshCw, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -62,6 +62,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
   const [reservedFor, setReservedFor] = useState('');
   const [reservations, setReservations] = useState<Reservation[]>(initialReservations);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Removed unused fetchEnclosures function since we use initialEnclosures
 
@@ -170,6 +171,78 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
       toast.error('Failed to remove reservation');
     }
   };
+
+  const clearAllReservations = async () => {
+    if (!confirm('Are you sure you want to clear ALL reservations? This action cannot be undone!')) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/reservations`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (res.ok) {
+        toast.success('All reservations cleared successfully');
+        setReservations([]);
+      } else {
+        const data = await res.json();
+        toast.error(data.message || 'Failed to clear reservations');
+      }
+    } catch (error) {
+      console.error('Clear all failed:', error);
+      toast.error('Failed to clear all reservations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const exportReservations = () => {
+    if (reservations.length === 0) {
+      toast.error('No reservations to export');
+      return;
+    }
+
+    // Create CSV content
+    const headers = ['Enclosure', 'Row', 'Seat Number', 'Reserved For', 'Reserved By', 'Created At'];
+    const csvContent = [
+      headers.join(','),
+      ...reservations.map(r => [
+        r.enclosureLetter,
+        r.rowLetter,
+        r.seatNumber,
+        r.reservedFor || '',
+        r.reservedBy || '',
+        new Date(r.createdAt).toLocaleString()
+      ].join(','))
+    ].join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `seat-reservations-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success('Reservations exported successfully');
+  };
+
+  // Filter reservations based on search query
+  const filteredReservations = reservations.filter(r => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      r.enclosureLetter.toLowerCase().includes(query) ||
+      r.rowLetter.toLowerCase().includes(query) ||
+      r.seatNumber.toString().includes(query) ||
+      (r.reservedFor && r.reservedFor.toLowerCase().includes(query)) ||
+      (r.reservedBy && r.reservedBy.toLowerCase().includes(query))
+    );
+  });
 
   const selectedEnclosureData = enclosures.find((e) => e.letter === selectedEnclosure);
 
@@ -306,7 +379,7 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
           <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
           
           <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 border-b border-gray-100">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <CardTitle className="text-xl font-bold text-gray-900">Current Reservations</CardTitle>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -315,19 +388,73 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                 <span className="text-sm text-gray-600">reserved</span>
               </div>
             </div>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={fetchReservations}
+                variant="outline"
+                size="sm"
+                className="gap-2 border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </Button>
+              <Button
+                onClick={exportReservations}
+                variant="outline"
+                size="sm"
+                disabled={reservations.length === 0}
+                className="gap-2 border-2 border-blue-500 text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+              >
+                <Download className="w-4 h-4" />
+                Export CSV
+              </Button>
+              <Button
+                onClick={clearAllReservations}
+                variant="danger"
+                size="sm"
+                disabled={loading || reservations.length === 0}
+                className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white disabled:opacity-50"
+              >
+                <X className="w-4 h-4" />
+                Clear All
+              </Button>
+            </div>
+
+            {/* Search Bar */}
+            {reservations.length > 0 && (
+              <div className="mt-4">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by enclosure, row, seat number, or reserved for..."
+                  className="border-2 border-gray-200 focus:border-emerald-500"
+                />
+                {searchQuery && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    Showing {filteredReservations.length} of {reservations.length} reservations
+                  </p>
+                )}
+              </div>
+            )}
           </CardHeader>
           <CardContent className="p-4">
             <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-              {reservations.length === 0 ? (
+              {filteredReservations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
                     <AlertCircle className="w-8 h-8 text-gray-400" />
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 mb-1">No Reservations Yet</p>
-                  <p className="text-sm text-gray-500">Create your first seat reservation above</p>
+                  <p className="text-lg font-semibold text-gray-900 mb-1">
+                    {searchQuery ? 'No matching reservations' : 'No Reservations Yet'}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {searchQuery ? 'Try adjusting your search query' : 'Create your first seat reservation above'}
+                  </p>
                 </div>
               ) : (
-                reservations.map((reservation) => (
+                filteredReservations.map((reservation) => (
                   <div
                     key={reservation.id}
                     className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50"

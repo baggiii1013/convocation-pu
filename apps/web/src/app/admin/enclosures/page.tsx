@@ -1,4 +1,5 @@
 import { requireAdmin } from '@/lib/auth';
+import { cookies } from 'next/headers';
 import { EnclosuresClient } from './enclosures-client';
 
 /**
@@ -38,13 +39,25 @@ interface Enclosure {
 
 async function fetchEnclosures(): Promise<Enclosure[]> {
   try {
+    // Get auth token from cookies
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
+
+    if (!accessToken) {
+      console.error('No access token found');
+      return [];
+    }
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
-      credentials: 'include',
+      headers: {
+        'Cookie': `accessToken=${accessToken}`,
+      },
       cache: 'no-store', // Always fetch fresh data
     });
     
     if (!res.ok) {
-      throw new Error('Failed to fetch enclosures');
+      console.error('Failed to fetch enclosures:', res.status, res.statusText);
+      return [];
     }
     
     return await res.json();

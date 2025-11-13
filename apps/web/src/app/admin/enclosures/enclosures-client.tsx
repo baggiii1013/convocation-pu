@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Edit, Plus, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/Input';
+import { Copy, Download, Edit, Plus, RefreshCw, Search, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -38,6 +39,8 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedEnclosures, setSelectedEnclosures] = useState<Set<string>>(new Set());
 
   const fetchEnclosures = async () => {
     try {
@@ -123,6 +126,177 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
     setIsEditing(true);
   };
 
+  const handleDuplicate = (enclosure: Enclosure) => {
+    // Create a copy with a new letter
+    const newEnclosure = {
+      ...enclosure,
+      id: undefined,
+      letter: '', // User will fill this
+      name: `${enclosure.name} (Copy)`,
+      displayOrder: enclosures.length,
+      allocatedSeats: 0,
+    };
+    setCurrentEnclosure(newEnclosure);
+    setIsEditing(true);
+    toast.success('Duplicating enclosure - update the letter');
+  };
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    try {
+      await fetchEnclosures();
+      toast.success('Enclosures refreshed');
+    } catch (error) {
+      toast.error('Failed to refresh');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedEnclosures.size === 0) {
+      toast.error('No enclosures selected');
+      return;
+    }
+
+    if (!confirm(`Delete ${selectedEnclosures.size} selected enclosure(s)? This cannot be undone.`)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const deletePromises = Array.from(selectedEnclosures).map(id =>
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        })
+      );
+
+      const results = await Promise.allSettled(deletePromises);
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected').length;
+
+      if (failed > 0) {
+        toast.error(`Deleted ${successful}, failed ${failed}`);
+      } else {
+        toast.success(`Successfully deleted ${successful} enclosure(s)`);
+      }
+
+      setSelectedEnclosures(new Set());
+      await fetchEnclosures();
+      router.refresh();
+    } catch (error) {
+      console.error('Bulk delete failed:', error);
+      toast.error('Failed to delete selected enclosures');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (enclosures.length === 0) {
+      toast.error('No enclosures to delete');
+      return;
+    }
+
+    if (!confirm('Delete ALL enclosures? This will permanently delete all enclosures and cannot be undone!')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const deletePromises = enclosures.map(enc =>
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enc.id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        })
+      );
+
+      await Promise.all(deletePromises);
+      toast.success('All enclosures deleted');
+      setEnclosures([]);
+      setSelectedEnclosures(new Set());
+      router.refresh();
+    } catch (error) {
+      console.error('Delete all failed:', error);
+      toast.error('Failed to delete all enclosures');
+      await fetchEnclosures();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExport = () => {
+    if (enclosures.length === 0) {
+      toast.error('No enclosures to export');
+      return;
+    }
+
+    try {
+      // Create CSV content
+      const headers = ['Letter', 'Name', 'Allocated For', 'Entry Direction', 'Total Seats', 'Allocated Seats', 'Rows', 'Display Order'];
+      const csvContent = [
+        headers.join(','),
+        ...enclosures.map(e => [
+          e.letter,
+          `"${e.name || ''}"`,
+          e.allocatedFor,
+          e.entryDirection,
+          e.totalSeats || 0,
+          e.allocatedSeats || 0,
+          e.rows?.length || 0,
+          e.displayOrder
+        ].join(','))
+      ].join('\n');
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `enclosures-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Enclosures exported successfully');
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export enclosures');
+    }
+  };
+
+  const toggleSelectEnclosure = (id: string) => {
+    const newSelected = new Set(selectedEnclosures);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedEnclosures(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedEnclosures.size === filteredEnclosures.length) {
+      setSelectedEnclosures(new Set());
+    } else {
+      setSelectedEnclosures(new Set(filteredEnclosures.map(e => e.id!).filter(Boolean)));
+    }
+  };
+
+  // Filter enclosures based on search query
+  const filteredEnclosures = enclosures.filter(e => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      e.letter.toLowerCase().includes(query) ||
+      (e.name && e.name.toLowerCase().includes(query)) ||
+      e.allocatedFor.toLowerCase().includes(query) ||
+      e.entryDirection.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="space-y-8">
       {/* Header Section */}
@@ -137,16 +311,103 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
         </div>
         <Button 
           onClick={handleCreate} 
-          className="gap-2"
+          className="gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
         >
           <Plus className="w-5 h-5" />
           New Enclosure
         </Button>
       </div>
 
+      {/* Action Bar */}
+      <Card className="border-0 shadow-lg bg-white dark:bg-dark-card">
+        <CardContent className="p-4">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            {/* Search */}
+            <div className="relative flex-1 w-full lg:max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by letter, name, or allocation..."
+                className="pl-10 border-2 border-gray-200 focus:border-indigo-500"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={handleRefresh}
+                variant="outline"
+                size="sm"
+                disabled={loading}
+                className="gap-2 border-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+              <Button
+                onClick={handleExport}
+                variant="outline"
+                size="sm"
+                disabled={enclosures.length === 0}
+                className="gap-2 border-2 border-blue-500 text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+              >
+                <Download className="w-4 h-4" />
+                Export
+              </Button>
+              {selectedEnclosures.size > 0 && (
+                <Button
+                  onClick={handleDeleteSelected}
+                  variant="danger"
+                  size="sm"
+                  disabled={loading}
+                  className="gap-2 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete Selected ({selectedEnclosures.size})
+                </Button>
+              )}
+              <Button
+                onClick={handleDeleteAll}
+                variant="danger"
+                size="sm"
+                disabled={loading || enclosures.length === 0}
+                className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white disabled:opacity-50"
+              >
+                <X className="w-4 h-4" />
+                Clear All
+              </Button>
+            </div>
+          </div>
+
+          {/* Selection Info */}
+          {filteredEnclosures.length > 0 && (
+            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedEnclosures.size === filteredEnclosures.length && filteredEnclosures.length > 0}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Select All
+                </span>
+              </label>
+              <span className="text-sm text-gray-600">
+                {searchQuery && (
+                  <>Showing {filteredEnclosures.length} of {enclosures.length} • </>
+                )}
+                {selectedEnclosures.size > 0 && `${selectedEnclosures.size} selected`}
+              </span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Enclosure List */}
       <div className="grid gap-6">
-        {enclosures.map((enclosure) => (
+        {filteredEnclosures.map((enclosure) => (
           <Card key={enclosure.id} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white dark:bg-dark-card">
             {/* Decorative top border */}
             <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
@@ -154,6 +415,14 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
               <CardHeader className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
+                    {/* Selection Checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={selectedEnclosures.has(enclosure.id!)}
+                      onChange={() => toggleSelectEnclosure(enclosure.id!)}
+                      className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
+                      aria-label={`Select enclosure ${enclosure.letter}`}
+                    />
                     <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg">
                       {enclosure.letter}
                     </div>
@@ -172,6 +441,15 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDuplicate(enclosure)}
+                      className="gap-2 hover:bg-green-50 hover:border-green-300 transition-all duration-300"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Duplicate
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -241,6 +519,31 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
               </CardContent>
             </Card>
           ))}
+
+          {/* Empty States */}
+          {filteredEnclosures.length === 0 && enclosures.length > 0 && (
+            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-gradient-to-br from-white to-gray-50 rounded-2xl">
+              <CardContent>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                    <Search className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-semibold text-gray-900 mb-2">No Matching Enclosures</p>
+                    <p className="text-gray-500 mb-6">Try adjusting your search query</p>
+                  </div>
+                  <Button 
+                    onClick={() => setSearchQuery('')}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <X className="w-5 h-5" />
+                    Clear Search
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {enclosures.length === 0 && (
             <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-gradient-to-br from-white to-gray-50 rounded-2xl">

@@ -3,8 +3,10 @@
 import { AerialVenueWrapper } from '@/components/attendee/AerialVenueWrapper';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { AlertCircle, CheckCircle, RefreshCw, Save } from 'lucide-react';
+import { Input } from '@/components/ui/Input';
+import { AlertCircle, CheckCircle, Download, RefreshCw, RotateCcw, Save, Search } from 'lucide-react';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface Enclosure {
   id: string;
@@ -50,12 +52,15 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
   const [enclosures, setEnclosures] = useState<Enclosure[]>(initialEnclosures);
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<Map<string, { x: number; y: number }>>(new Map());
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchEnclosures = async () => {
     try {
+      setLoading(true);
       setError(null);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
         credentials: 'include',
@@ -67,9 +72,13 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
 
       const data = await res.json();
       setEnclosures(data.data || data || []);
+      toast.success('Enclosures refreshed');
     } catch (err) {
       console.error('Error fetching enclosures:', err);
       setError('Failed to load enclosures. Please try again.');
+      toast.error('Failed to refresh enclosures');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -156,10 +165,13 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
       // Hide success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
       
+      toast.success('Layout saved successfully!');
       console.log('Layout saved successfully!');
     } catch (err) {
       console.error('Error saving layout:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save layout. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save layout. Please try again.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -168,7 +180,108 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
   const handleDiscardChanges = () => {
     setPendingChanges(new Map());
     fetchEnclosures(); // Reload original positions
+    toast.success('Changes discarded');
   };
+
+  const handleResetAllPositions = async () => {
+    if (!confirm('Reset all enclosure positions to center (50%, 50%)? This will save immediately and cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError(null);
+
+      // Reset all enclosures to center position
+      const resetPromises = enclosures.map(async (enclosure) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enclosure.id}/layout`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            positionX: 50,
+            positionY: 50,
+          }),
+        });
+
+        return response;
+      });
+
+      const results = await Promise.all(resetPromises);
+      const allSucceeded = results.every(res => res?.ok);
+      
+      if (!allSucceeded) {
+        const failedCount = results.filter(res => !res?.ok).length;
+        throw new Error(`${failedCount} enclosure(s) failed to reset.`);
+      }
+
+      setPendingChanges(new Map());
+      await fetchEnclosures();
+      toast.success('All positions reset to center');
+    } catch (err) {
+      console.error('Error resetting positions:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to reset positions';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleExportLayout = () => {
+    if (enclosures.length === 0) {
+      toast.error('No enclosures to export');
+      return;
+    }
+
+    try {
+      // Create CSV content
+      const headers = ['Letter', 'Name', 'Allocated For', 'Position X (%)', 'Position Y (%)', 'Width', 'Height', 'Color', 'Total Seats'];
+      const csvContent = [
+        headers.join(','),
+        ...enclosures.map(e => [
+          e.letter,
+          `"${e.name || ''}"`,
+          e.allocatedFor,
+          (e.positionX || 0).toFixed(2),
+          (e.positionY || 0).toFixed(2),
+          e.width || 0,
+          e.height || 0,
+          e.color || '',
+          e.totalSeats || 0
+        ].join(','))
+      ].join('\n');
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `aerial-view-layout-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Layout exported successfully');
+    } catch (err) {
+      console.error('Export failed:', err);
+      toast.error('Failed to export layout');
+    }
+  };
+
+  // Filter enclosures based on search query
+  const filteredEnclosures = enclosures.filter(e => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      e.letter.toLowerCase().includes(query) ||
+      (e.name && e.name.toLowerCase().includes(query)) ||
+      e.allocatedFor.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
@@ -190,6 +303,36 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                   {pendingChanges.size} unsaved change{pendingChanges.size > 1 ? 's' : ''}
                 </span>
               )}
+              <Button
+                onClick={fetchEnclosures}
+                variant="outline"
+                size="sm"
+                disabled={loading || saving}
+                className="gap-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+              <Button
+                onClick={handleExportLayout}
+                variant="outline"
+                size="sm"
+                disabled={enclosures.length === 0}
+                className="gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export
+              </Button>
+              <Button
+                onClick={handleResetAllPositions}
+                variant="outline"
+                size="sm"
+                disabled={saving || loading}
+                className="gap-2 text-orange-600 hover:text-orange-700 border-orange-300 hover:border-orange-400"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Reset All
+              </Button>
               <Button
                 onClick={() => setEditMode(!editMode)}
                 variant={editMode ? 'default' : 'outline'}
@@ -304,42 +447,74 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
         {/* Enclosure List */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-lg">Enclosures Overview</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Enclosures Overview</CardTitle>
+              {enclosures.length > 0 && (
+                <span className="text-sm text-gray-600">
+                  {filteredEnclosures.length} of {enclosures.length} enclosures
+                </span>
+              )}
+            </div>
+            {enclosures.length > 0 && (
+              <div className="relative mt-3">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search enclosures by letter, name, or allocation..."
+                  className="pl-10 border-2 border-gray-200 focus:border-blue-500"
+                />
+              </div>
+            )}
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {enclosures.map((enc) => (
-                <div
-                  key={enc.id}
-                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                  style={{ borderColor: enc.color || '#3B82F6' }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="text-2xl font-bold"
-                      style={{ color: enc.color || '#3B82F6' }}
-                    >
-                      {enc.letter}
-                    </span>
-                    {pendingChanges.has(enc.letter) && (
-                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded">
-                        Modified
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1">
-                    {enc.name || `Enclosure ${enc.letter}`}
-                  </p>
-                  <p className="text-xs text-gray-600 mb-2">{enc.allocatedFor}</p>
-                  <p className="text-xs text-gray-500">
-                    Position: ({(enc.positionX || 0).toFixed(1)}%, {(enc.positionY || 0).toFixed(1)}%)
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {enc.totalSeats || 0} seats
-                  </p>
+            {filteredEnclosures.length === 0 && searchQuery ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-8 h-8 text-gray-400" />
                 </div>
-              ))}
-            </div>
+                <p className="text-gray-600 mb-2">No matching enclosures</p>
+                <p className="text-sm text-gray-500">Try adjusting your search query</p>
+              </div>
+            ) : filteredEnclosures.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">No enclosures available</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredEnclosures.map((enc) => (
+                  <div
+                    key={enc.id}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    style={{ borderColor: enc.color || '#3B82F6' }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span
+                        className="text-2xl font-bold"
+                        style={{ color: enc.color || '#3B82F6' }}
+                      >
+                        {enc.letter}
+                      </span>
+                      {pendingChanges.has(enc.letter) && (
+                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded">
+                          Modified
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 mb-1">
+                      {enc.name || `Enclosure ${enc.letter}`}
+                    </p>
+                    <p className="text-xs text-gray-600 mb-2">{enc.allocatedFor}</p>
+                    <p className="text-xs text-gray-500">
+                      Position: ({(enc.positionX || 0).toFixed(1)}%, {(enc.positionY || 0).toFixed(1)}%)
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {enc.totalSeats || 0} seats
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

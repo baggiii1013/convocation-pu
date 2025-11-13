@@ -1,4 +1,5 @@
 import { requireAdmin } from '@/lib/auth';
+import { cookies } from 'next/headers';
 import { DashboardClient } from './dashboard-client';
 
 /**
@@ -35,13 +36,39 @@ interface AllocationStats {
 
 async function fetchAllocationStats(): Promise<AllocationStats> {
   try {
+    // Get auth token from cookies
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
+
+    if (!accessToken) {
+      console.error('No access token found');
+      return {
+        totalAttendees: 0,
+        totalAllocated: 0,
+        totalUnallocated: 0,
+        totalEnclosures: 0,
+        byCategory: {},
+        enclosureStats: [],
+      };
+    }
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/allocations/stats`, {
-      credentials: "include",
+      headers: {
+        'Cookie': `accessToken=${accessToken}`,
+      },
       cache: 'no-store', // Always fetch fresh data
     });
     
     if (!res.ok) {
-      throw new Error("Failed to fetch statistics");
+      console.error('Failed to fetch statistics:', res.status, res.statusText);
+      return {
+        totalAttendees: 0,
+        totalAllocated: 0,
+        totalUnallocated: 0,
+        totalEnclosures: 0,
+        byCategory: {},
+        enclosureStats: [],
+      };
     }
     
     const data = await res.json();
