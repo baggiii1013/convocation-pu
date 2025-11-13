@@ -156,46 +156,51 @@ export default function AerialViewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-400" />
-          <p className="text-gray-600">Loading enclosures...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading enclosures...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Aerial View - Seat Allocations
-          </h1>
-          <p className="text-gray-600">
-            View and search seat allocations across all enclosures
-          </p>
-        </div>
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Aerial View - Seat Allocations
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          View and search seat allocations across all enclosures
+        </p>
+      </div>
 
-        {/* Enclosure Selector & Search */}
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
-          {/* Enclosure Tabs */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Select Enclosure
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
+      {/* Enclosure Selector & Search */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Enclosure Tabs */}
+        <Card className="border-0 shadow-xl bg-white dark:bg-dark-card overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+          <CardHeader className="bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg">
+                <MapPin className="w-5 h-5 text-white" />
+              </div>
+              Select Enclosure
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+              <div className="flex flex-wrap gap-3">
                 {enclosures.map((enc) => (
                   <Button
                     key={enc.letter}
                     onClick={() => setSelectedEnclosure(enc.letter)}
-                    variant={selectedEnclosure === enc.letter ? "default" : "outline"}
-                    className="min-w-[80px]"
+                    className={`min-w-[80px] transition-all duration-300 font-semibold ${
+                      selectedEnclosure === enc.letter 
+                        ? "bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg hover:shadow-xl" 
+                        : "bg-white border-2 border-gray-300 text-gray-700 hover:border-blue-400 hover:shadow-md"
+                    }`}
                   >
                     {enc.letter}
                     <span className="ml-2 text-xs opacity-75">
@@ -208,22 +213,25 @@ export default function AerialViewPage() {
           </Card>
 
           {/* Search */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Search className="w-4 h-4" />
+          <Card className="border-0 shadow-xl bg-white overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-cyan-500 to-teal-500"></div>
+            <CardHeader className="bg-gradient-to-r from-cyan-50/50 to-teal-50/50">
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-lg">
+                  <Search className="w-5 h-5 text-white" />
+                </div>
                 Search Attendee
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   type="text"
                   placeholder="Search by name or enrollment ID..."
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 py-6 border-2 border-gray-200 focus:border-cyan-500 rounded-xl text-lg transition-colors"
                 />
               </div>
             </CardContent>
@@ -384,20 +392,19 @@ export default function AerialViewPage() {
         )}
 
         {/* Empty State */}
-        {!loadingData && filteredRows && filteredRows.length === 0 && (
-          <Card className="p-12 text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No attendees found
-            </h3>
-            <p className="text-gray-600">
-              {searchTerm
-                ? "Try adjusting your search term"
-                : "No seat allocations in this enclosure yet"}
-            </p>
-          </Card>
-        )}
-      </div>
+      {!loadingData && filteredRows && filteredRows.length === 0 && (
+        <Card className="p-12 text-center">
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            No attendees found
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {searchTerm
+              ? "Try adjusting your search term"
+              : "No seat allocations in this enclosure yet"}
+          </p>
+        </Card>
+      )}
     </div>
   );
 }

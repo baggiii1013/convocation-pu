@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { AlertCircle, Trash2 } from 'lucide-react';
+import { AlertCircle, Plus, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -174,29 +174,47 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
   const selectedEnclosureData = enclosures.find((e) => e.letter === selectedEnclosure);
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-6">Reserve Seats</h1>
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Reserve Seats
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          Reserve specific seats for VIPs and special guests
+        </p>
+      </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Reservation Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Create Seat Reservation</CardTitle>
+        {/* Reservation Form - Enhanced */}
+        <Card className="border-0 shadow-xl bg-white dark:bg-dark-card overflow-hidden">
+          {/* Decorative top border */}
+          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+          
+          <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/20 border-b border-gray-100 dark:border-dark-border">
+            <CardTitle className="flex items-center gap-3 text-2xl">
+              <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg shadow-lg">
+                <Plus className="w-6 h-6 text-white" />
+              </div>
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                Create Seat Reservation
+              </span>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="enclosure">Enclosure *</Label>
-              <Select value={selectedEnclosure} onValueChange={(value) => {
-                setSelectedEnclosure(value);
-                setSelectedRow(''); // Reset row when enclosure changes
-              }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select enclosure" />
-                </SelectTrigger>
+          <CardContent className="space-y-5 pt-6">
+          <div>
+            <Label htmlFor="enclosure" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Enclosure *</Label>
+            <Select value={selectedEnclosure} onValueChange={(value: string) => {
+              setSelectedEnclosure(value);
+              setSelectedRow(''); // Reset row when enclosure changes
+            }}>
+              <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors">
+                <SelectValue placeholder="Select enclosure" />
+              </SelectTrigger>
                 <SelectContent>
                   {enclosures.map((enc) => (
                     <SelectItem key={enc.id} value={enc.letter}>
-                      {enc.letter} - {enc.name || `Enclosure ${enc.letter}`}
+                      <span className="font-semibold">{enc.letter}</span> - {enc.name || `Enclosure ${enc.letter}`}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -204,19 +222,19 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             </div>
 
             <div>
-              <Label htmlFor="row">Row *</Label>
+              <Label htmlFor="row" className="text-sm font-semibold text-gray-700">Row *</Label>
               <Select
                 value={selectedRow}
                 onValueChange={setSelectedRow}
                 disabled={!selectedEnclosure}
               >
-                <SelectTrigger>
+                <SelectTrigger className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <SelectValue placeholder="Select row" />
                 </SelectTrigger>
                 <SelectContent>
                   {selectedEnclosureData?.rows.map((row) => (
                     <SelectItem key={row.letter} value={row.letter}>
-                      Row {row.letter} (Seats {row.startSeat}-{row.endSeat})
+                      <span className="font-semibold">Row {row.letter}</span> (Seats {row.startSeat}-{row.endSeat})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -224,69 +242,110 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
             </div>
 
             <div>
-              <Label htmlFor="seats">Seat Numbers *</Label>
+              <Label htmlFor="seats" className="text-sm font-semibold text-gray-700">Seat Numbers *</Label>
               <Input
                 id="seats"
                 value={seatNumbers}
                 onChange={(e) => setSeatNumbers(e.target.value)}
                 placeholder="e.g., 1,5,10 or 1-10"
+                className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2 flex items-start gap-1">
+                <span className="text-emerald-600 font-semibold">💡</span>
                 Comma-separated or range (e.g., &quot;1,5,10&quot; or &quot;1-10&quot; or &quot;1,5-10,15&quot;)
               </p>
             </div>
 
             <div>
-              <Label htmlFor="reservedFor">Reserved For (Optional)</Label>
+              <Label htmlFor="reservedFor" className="text-sm font-semibold text-gray-700">Reserved For (Optional)</Label>
               <Input
                 id="reservedFor"
                 value={reservedFor}
                 onChange={(e) => setReservedFor(e.target.value)}
                 placeholder="e.g., VIP, Special Guest"
+                className="mt-2 border-2 border-gray-200 focus:border-emerald-500 transition-colors"
               />
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <strong>Note:</strong> Reserved seats will be skipped during automatic seat allocation.
-                Make sure to reserve seats before running the allocation algorithm.
+            <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl p-4 shadow-lg">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full blur-2xl"></div>
+              <div className="relative flex items-start gap-3">
+                <div className="flex-shrink-0 p-2 bg-blue-600 rounded-lg shadow-md">
+                  <AlertCircle className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 text-sm text-blue-900">
+                  <p className="font-bold mb-1">Important Note</p>
+                  <p>Reserved seats will be skipped during automatic seat allocation. Make sure to reserve seats before running the allocation algorithm.</p>
+                </div>
               </div>
             </div>
 
-            <Button onClick={handleReserve} disabled={loading} className="w-full">
-              {loading ? 'Reserving...' : 'Reserve Seats'}
+            <Button 
+              onClick={handleReserve} 
+              disabled={loading} 
+              className="w-full gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Reserving Seats...
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5" />
+                  Reserve Seats
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>
 
-        {/* Reservations List */}
-        <Card>
-          <CardHeader>
+        {/* Reservations List - Enhanced */}
+        <Card className="border-0 shadow-xl bg-white overflow-hidden">
+          {/* Decorative top border */}
+          <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+          
+          <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <CardTitle>Current Reservations</CardTitle>
-              <span className="text-sm text-gray-600">{reservations.length} reserved</span>
+              <CardTitle className="text-xl font-bold text-gray-900">Current Reservations</CardTitle>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  {reservations.length}
+                </span>
+                <span className="text-sm text-gray-600">reserved</span>
+              </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+          <CardContent className="p-4">
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
               {reservations.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No reservations yet</p>
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
+                    <AlertCircle className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-lg font-semibold text-gray-900 mb-1">No Reservations Yet</p>
+                  <p className="text-sm text-gray-500">Create your first seat reservation above</p>
+                </div>
               ) : (
                 reservations.map((reservation) => (
                   <div
                     key={reservation.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50"
                   >
                     <div className="flex-1">
-                      <div className="font-semibold">
-                        {reservation.enclosureLetter} - Row {reservation.rowLetter} - Seat{' '}
-                        {reservation.seatNumber}
+                      <div className="font-bold text-gray-900 text-lg">
+                        <span className="inline-flex items-center px-2 py-1 bg-emerald-100 text-emerald-800 rounded-lg mr-2 text-sm font-semibold">
+                          {reservation.enclosureLetter}
+                        </span>
+                        Row {reservation.rowLetter} • Seat {reservation.seatNumber}
                       </div>
                       {reservation.reservedFor && (
-                        <div className="text-sm text-gray-600">For: {reservation.reservedFor}</div>
+                        <div className="text-sm text-gray-600 mt-2 flex items-center gap-1">
+                          <span className="font-semibold">For:</span> {reservation.reservedFor}
+                        </div>
                       )}
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                        <span>📅</span>
                         Reserved on {new Date(reservation.createdAt).toLocaleDateString()}
                       </div>
                     </div>
@@ -294,8 +353,10 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
                       variant="danger"
                       size="sm"
                       onClick={() => removeReservation(reservation.id)}
+                      className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       <Trash2 className="w-4 h-4" />
+                      Remove
                     </Button>
                   </div>
                 ))
@@ -305,23 +366,37 @@ export function ReserveSeatsClient({ initialEnclosures, initialReservations }: R
         </Card>
       </div>
 
-      {/* Reservations by Enclosure Summary */}
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Reservations Summary by Enclosure</CardTitle>
+      {/* Reservations by Enclosure Summary - Enhanced */}
+      <Card className="mt-8 border-0 shadow-xl bg-white overflow-hidden">
+        {/* Decorative top border */}
+        <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+        
+        <CardHeader className="bg-gradient-to-r from-emerald-50/50 to-teal-50/50 border-b border-gray-100">
+          <CardTitle className="text-xl font-bold text-gray-900">
+            Reservations Summary by Enclosure
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {enclosures.map((enclosure) => {
               const enclosureReservations = reservations.filter(
                 (r) => r.enclosureLetter === enclosure.letter
               );
               return (
-                <div key={enclosure.id} className="p-4 border rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-600">{enclosure.letter}</div>
-                  <div className="text-sm text-gray-600">{enclosure.name || `Enclosure ${enclosure.letter}`}</div>
-                  <div className="text-lg font-semibold mt-2">{enclosureReservations.length}</div>
-                  <div className="text-xs text-gray-500">Reserved Seats</div>
+                <div 
+                  key={enclosure.id} 
+                  className="p-5 bg-gradient-to-br from-white to-emerald-50 border-2 border-emerald-200 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-110 transition-transform">
+                    {enclosure.letter}
+                  </div>
+                  <div className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                    {enclosure.name || `Enclosure ${enclosure.letter}`}
+                  </div>
+                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mt-2">
+                    {enclosureReservations.length}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">Reserved Seats</div>
                 </div>
               );
             })}

@@ -85,7 +85,8 @@ export function Sidebar({ isOpen = true, onClose, className }: SidebarProps) {
           'h-screen border-r border-light-border dark:border-dark-border',
           'bg-light-card dark:bg-dark-card',
           // On mobile: fixed position, controlled by isOpen
-          'fixed left-0 top-0 z-50 lg:relative',
+          // On desktop: sticky position so it stays in view when scrolling
+          'fixed left-0 top-0 z-50 lg:sticky',
           className
         )}
       >

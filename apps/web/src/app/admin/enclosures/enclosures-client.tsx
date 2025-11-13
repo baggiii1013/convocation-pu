@@ -124,97 +124,149 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
   };
 
   return (
-    <div className="container mx-auto p-8 max-w-7xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Enclosure Management</h1>
-          <p className="text-gray-600 mt-2">Create and manage venue enclosures with row configurations</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Enclosure Management
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Configure venue enclosures and seating arrangements
+          </p>
         </div>
-        <Button onClick={handleCreate} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" />
+        <Button 
+          onClick={handleCreate} 
+          className="gap-2"
+        >
+          <Plus className="w-5 h-5" />
           New Enclosure
         </Button>
       </div>
 
       {/* Enclosure List */}
-      <div className="grid gap-6 mb-8">
+      <div className="grid gap-6">
         {enclosures.map((enclosure) => (
-          <Card key={enclosure.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl font-bold text-blue-600">{enclosure.letter}</div>
-                  <div>
-                    <CardTitle className="text-xl">{enclosure.name || `Enclosure ${enclosure.letter}`}</CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {enclosure.allocatedFor} • Entry: {enclosure.entryDirection}
-                    </p>
+          <Card key={enclosure.id} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white dark:bg-dark-card">
+            {/* Decorative top border */}
+            <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+              
+              <CardHeader className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg">
+                      {enclosure.letter}
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl font-bold text-gray-900">
+                        {enclosure.name || `Enclosure ${enclosure.letter}`}
+                      </CardTitle>
+                      <div className="flex flex-wrap items-center gap-2 mt-2">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                          {enclosure.allocatedFor}
+                        </span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                          Entry: {enclosure.entryDirection}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(enclosure)}
+                      className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(enclosure.id!)}
+                      className="gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white transition-all duration-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </Button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(enclosure)}
-                    className="flex items-center gap-2"
-                  >
-                    <Edit className="w-4 h-4" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(enclosure.id!)}
-                    className="flex items-center gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{enclosure.totalSeats || 0}</div>
-                  <div className="text-sm text-gray-600">Total Seats</div>
-                </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{enclosure.allocatedSeats || 0}</div>
-                  <div className="text-sm text-gray-600">Allocated</div>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-gray-600">{enclosure.rows?.length || 0}</div>
-                  <div className="text-sm text-gray-600">Rows</div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold text-sm text-gray-700">Row Configuration:</h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {enclosure.rows?.map((row) => (
-                    <div key={row.letter} className="p-2 border rounded text-sm">
-                      <span className="font-semibold">Row {row.letter}:</span> {row.startSeat}-{row.endSeat}
-                      {row.reservedSeats && (
-                        <span className="text-red-600 ml-1">(Reserved: {row.reservedSeats})</span>
-                      )}
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                  <div className="text-center p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      {enclosure.totalSeats || 0}
                     </div>
-                  ))}
+                    <div className="text-sm font-semibold text-gray-600 mt-1">Total Seats</div>
+                  </div>
+                  <div className="text-center p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200 hover:shadow-lg transition-all duration-300">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+                      {enclosure.allocatedSeats || 0}
+                    </div>
+                    <div className="text-sm font-semibold text-gray-600 mt-1">Allocated</div>
+                  </div>
+                  <div className="text-center p-5 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300">
+                    <div className="text-3xl font-bold text-gray-700">
+                      {enclosure.rows?.length || 0}
+                    </div>
+                    <div className="text-sm font-semibold text-gray-600 mt-1">Rows</div>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-6 w-1 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full"></div>
+                    <h4 className="font-bold text-gray-900">Row Configuration</h4>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {enclosure.rows?.map((row) => (
+                      <div 
+                        key={row.letter} 
+                        className="p-3 bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-lg text-sm hover:border-indigo-300 hover:shadow-md transition-all duration-300"
+                      >
+                        <div className="font-bold text-gray-900">Row {row.letter}</div>
+                        <div className="text-gray-600 text-xs mt-1">
+                          Seats: {row.startSeat}-{row.endSeat}
+                        </div>
+                        {row.reservedSeats && (
+                          <div className="text-red-600 font-semibold text-xs mt-1">
+                            Reserved: {row.reservedSeats}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
 
-        {enclosures.length === 0 && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <p className="text-gray-500 mb-4">No enclosures found. Create your first enclosure to get started.</p>
-              <Button onClick={handleCreate}>Create First Enclosure</Button>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+          {enclosures.length === 0 && (
+            <Card className="text-center py-16 border-2 border-dashed border-gray-300 bg-gradient-to-br from-white to-gray-50 rounded-2xl">
+              <CardContent>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
+                    <Plus className="w-10 h-10 text-indigo-600" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-semibold text-gray-900 mb-2">No Enclosures Found</p>
+                    <p className="text-gray-500 mb-6">Create your first enclosure to get started</p>
+                  </div>
+                  <Button 
+                    onClick={handleCreate}
+                    className="gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Create First Enclosure
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
+        {/* Enclosure Form Modal */}
       {/* Enclosure Form Modal */}
       {isEditing && currentEnclosure && (
         <EnclosureForm
