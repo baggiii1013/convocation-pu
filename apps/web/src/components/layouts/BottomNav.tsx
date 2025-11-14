@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Calendar, Home, Settings, Users } from 'lucide-react';
@@ -13,15 +14,24 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const navItems: NavItem[] = [
-  { title: 'Home', href: '/dashboard', icon: Home },
-  { title: 'Events', href: '/events', icon: Calendar },
-  { title: 'Attendees', href: '/attendees', icon: Users },
-  { title: 'Settings', href: '/settings', icon: Settings },
-];
-
 export function BottomNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  // Determine the correct dashboard URL based on user role
+  const dashboardUrl = React.useMemo(() => {
+    if (user?.role === 'ADMIN' || user?.role === 'STAFF') {
+      return '/admin/dashboard';
+    }
+    return '/dashboard';
+  }, [user?.role]);
+
+  const navItems: NavItem[] = [
+    { title: 'Home', href: dashboardUrl, icon: Home },
+    { title: 'Events', href: '/events', icon: Calendar },
+    { title: 'Attendees', href: '/attendees', icon: Users },
+    { title: 'Settings', href: '/settings', icon: Settings },
+  ];
 
   return (
     <nav

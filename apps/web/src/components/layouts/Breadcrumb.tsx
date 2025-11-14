@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
@@ -16,6 +17,16 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
+  const { user } = useAuth();
+
+  // Determine the correct dashboard URL based on user role
+  const dashboardUrl = React.useMemo(() => {
+    if (user?.role === 'ADMIN' || user?.role === 'STAFF') {
+      return '/admin/dashboard';
+    }
+    return '/dashboard';
+  }, [user?.role]);
+
   return (
     <nav
       aria-label="Breadcrumb"
@@ -23,7 +34,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
     >
       {/* Home Link */}
       <Link
-        href="/dashboard"
+        href={dashboardUrl}
         className={cn(
           'flex items-center gap-1 rounded-md px-2 py-1 transition-colors',
           'text-muted-foreground hover:text-foreground hover:bg-primary-50 dark:hover:bg-primary-900/20'

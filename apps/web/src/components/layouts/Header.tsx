@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -14,6 +15,15 @@ export function Header({
   className 
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const { user } = useAuth();
+
+  // Determine the correct dashboard URL based on user role
+  const dashboardUrl = React.useMemo(() => {
+    if (user?.role === 'ADMIN' || user?.role === 'STAFF') {
+      return '/admin/dashboard';
+    }
+    return '/dashboard';
+  }, [user?.role]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +49,7 @@ export function Header({
     >
       <div className="flex h-16 items-center gap-4 px-4 md:px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={dashboardUrl} className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 shadow-glow-sm">
             <span className="text-lg font-bold text-white">PU</span>
           </div>
