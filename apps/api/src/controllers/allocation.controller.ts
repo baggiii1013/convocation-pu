@@ -66,6 +66,89 @@ export class AllocationController {
   }
 
   /**
+   * POST /api/allocations/allocate-enclosure/:enclosureLetter
+   * Trigger seat allocation for a specific enclosure
+   */
+  static async allocateEnclosureSeats(req: Request, res: Response): Promise<void> {
+    try {
+      const { enclosureLetter } = req.params;
+      const user = req.user as AccessTokenPayload;
+
+      if (!enclosureLetter) {
+        res.status(400).json({
+          success: false,
+          message: 'Enclosure letter is required',
+          code: 'INVALID_ENCLOSURE'
+        });
+        return;
+      }
+
+      logger.info(`Seat allocation for enclosure ${enclosureLetter} triggered by user ${user.email}`);
+
+      const seatService = new SeatAllocationService(prisma);
+      const result = await seatService.allocateSeatsForEnclosure(enclosureLetter);
+
+      res.status(200).json({
+        success: true,
+        message: `Seat allocation completed for enclosure ${enclosureLetter}: ${result.allocated} allocated, ${result.failed} failed`,
+        data: {
+          enclosure: enclosureLetter,
+          allocated: result.allocated,
+          failed: result.failed,
+          errors: result.errors
+        }
+      });
+    } catch (error) {
+      logger.error('Enclosure allocation error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Seat allocation failed',
+        code: 'ALLOCATION_ERROR',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  /**
+   * DELETE /api/allocations/clear-enclosure/:enclosureLetter
+   * Clear seat allocations for a specific enclosure
+   */
+  static async clearEnclosureAllocations(req: Request, res: Response): Promise<void> {
+    try {
+      const { enclosureLetter } = req.params;
+      const user = req.user as AccessTokenPayload;
+
+      if (!enclosureLetter) {
+        res.status(400).json({
+          success: false,
+          message: 'Enclosure letter is required',
+          code: 'INVALID_ENCLOSURE'
+        });
+        return;
+      }
+
+      logger.info(`Clear allocations for enclosure ${enclosureLetter} requested by user ${user.email}`);
+
+      const seatService = new SeatAllocationService(prisma);
+      const count = await seatService.clearEnclosureAllocations(enclosureLetter);
+
+      res.status(200).json({
+        success: true,
+        message: `Cleared ${count} seat allocations from enclosure ${enclosureLetter}`,
+        data: { enclosure: enclosureLetter, count }
+      });
+    } catch (error) {
+      logger.error('Clear enclosure allocations error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to clear enclosure allocations',
+        code: 'CLEAR_ERROR',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  /**
    * GET /api/allocations/:enrollmentId
    * Get seat allocation for a specific attendee
    */
@@ -167,6 +250,7 @@ export class AllocationController {
           totalAllocated: stats.totalAllocated,
           totalUnallocated: stats.totalUnallocated,
           totalEnclosures: enclosures.length,
+          byEnclosure: stats.byEnclosure, // Add this for the seat allocation page
           byCategory: byCategory.reduce((acc, item) => {
             acc[item.assignedEnclosure || 'UNASSIGNED'] = item._count;
             return acc;

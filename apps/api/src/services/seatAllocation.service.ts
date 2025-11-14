@@ -330,7 +330,7 @@ export class SeatAllocationService {
     totalAttendees: number;
     totalAllocated: number;
     totalUnallocated: number;
-    byEnclosure: Record<string, { total: number; allocated: number; available: number }>;
+    byEnclosure: Record<string, { total: number; allocated: number; available: number; reserved: number; totalCapacity: number }>;
   }> {
     const attendees = await this.prisma.attendee.count({
       where: {
@@ -352,14 +352,33 @@ export class SeatAllocationService {
       }
     });
 
-    const byEnclosure: Record<string, { total: number; allocated: number; available: number }> = {};
+    const byEnclosure: Record<string, { total: number; allocated: number; available: number; reserved: number; totalCapacity: number }> = {};
 
     for (const enclosure of enclosures) {
+      // Calculate total capacity (all seats regardless of reservations)
+      const totalCapacity = enclosure.rows.reduce((total, row) => {
+        return total + (row.endSeat - row.startSeat + 1);
+      }, 0);
+
+      // Get admin-reserved seat count
+      const adminReservedCount = await this.prisma.seatReservation.count({
+        where: { enclosureLetter: enclosure.letter }
+      });
+
+      // Calculate row-reserved seats
+      const rowReservedTotal = enclosure.rows.reduce((total, row) => {
+        return total + this.parseReservedSeats(row.reservedSeats).length;
+      }, 0);
+
+      const totalReserved = adminReservedCount + rowReservedTotal;
       const totalSeats = await this.getTotalSeats(enclosure.letter);
+      
       byEnclosure[enclosure.letter] = {
-        total: totalSeats,
+        total: totalSeats, // Available capacity (excluding reserved)
         allocated: enclosure._count.seatAllocations,
-        available: totalSeats - enclosure._count.seatAllocations
+        available: totalSeats - enclosure._count.seatAllocations,
+        reserved: totalReserved, // Total reserved seats (admin + row)
+        totalCapacity: totalCapacity // Total physical seats
       };
     }
 
@@ -369,6 +388,73 @@ export class SeatAllocationService {
       totalUnallocated: attendees - allocated,
       byEnclosure
     };
+  }
+
+  /**
+   * Allocate seats for a specific enclosure only
+   */
+  async allocateSeatsForEnclosure(enclosureLetter: string): Promise<AllocationResult> {
+    try {
+      logger.info(`Starting seat allocation for enclosure ${enclosureLetter}...`);
+
+      // Fetch attendees assigned to this enclosure who don't have allocations yet
+      const attendees = await this.prisma.attendee.findMany({
+        where: {
+          assignedEnclosure: enclosureLetter,
+          allocation: null,
+          convocationEligible: true,
+          convocationRegistered: true
+        },
+        select: {
+          id: true,
+          enrollmentId: true,
+          name: true,
+          assignedEnclosure: true
+        }
+      });
+
+      if (attendees.length === 0) {
+        logger.info(`No attendees to allocate in enclosure ${enclosureLetter}`);
+        return {
+          success: true,
+          allocated: 0,
+          failed: 0,
+          errors: []
+        };
+      }
+
+      logger.info(`Found ${attendees.length} attendees to allocate in enclosure ${enclosureLetter}`);
+
+      const result = await this.allocateForEnclosure(
+        enclosureLetter,
+        attendees as AttendeeToAllocate[]
+      );
+
+      logger.info(
+        `Allocation complete for enclosure ${enclosureLetter}: ${result.allocated} allocated, ${result.failed} failed`
+      );
+
+      return {
+        success: result.failed === 0,
+        allocated: result.allocated,
+        failed: result.failed,
+        errors: result.errors
+      };
+    } catch (error) {
+      logger.error(`Error allocating seats for enclosure ${enclosureLetter}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Clear seat allocations for a specific enclosure
+   */
+  async clearEnclosureAllocations(enclosureLetter: string): Promise<number> {
+    const result = await this.prisma.seatAllocation.deleteMany({
+      where: { enclosureLetter }
+    });
+    logger.info(`Cleared ${result.count} seat allocations from enclosure ${enclosureLetter}`);
+    return result.count;
   }
 
   /**

@@ -44,6 +44,32 @@ router.delete(
 );
 
 /**
+ * POST /api/allocations/allocate-enclosure/:enclosureLetter
+ * Trigger seat allocation for a specific enclosure
+ * Admin only
+ */
+router.post(
+  '/allocate-enclosure/:enclosureLetter',
+  authenticate,
+  authorize('admin'),
+  validate(enclosureLetterParamSchema),
+  AllocationController.allocateEnclosureSeats
+);
+
+/**
+ * DELETE /api/allocations/clear-enclosure/:enclosureLetter
+ * Clear seat allocations for a specific enclosure
+ * Admin only
+ */
+router.delete(
+  '/clear-enclosure/:enclosureLetter',
+  authenticate,
+  authorize('admin'),
+  validate(enclosureLetterParamSchema),
+  AllocationController.clearEnclosureAllocations
+);
+
+/**
  * GET /api/allocations/stats
  * Get allocation statistics
  * Admin and staff can view

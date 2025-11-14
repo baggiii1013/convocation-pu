@@ -36,6 +36,12 @@ const adminCards: BentoCardProps[] = [
   },
   {
     color: '#060010',
+    title: 'Seat Allocation',
+    description: 'Run seat allocation algorithm per enclosure',
+    label: 'Allocate Seats'
+  },
+  {
+    color: '#060010',
     title: 'Reserve Seats',
     description: 'Reserve specific seats for VIPs',
     label: 'Reservations'
@@ -121,6 +127,7 @@ const userCards: BentoCardProps[] = [
 // Map cards to their routes - ADMIN
 const adminRoutes = [
   '/admin/dashboard',
+  '/admin/seat-allocation',
   '/admin/reserve-seats',
   '/admin/enclosures',
   '/admin/aerial-view',
