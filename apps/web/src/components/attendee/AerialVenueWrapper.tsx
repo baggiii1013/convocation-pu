@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import toast from 'react-hot-toast';
 import { AerialVenueView } from './AerialVenueView';
 import { EnclosureDetailModal } from './EnclosureDetailModal';
 
@@ -81,8 +80,8 @@ export function AerialVenueWrapper({
         // Extract seat allocations from the response
         const allocations: SeatAllocation[] = [];
         if (data.data?.rows) {
-          data.data.rows.forEach((row: any) => {
-            row.attendees?.forEach((attendee: any) => {
+          data.data.rows.forEach((row: { row: string; attendees?: Array<{ seat: number; enrollmentId: string; name?: string }> }) => {
+            row.attendees?.forEach((attendee: { seat: number; enrollmentId: string; name?: string }) => {
               allocations.push({
                 row: row.row,
                 seat: attendee.seat,

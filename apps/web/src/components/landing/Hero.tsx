@@ -68,7 +68,7 @@ export function Hero() {
             Parul University
             <br />
             <span className="bg-gradient-to-r from-white via-primary-100 to-white bg-clip-text text-transparent">
-              Convocation 2025
+              9th Convocation 2025
             </span>
           </motion.h1>
 

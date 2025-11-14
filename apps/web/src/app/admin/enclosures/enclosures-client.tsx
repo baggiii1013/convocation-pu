@@ -147,7 +147,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
       await fetchEnclosures();
       toast.success('Enclosures refreshed');
     } catch (error) {
-      toast.error('Failed to refresh');
+      toast.error(`Failed to refresh : ${error}`);
     } finally {
       setLoading(false);
     }
