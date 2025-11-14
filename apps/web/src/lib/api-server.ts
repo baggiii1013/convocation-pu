@@ -25,14 +25,14 @@ export const apiServer = {
   /**
    * Make a GET request to the API
    */
-  async get<T = any>(path: string, options?: RequestInit): Promise<T> {
+  async get<T = unknown>(path: string, options?: RequestInit): Promise<T> {
     return this.request<T>(path, { ...options, method: 'GET' });
   },
 
   /**
    * Make a POST request to the API
    */
-  async post<T = any>(path: string, body?: any, options?: RequestInit): Promise<T> {
+  async post<T = unknown>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
     return this.request<T>(path, {
       ...options,
       method: 'POST',
@@ -43,7 +43,7 @@ export const apiServer = {
   /**
    * Make a PUT request to the API
    */
-  async put<T = any>(path: string, body?: any, options?: RequestInit): Promise<T> {
+  async put<T = unknown>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
     return this.request<T>(path, {
       ...options,
       method: 'PUT',
@@ -54,7 +54,7 @@ export const apiServer = {
   /**
    * Make a PATCH request to the API
    */
-  async patch<T = any>(path: string, body?: any, options?: RequestInit): Promise<T> {
+  async patch<T = unknown>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
     return this.request<T>(path, {
       ...options,
       method: 'PATCH',
@@ -65,14 +65,14 @@ export const apiServer = {
   /**
    * Make a DELETE request to the API
    */
-  async delete<T = any>(path: string, options?: RequestInit): Promise<T> {
+  async delete<T = unknown>(path: string, options?: RequestInit): Promise<T> {
     return this.request<T>(path, { ...options, method: 'DELETE' });
   },
 
   /**
    * Internal method to make HTTP requests with proper cookie forwarding
    */
-  async request<T = any>(path: string, options: RequestInit = {}): Promise<T> {
+  async request<T = unknown>(path: string, options: RequestInit = {}): Promise<T> {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     
     if (!apiUrl) {
