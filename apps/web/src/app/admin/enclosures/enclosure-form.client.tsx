@@ -185,7 +185,7 @@ export function EnclosureForm({ enclosure, onSave, onCancel, loading }: Enclosur
 
               <div className="space-y-3 max-h-96 overflow-y-auto border rounded-lg p-4">
                 {formData.rows.map((row, index) => (
-                  <div key={index} className="flex items-end gap-2 p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-end gap-2 p-3 bg-dark-card rounded-lg">
                     <div className="flex-shrink-0">
                       <GripVertical className="w-5 h-5 text-gray-400" />
                     </div>
@@ -241,6 +241,48 @@ export function EnclosureForm({ enclosure, onSave, onCancel, loading }: Enclosur
                 ))}
               </div>
             </div>
+
+            {/* Summary Preview */}
+            {formData.rows.length > 0 && (
+              <div className="bg-dark-surface border rounded-lg p-4">
+                <h3 className="font-semibold text-[#529bc9] mb-3">Enclosure Summary</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600">Total Rows</p>
+                    <p className="text-2xl font-bold text-[#529bc9]">{formData.rows.length}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Total Seats</p>
+                    <p className="text-2xl font-bold text-[#529bc9]">
+                      {formData.rows.reduce((total, row) => {
+                        const seatsInRow = row.endSeat - row.startSeat + 1;
+                        return total + seatsInRow;
+                      }, 0)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Reserved Seats</p>
+                    <p className="text-2xl font-bold text-orange-900">
+                      {formData.rows.reduce((total, row) => {
+                        if (!row.reservedSeats) return total;
+                        const reserved = row.reservedSeats.split(',').filter(s => s.trim()).length;
+                        return total + reserved;
+                      }, 0)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Available Seats</p>
+                    <p className="text-2xl font-bold text-green-900">
+                      {formData.rows.reduce((total, row) => {
+                        const seatsInRow = row.endSeat - row.startSeat + 1;
+                        const reserved = row.reservedSeats ? row.reservedSeats.split(',').filter(s => s.trim()).length : 0;
+                        return total + (seatsInRow - reserved);
+                      }, 0)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex justify-end gap-2 pt-4 border-t">

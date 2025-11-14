@@ -410,7 +410,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
         {filteredEnclosures.map((enclosure) => (
           <Card key={enclosure.id} className="border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden bg-white dark:bg-dark-card">
             {/* Decorative top border */}
-            <div className="h-1 bg-blue-600"></div>
+            {/* <div className="h-1 bg-blue-600"></div> */}
               
               <CardHeader className="bg-gray-50/50 dark:bg-gray-800/50">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
