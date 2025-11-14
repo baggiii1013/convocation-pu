@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
@@ -25,6 +26,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { setUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,8 +61,20 @@ function LoginForm() {
       
       toast.success('Welcome back! Login successful.');
       
-      // Get user role from response and redirect accordingly
-      const userRole = response.data?.data?.user?.role || response.data?.user?.role;
+      // Get user data from response
+      const userData = response.data?.data?.user || response.data?.user;
+      const userRole = userData?.role;
+      
+      // Update the auth context with user info
+      if (userData) {
+        setUser({
+          id: userData.id,
+          email: userData.email,
+          name: userData.displayName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.email,
+          role: userRole,
+          profileImageURL: userData.profileImageURL,
+        });
+      }
       
       let redirectPath = redirectTo;
       

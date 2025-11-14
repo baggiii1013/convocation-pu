@@ -22,6 +22,7 @@ export interface UserInfo {
  */
 export interface AuthContextType {
   user: UserInfo | null;
+  setUser: (user: UserInfo | null) => void;
   logout: () => Promise<void>;
 }
 
@@ -66,6 +67,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
 
   const value: AuthContextType = {
     user,
+    setUser,
     logout,
   };
 

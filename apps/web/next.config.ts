@@ -7,7 +7,18 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.shopify.com',
+        hostname: 'media.assettype.com',
+        pathname: '/newslaundry/2022-01/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'medianoise.in',
+        pathname: '/wp-content/uploads/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.catchkaro.in',
+        pathname: '/wp-content/uploads/**'
       },
     ],
   },

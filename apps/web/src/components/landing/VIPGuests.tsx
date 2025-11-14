@@ -20,11 +20,11 @@ interface Guest {
 
 const guests: Guest[] = [
   {
-    name: 'Dr. Rajesh Kumar',
-    title: 'Chief Guest',
-    role: 'Former Vice Chancellor',
-    bio: 'Renowned educationist with 30+ years of experience in academic leadership',
-    image: '/guests/guest-1.jpg',
+    name: 'Mr. Rajat Sharma',
+    title: 'Honorary Guest',
+    role: 'Indian journalist and businessperson',
+    bio: 'Rajat Sharma is an Indian journalist and businessperson acting as the chairman and Editor-in-chief of India TV, an Indian news channel. He is most known as host of Indian television show Aap Ki Adalat, which first aired in 1993, making it the longest-running reality show in India television history',
+    image: 'https://medianoise.in/wp-content/uploads/2024/07/Rajat-Sharma-is-the-new-President-of-NBDA.jpg',
     social: {
       linkedin: '#',
       twitter: '#',
@@ -32,21 +32,21 @@ const guests: Guest[] = [
   },
   {
     name: 'Mrs. Sania Mirza',
-    title: 'Guest of Honor',
+    title: 'Honorary Guest',
     role: 'Former professional tennis player',
     bio: 'Sania Mirza  is an Indian former professional tennis player. A former doubles world No. 1, she won six major titles – three in womens doubles and three in mixed doubles.',
-    image: 'https://cdn.shopify.com/s/files/1/0719/3886/7511/files/278_2_600x600.webp?v=1691218604',
+    image: 'https://media.assettype.com/newslaundry/2022-01/fb4e9dfd-337b-4935-ad5a-44e29ac79b91/AI___SANIA_MIRZA.jpg?w=1200&h=675',
     social: {
       linkedin: '#',
       twitter: '#',
     },
   },
   {
-    name: 'Mr. Vikram Singh',
-    title: 'Special Guest',
-    role: 'Industry Leader',
-    bio: 'CEO of Fortune 500 company, PU alumnus and philanthropist',
-    image: '/guests/guest-3.jpg',
+    name: 'Mrs. Vineeta Singh',
+    title: 'Honorary Guest',
+    role: 'India entrepreneur',
+    bio: 'Vineeta Singh is an Indian entrepreneur and CEO, co-founder of Sugar Cosmetics. She has been a Shark on the business reality TV show Shark Tank India since the show started airing on SonyLIV in 2021.',
+    image: 'https://www.catchkaro.in/wp-content/uploads/2025/08/Vineeta-Singh-Success-Story.webp',
     social: {
       linkedin: '#',
     },
