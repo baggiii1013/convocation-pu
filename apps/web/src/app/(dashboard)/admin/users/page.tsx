@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/auth';
-import { AccountService } from '@/services/account.service';
+import { AccountServiceServer } from '@/services/account.service.server';
 import { ManageUsersClient } from './users-client';
 
 /**
@@ -26,7 +26,8 @@ export default async function ManageUsersPage() {
   await requireAdmin();
 
   // Fetch initial accounts (first page, default filters)
-  const { accounts, pagination } = await AccountService.getAll({
+  // Using server-side service to properly forward authentication cookies
+  const { accounts, pagination } = await AccountServiceServer.getAll({
     page: 1,
     limit: 20,
     sortBy: 'createdAt',
