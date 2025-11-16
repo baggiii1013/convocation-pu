@@ -1,9 +1,9 @@
-// This is your Prisma schema file,
+// This is your Prisma schema file for Vercel deployment
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -13,25 +13,25 @@ datasource db {
 
 // Core User Account Model
 model Account {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  email                 String   @unique
-  password              String   // Hashed password for authentication
-  firstName             String   // User's first name
-  lastName              String   // User's last name
-  displayName           String   // Full display name (computed or set)
-  profileImageURL       String?
-  role                  UserRole @default(STUDENT) // User role for authorization
-  assignedIAMPolicies   String[] // Array of IAM policy IDs
-  accountState          AccountState @default(ACTIVE)
-  isActive              Boolean  @default(true) // Account active status
-  lastLoginAt           DateTime? // Last login timestamp
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  email               String       @unique
+  password            String // Hashed password for authentication
+  firstName           String // User's first name
+  lastName            String // User's last name
+  displayName         String // Full display name (computed or set)
+  profileImageURL     String?
+  role                UserRole     @default(STUDENT) // User role for authorization
+  assignedIAMPolicies String[] // Array of IAM policy IDs
+  accountState        AccountState @default(ACTIVE)
+  isActive            Boolean      @default(true) // Account active status
+  lastLoginAt         DateTime? // Last login timestamp
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
   // Relations
-  attendees             Attendee[]
-  transactions          Transaction[]
-  
+  attendees            Attendee[]
+  confirmedAttendances Attendance[] @relation("AttendanceConfirmedBy")
+
   @@map("accounts")
 }
 
@@ -43,169 +43,206 @@ model Attendee {
   course                String
   school                String
   degree                String
-  email                 String?
+  email                 String
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
-  verificationToken     String? // Generated when seat is allocated, used for QR code (unique when set)
+  verificationToken     String?  // Generated when seat is allocated, used for QR code
   attendanceMarked      Boolean  @default(false)
   attendanceMarkedAt    DateTime? // Timestamp when attendance is marked via QR scan
+  
+  // Enclosure assignment - stored in database
+  assignedEnclosure     String?  // Enclosure letter (A, B, C, etc.)
+  
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
-  
+  crr                   String   @db.ObjectId
+
   // Relations
-  account               Account? @relation(fields: [accountId], references: [id])
-  accountId             String?  @db.ObjectId
-  allocation            SeatAllocation?
-  transactions          Transaction[]
-  
+  account     Account?        @relation(fields: [accountId], references: [id])
+  accountId   String?         @db.ObjectId
+  allocation  SeatAllocation?
+  attendances Attendance[]    // Multiple attendance records
+
   @@map("attendees")
 }
 
-// Seat Allocation Model
+// Enhanced SeatAllocation Model
 model SeatAllocation {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  enclosure             String
-  row                   String
-  seat                  Int
-  allocatedAt           DateTime @default(now())
-  
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  enclosureLetter String   // Changed to letter for easier querying
+  rowLetter       String   // Row letter (A, B, C)
+  seatNumber      Int      // Actual seat number
+  allocatedAt     DateTime @default(now())
+
   // Relations
-  attendee              Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
-  attendeeId            String   @unique @db.ObjectId
-  
+  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
+  enclosureId String    @db.ObjectId
+  attendee    Attendee  @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
+  attendeeId  String    @unique @db.ObjectId
+
+  @@unique([enclosureLetter, rowLetter, seatNumber]) // Prevent double allocation
+  @@index([enclosureLetter, rowLetter])
+  @@index([enclosureId])
   @@map("seat_allocations")
 }
 
-// Transaction Model
-model Transaction {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  amount                Float
-  currency              String   @default("INR")
-  status                TransactionStatus @default(PENDING)
-  paymentMethod         String
-  transactionId         String   @unique
-  razorpayOrderId       String?
-  razorpayPaymentId     String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
-  // Relations
-  attendee              Attendee @relation(fields: [attendeeId], references: [id])
-  attendeeId            String   @db.ObjectId
-  account               Account? @relation(fields: [accountId], references: [id])
-  accountId             String?  @db.ObjectId
-  
-  @@map("transactions")
-}
-
-// Remote Configuration Model
-model RemoteConfig {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  active                Boolean  @default(true)
-  bannerImageURL        String?
-  logoImageURL          String?
-  countdownEnabled      Boolean  @default(false)
-  countdownTargetDate   DateTime?
-  countdownTitle        String?
-  countdownDescription  String?
-  attendeesLocked       Boolean  @default(false)
-  attendeesCSVFile      String?
-  showInstructions      Boolean  @default(true)
-  instructions          String?
-  updatedAt             DateTime @updatedAt
-  
-  // Relations
-  enclosures            Enclosure[]
-  
-  @@map("remote_config")
-}
-
-// Enclosure/Venue Mapping Model
+// Enhanced Enclosure Model
 model Enclosure {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  letter                String
-  allocatedFor          EnclosureType
-  entryDirection        Direction
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  letter         String        @unique // A, B, C, etc.
+  name           String?       // Optional: "North Wing", "Main Hall"
+  allocatedFor   EnclosureType
+  entryDirection Direction
+  displayOrder   Int           @default(0) // Order to display in UI
+  totalSeats     Int           @default(0) // Auto-calculated
+  isActive       Boolean       @default(true)
   
+  // Spatial positioning for aerial view
+  positionX      Float?        @default(0) // X coordinate in aerial view (0-100%)
+  positionY      Float?        @default(0) // Y coordinate in aerial view (0-100%)
+  width          Float?        @default(15) // Width percentage (0-100%)
+  height         Float?        @default(15) // Height percentage (0-100%)
+  color          String?       @default("#3B82F6") // Hex color for visual identification
+
   // Relations
-  remoteConfig          RemoteConfig @relation(fields: [remoteConfigId], references: [id], onDelete: Cascade)
-  remoteConfigId        String       @db.ObjectId
-  rows                  Row[]
-  
+  rows            Row[]
+  seatAllocations SeatAllocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("enclosures")
 }
 
-// Row Configuration Model
+// Enhanced Row Model
 model Row {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  letter                String
-  startSeat             Int
-  endSeat               Int
-  reserved              String   @default("")
-  
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  letter        String // Row identifier (A, B, C, etc.)
+  startSeat     Int    // First seat number in row
+  endSeat       Int    // Last seat number in row
+  reservedSeats String @default("") // Comma-separated reserved seat numbers: "1,5,10"
+  displayOrder  Int    @default(0) // Order of rows in enclosure
+
   // Relations
-  enclosure             Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
-  enclosureId           String    @db.ObjectId
-  
+  enclosure   Enclosure @relation(fields: [enclosureId], references: [id], onDelete: Cascade)
+  enclosureId String    @db.ObjectId
+
+  @@unique([enclosureId, letter])
+  @@index([enclosureId, displayOrder])
   @@map("rows")
+}
+
+// Admin Seat Reservation Model - NEW
+model SeatReservation {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  enclosureLetter String   // Enclosure letter
+  rowLetter       String   // Row letter
+  seatNumber      Int      // Reserved seat number
+  reservedFor     String?  // Optional: reason or person name
+  reservedBy      String?  // Admin who reserved it
+  createdAt       DateTime @default(now())
+
+  @@unique([enclosureLetter, rowLetter, seatNumber]) // Prevent duplicate reservations
+  @@index([enclosureLetter])
+  @@map("seat_reservations")
+}
+
+// Attendance Tracking Model
+model Attendance {
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  attendeeId         String          @db.ObjectId
+  convocationId      String?         @db.ObjectId // Optional: link to specific convocation event
+  status             AttendanceStatus @default(PRESENT)
+  markedAt           DateTime        @default(now()) // When attendance was marked
+  verificationMethod VerificationMethod // How attendance was verified (QR, Manual, etc.)
+  
+  // Scan/Check-in details
+  checkInTime        DateTime?       // Actual check-in timestamp
+  checkOutTime       DateTime?       // Optional: when attendee left
+  location           String?         // Gate/Entry point where marked
+  
+  // User who confirmed/marked the attendance
+  confirmedBy        String?         @db.ObjectId // Account ID of staff/admin who confirmed
+  confirmedByName    String?         // Display name of confirmer (denormalized for performance)
+  
+  // Additional context
+  notes              String?         // Optional notes or remarks
+  seatInfo           Json?           // Snapshot of seat allocation at time of attendance
+  
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  // Relations
+  attendee           Attendee        @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
+  convocation        Convocation?    @relation(fields: [convocationId], references: [id], onDelete: SetNull)
+  confirmer          Account?        @relation("AttendanceConfirmedBy", fields: [confirmedBy], references: [id], onDelete: SetNull)
+
+  @@index([attendeeId, markedAt])
+  @@index([convocationId])
+  @@index([confirmedBy])
+  @@index([status])
+  @@map("attendances")
 }
 
 // Analytics Model
 model Analytics {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  date                  DateTime @unique
-  visitors              Int      @default(0)
-  pageViews             Int      @default(0)
-  uniqueVisitors        Int      @default(0)
-  countries             Json     @default("{}")
-  languages             Json     @default("{}")
-  devices               Json     @default("{}")
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  date           DateTime @unique
+  visitors       Int      @default(0)
+  pageViews      Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  countries      Json     @default("{}")
+  languages      Json     @default("{}")
+  devices        Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
   @@map("analytics")
 }
 
 // IAM Policy Model
 model IAMPolicy {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String   @unique
-  description           String
-  permissions           String[]
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String
+  permissions String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   @@map("iam_policies")
 }
 
 // Department Model
 model Department {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String   @unique
-  code                  String   @unique
-  school                String
-  isActive              Boolean  @default(true)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  code      String   @unique
+  school    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("departments")
 }
 
 // Convocation Event Model
 model Convocation {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                    String        @id @default(auto()) @map("_id") @db.ObjectId
   title                 String
   description           String?
   eventDate             DateTime
   registrationStartDate DateTime
   registrationEndDate   DateTime
   venue                 String
-  isActive              Boolean  @default(true)
+  isActive              Boolean       @default(true)
   maxAttendees          Int?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  // Relations
+  attendances           Attendance[]
+
   @@map("convocations")
 }
 
@@ -237,6 +274,7 @@ enum EnclosureType {
   STAFF
   GUESTS
   VIP
+  MIXED
 }
 
 enum Direction {
@@ -248,4 +286,22 @@ enum Direction {
   NORTHWEST
   SOUTHEAST
   SOUTHWEST
+  LEFT    // For simple left/right entry
+  RIGHT
+  CENTER
+}
+
+enum AttendanceStatus {
+  PRESENT     // Attendee is present
+  ABSENT      // Attendee is absent
+  LATE        // Attendee arrived late
+  EXCUSED     // Excused absence
+}
+
+enum VerificationMethod {
+  QR_SCAN      // Scanned QR code
+  MANUAL       // Manually marked by staff
+  BIOMETRIC    // Biometric verification (future)
+  NFC          // NFC card scan (future)
+  FACIAL       // Facial recognition (future)
 }

@@ -29,26 +29,25 @@ model Account {
   updatedAt           DateTime     @updatedAt
 
   // Relations
-  attendees Attendee[]
+  attendees            Attendee[]
+  confirmedAttendances Attendance[] @relation("AttendanceConfirmedBy")
 
   @@map("accounts")
 }
 
 // Attendee/Student Model
 model Attendee {
-  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
-  enrollmentId          String    @unique
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  enrollmentId          String  @unique
   name                  String
   course                String
   school                String
   degree                String
   email                 String
   phone                 String?
-  convocationEligible   Boolean   @default(false)
-  convocationRegistered Boolean   @default(false)
+  convocationEligible   Boolean @default(false)
+  convocationRegistered Boolean @default(false)
   verificationToken     String? // Generated when seat is allocated, used for QR code
-  attendanceMarked      Boolean   @default(false)
-  attendanceMarkedAt    DateTime? // Timestamp when attendance is marked via QR scan
 
   // Enclosure assignment - stored in database
   assignedEnclosure String? // Enclosure letter (A, B, C, etc.)
@@ -58,9 +57,10 @@ model Attendee {
   crr       String   @db.ObjectId
 
   // Relations
-  account    Account?        @relation(fields: [accountId], references: [id])
-  accountId  String?         @db.ObjectId
-  allocation SeatAllocation?
+  account     Account?        @relation(fields: [accountId], references: [id])
+  accountId   String?         @db.ObjectId
+  allocation  SeatAllocation?
+  attendances Attendance[] // Multiple attendance records
 
   @@map("attendees")
 }
@@ -146,6 +146,43 @@ model SeatReservation {
   @@map("seat_reservations")
 }
 
+// Attendance Tracking Model
+model Attendance {
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  attendeeId         String             @db.ObjectId
+  convocationId      String?            @db.ObjectId // Optional: link to specific convocation event
+  status             AttendanceStatus   @default(PRESENT)
+  markedAt           DateTime           @default(now()) // When attendance was marked
+  verificationMethod VerificationMethod // How attendance was verified (QR, Manual, etc.)
+
+  // Scan/Check-in details
+  checkInTime  DateTime? // Actual check-in timestamp
+  checkOutTime DateTime? // Optional: when attendee left
+  location     String? // Gate/Entry point where marked
+
+  // User who confirmed/marked the attendance
+  confirmedBy     String? @db.ObjectId // Account ID of staff/admin who confirmed
+  confirmedByName String? // Display name of confirmer (denormalized for performance)
+
+  // Additional context
+  notes    String? // Optional notes or remarks
+  seatInfo Json? // Snapshot of seat allocation at time of attendance
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  attendee    Attendee     @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
+  convocation Convocation? @relation(fields: [convocationId], references: [id], onDelete: SetNull)
+  confirmer   Account?     @relation("AttendanceConfirmedBy", fields: [confirmedBy], references: [id], onDelete: SetNull)
+
+  @@index([attendeeId, markedAt])
+  @@index([convocationId])
+  @@index([confirmedBy])
+  @@index([status])
+  @@map("attendances")
+}
+
 // Analytics Model
 model Analytics {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -201,6 +238,9 @@ model Convocation {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
+  // Relations
+  attendances Attendance[]
+
   @@map("convocations")
 }
 
@@ -247,4 +287,19 @@ enum Direction {
   LEFT // For simple left/right entry
   RIGHT
   CENTER
+}
+
+enum AttendanceStatus {
+  PRESENT // Attendee is present
+  ABSENT // Attendee is absent
+  LATE // Attendee arrived late
+  EXCUSED // Excused absence
+}
+
+enum VerificationMethod {
+  QR_SCAN // Scanned QR code
+  MANUAL // Manually marked by staff
+  BIOMETRIC // Biometric verification (future)
+  NFC // NFC card scan (future)
+  FACIAL // Facial recognition (future)
 }

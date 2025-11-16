@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { Router } from 'express';
 import accountRoutes from './account.routes.js';
 import allocationRoutes from './allocation.routes.js';
+import attendanceRoutes from './attendance.routes.js';
 import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
 import enclosureRoutes from './enclosure.routes.js';
@@ -45,6 +46,9 @@ router.use('/allocations', allocationRoutes);
 
 // Seat reservation routes (Admin only)
 router.use('/admin', seatReservationRoutes);
+
+// Attendance tracking routes
+router.use('/attendance', attendanceRoutes);
 
 // TODO: Add route modules here as they are created
 // router.use('/config', configRoutes);

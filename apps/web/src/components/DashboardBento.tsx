@@ -30,9 +30,9 @@ export interface DashboardBentoProps {
 const adminCards: BentoCardProps[] = [
   {
     color: '#060010',
-    title: 'Dashboard',
-    description: 'Seat allocation overview and statistics',
-    label: 'Overview'
+    title: 'Attendance Stats',
+    description: 'View detailed attendance analytics and logs',
+    label: 'Analytics'
   },
   {
     color: '#060010',
@@ -94,12 +94,6 @@ const adminCards: BentoCardProps[] = [
 const userCards: BentoCardProps[] = [
   {
     color: '#060010',
-    title: 'Dashboard',
-    description: 'Your personal dashboard',
-    label: 'Home'
-  },
-  {
-    color: '#060010',
     title: 'My Profile',
     description: 'View and update your profile',
     label: 'Profile'
@@ -126,7 +120,7 @@ const userCards: BentoCardProps[] = [
 
 // Map cards to their routes - ADMIN
 const adminRoutes = [
-  '/admin/dashboard',
+  '/admin/attendance-stats',
   '/admin/seat-allocation',
   '/admin/reserve-seats',
   '/admin/enclosures',

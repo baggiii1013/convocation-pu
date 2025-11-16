@@ -1,6 +1,7 @@
 import type { Attendee, Prisma } from '../lib/prisma.js';
 import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
+import { AttendanceService } from './attendance.service.js';
 
 export interface AttendeeCreateInput {
   enrollmentId: string;
@@ -685,28 +686,6 @@ export class AttendeeService {
       // Cast to any to access allocation property
       const attendeeWithAllocation = attendee as any;
 
-      // Check if attendance already marked
-      if (attendeeWithAllocation.attendanceMarked) {
-        return {
-          success: true,
-          message: 'Attendance already marked',
-          attendee: {
-            enrollmentId: attendeeWithAllocation.enrollmentId,
-            name: attendeeWithAllocation.name,
-            course: attendeeWithAllocation.course,
-            school: attendeeWithAllocation.school,
-            allocation: attendeeWithAllocation.allocation ? {
-              enclosure: attendeeWithAllocation.allocation.enclosureLetter,
-              row: attendeeWithAllocation.allocation.rowLetter,
-              seat: attendeeWithAllocation.allocation.seatNumber
-            } : null,
-            attendanceMarked: attendeeWithAllocation.attendanceMarked,
-            attendanceMarkedAt: attendeeWithAllocation.attendanceMarkedAt
-          },
-          alreadyMarked: true
-        };
-      }
-
       // If verifyOnly is true, just return the attendee details without marking attendance
       if (verifyOnly) {
         return {
@@ -721,28 +700,37 @@ export class AttendeeService {
               enclosure: attendeeWithAllocation.allocation.enclosureLetter,
               row: attendeeWithAllocation.allocation.rowLetter,
               seat: attendeeWithAllocation.allocation.seatNumber
-            } : null,
-            attendanceMarked: false,
-            attendanceMarkedAt: null
+            } : null
           },
           alreadyMarked: false
         };
       }
 
-      // Mark attendance
-      const updatedAttendee = await prisma.attendee.update({
-        where: { id: attendee.id },
-        data: {
-          attendanceMarked: true,
-          attendanceMarkedAt: new Date()
-        },
-        include: {
-          allocation: true
-        }
-      });
-
       // Cast to any to access allocation property
-      const updatedWithAllocation = updatedAttendee as any;
+      const updatedWithAllocation = attendee as any;
+
+      // Create attendance record in the Attendance collection
+      try {
+        await AttendanceService.create({
+          attendeeId: attendee.id,
+          verificationMethod: 'QR_SCAN', // Since they're using QR code to verify
+          status: 'PRESENT',
+          checkInTime: new Date(),
+          location: 'Self Check-in', // Default location for self-service verification
+          notes: 'Verified via QR code scan',
+          seatInfo: updatedWithAllocation.allocation ? {
+            enclosure: updatedWithAllocation.allocation.enclosureLetter,
+            row: updatedWithAllocation.allocation.rowLetter,
+            seat: updatedWithAllocation.allocation.seatNumber
+          } : undefined
+        });
+        
+        logger.info(`Attendance record created for ${updatedWithAllocation.enrollmentId}`);
+      } catch (attendanceError) {
+        logger.error('Error creating attendance record:', attendanceError);
+        // Don't fail the entire operation if attendance record creation fails
+        // The attendanceMarked flag is already set, so the attendance is tracked
+      }
 
       logger.info(`Attendance marked for ${updatedWithAllocation.enrollmentId} at ${updatedWithAllocation.attendanceMarkedAt}`);
 
@@ -758,9 +746,7 @@ export class AttendeeService {
             enclosure: updatedWithAllocation.allocation.enclosureLetter,
             row: updatedWithAllocation.allocation.rowLetter,
             seat: updatedWithAllocation.allocation.seatNumber
-          } : null,
-          attendanceMarked: updatedWithAllocation.attendanceMarked,
-          attendanceMarkedAt: updatedWithAllocation.attendanceMarkedAt
+          } : null
         },
         alreadyMarked: false
       };

@@ -235,22 +235,40 @@ export class SeatAllocationService {
     // Bulk create all allocations
     if (allocations.length > 0) {
       try {
-        // Create allocations in a transaction, also generating tokens for attendees
-        await this.prisma.$transaction(async (tx) => {
-          // Create all seat allocations
-          await tx.seatAllocation.createMany({
-            data: allocations
-          });
-
-          // Generate and update verification tokens for all allocated attendees
-          for (const allocation of allocations) {
-            const verificationToken = this.generateVerificationToken();
-            await tx.attendee.update({
-              where: { id: allocation.attendeeId },
-              data: { verificationToken }
-            });
-          }
+        // Step 1: Create all seat allocations in bulk (fast operation)
+        await this.prisma.seatAllocation.createMany({
+          data: allocations
         });
+
+        logger.info(
+          `Created ${allocations.length} seat allocations in enclosure ${enclosureLetter}`
+        );
+
+        // Step 2: Update attendees with verification tokens in batches
+        // Process in batches of 50 to avoid transaction timeouts
+        const BATCH_SIZE = 50;
+        const attendeeIds = allocations.map(a => a.attendeeId);
+        
+        for (let i = 0; i < attendeeIds.length; i += BATCH_SIZE) {
+          const batchIds = attendeeIds.slice(i, i + BATCH_SIZE);
+          const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+          const totalBatches = Math.ceil(attendeeIds.length / BATCH_SIZE);
+          
+          logger.debug(
+            `Processing verification tokens batch ${batchNumber}/${totalBatches} (${batchIds.length} attendees)`
+          );
+
+          // Update each attendee in the batch with a unique verification token
+          await Promise.all(
+            batchIds.map((attendeeId) => {
+              const verificationToken = this.generateVerificationToken();
+              return this.prisma.attendee.update({
+                where: { id: attendeeId },
+                data: { verificationToken }
+              });
+            })
+          );
+        }
 
         logger.info(
           `Successfully created ${allocations.length} seat allocations with verification tokens in enclosure ${enclosureLetter}`

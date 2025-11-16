@@ -113,9 +113,13 @@ export function SeatAllocationClient({ initialEnclosures, initialStats }: SeatAl
       );
 
       const data = await res.json();
+      
+      console.log('Allocation response:', { status: res.status, data });
 
       if (!res.ok) {
-        throw new Error(data.message || 'Failed to allocate seats');
+        const errorMsg = data.message || data.error || 'Failed to allocate seats';
+        console.error('Allocation failed:', { status: res.status, code: data.code, error: errorMsg });
+        throw new Error(errorMsg);
       }
 
       toast.success(data.message || `Successfully allocated ${data.data.allocated} seats in Enclosure ${enclosureLetter}`);

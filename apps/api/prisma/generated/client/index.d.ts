@@ -44,6 +44,11 @@ export type Row = $Result.DefaultSelection<Prisma.$RowPayload>
  */
 export type SeatReservation = $Result.DefaultSelection<Prisma.$SeatReservationPayload>
 /**
+ * Model Attendance
+ * 
+ */
+export type Attendance = $Result.DefaultSelection<Prisma.$AttendancePayload>
+/**
  * Model Analytics
  * 
  */
@@ -126,6 +131,27 @@ export const Direction: {
 
 export type Direction = (typeof Direction)[keyof typeof Direction]
 
+
+export const AttendanceStatus: {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  EXCUSED: 'EXCUSED'
+};
+
+export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
+
+
+export const VerificationMethod: {
+  QR_SCAN: 'QR_SCAN',
+  MANUAL: 'MANUAL',
+  BIOMETRIC: 'BIOMETRIC',
+  NFC: 'NFC',
+  FACIAL: 'FACIAL'
+};
+
+export type VerificationMethod = (typeof VerificationMethod)[keyof typeof VerificationMethod]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -147,6 +173,14 @@ export const EnclosureType: typeof $Enums.EnclosureType
 export type Direction = $Enums.Direction
 
 export const Direction: typeof $Enums.Direction
+
+export type AttendanceStatus = $Enums.AttendanceStatus
+
+export const AttendanceStatus: typeof $Enums.AttendanceStatus
+
+export type VerificationMethod = $Enums.VerificationMethod
+
+export const VerificationMethod: typeof $Enums.VerificationMethod
 
 /**
  * ##  Prisma Client ʲˢ
@@ -292,6 +326,16 @@ export class PrismaClient<
     * ```
     */
   get seatReservation(): Prisma.SeatReservationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attendance`: Exposes CRUD operations for the **Attendance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attendances
+    * const attendances = await prisma.attendance.findMany()
+    * ```
+    */
+  get attendance(): Prisma.AttendanceDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.analytics`: Exposes CRUD operations for the **Analytics** model.
@@ -779,6 +823,7 @@ export namespace Prisma {
     Enclosure: 'Enclosure',
     Row: 'Row',
     SeatReservation: 'SeatReservation',
+    Attendance: 'Attendance',
     Analytics: 'Analytics',
     IAMPolicy: 'IAMPolicy',
     Department: 'Department',
@@ -801,7 +846,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "row" | "seatReservation" | "analytics" | "iAMPolicy" | "department" | "convocation"
+      modelProps: "account" | "attendee" | "seatAllocation" | "enclosure" | "row" | "seatReservation" | "attendance" | "analytics" | "iAMPolicy" | "department" | "convocation"
       txIsolationLevel: never
     }
     model: {
@@ -1249,6 +1294,80 @@ export namespace Prisma {
           }
         }
       }
+      Attendance: {
+        payload: Prisma.$AttendancePayload<ExtArgs>
+        fields: Prisma.AttendanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttendanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttendanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          findFirst: {
+            args: Prisma.AttendanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttendanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          findMany: {
+            args: Prisma.AttendanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
+          }
+          create: {
+            args: Prisma.AttendanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          createMany: {
+            args: Prisma.AttendanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.AttendanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          update: {
+            args: Prisma.AttendanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          deleteMany: {
+            args: Prisma.AttendanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttendanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AttendanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          aggregate: {
+            args: Prisma.AttendanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttendance>
+          }
+          groupBy: {
+            args: Prisma.AttendanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.AttendanceFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.AttendanceAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.AttendanceCountArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceCountAggregateOutputType> | number
+          }
+        }
+      }
       Analytics: {
         payload: Prisma.$AnalyticsPayload<ExtArgs>
         fields: Prisma.AnalyticsFieldRefs
@@ -1630,6 +1749,7 @@ export namespace Prisma {
     enclosure?: EnclosureOmit
     row?: RowOmit
     seatReservation?: SeatReservationOmit
+    attendance?: AttendanceOmit
     analytics?: AnalyticsOmit
     iAMPolicy?: IAMPolicyOmit
     department?: DepartmentOmit
@@ -1715,10 +1835,12 @@ export namespace Prisma {
 
   export type AccountCountOutputType = {
     attendees: number
+    confirmedAttendances: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendees?: boolean | AccountCountOutputTypeCountAttendeesArgs
+    confirmedAttendances?: boolean | AccountCountOutputTypeCountConfirmedAttendancesArgs
   }
 
   // Custom InputTypes
@@ -1737,6 +1859,44 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountAttendeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AttendeeWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountConfirmedAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
+  }
+
+
+  /**
+   * Count Type AttendeeCountOutputType
+   */
+
+  export type AttendeeCountOutputType = {
+    attendances: number
+  }
+
+  export type AttendeeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendances?: boolean | AttendeeCountOutputTypeCountAttendancesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AttendeeCountOutputType without action
+   */
+  export type AttendeeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendeeCountOutputType
+     */
+    select?: AttendeeCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AttendeeCountOutputType without action
+   */
+  export type AttendeeCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
   }
 
 
@@ -1777,6 +1937,37 @@ export namespace Prisma {
    */
   export type EnclosureCountOutputTypeCountSeatAllocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SeatAllocationWhereInput
+  }
+
+
+  /**
+   * Count Type ConvocationCountOutputType
+   */
+
+  export type ConvocationCountOutputType = {
+    attendances: number
+  }
+
+  export type ConvocationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendances?: boolean | ConvocationCountOutputTypeCountAttendancesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConvocationCountOutputType without action
+   */
+  export type ConvocationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConvocationCountOutputType
+     */
+    select?: ConvocationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConvocationCountOutputType without action
+   */
+  export type ConvocationCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
   }
 
 
@@ -2017,6 +2208,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     attendees?: boolean | Account$attendeesArgs<ExtArgs>
+    confirmedAttendances?: boolean | Account$confirmedAttendancesArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2042,6 +2234,7 @@ export namespace Prisma {
   export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "profileImageURL" | "role" | "assignedIAMPolicies" | "accountState" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendees?: boolean | Account$attendeesArgs<ExtArgs>
+    confirmedAttendances?: boolean | Account$confirmedAttendancesArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2049,6 +2242,7 @@ export namespace Prisma {
     name: "Account"
     objects: {
       attendees: Prisma.$AttendeePayload<ExtArgs>[]
+      confirmedAttendances: Prisma.$AttendancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2429,6 +2623,7 @@ export namespace Prisma {
   export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     attendees<T extends Account$attendeesArgs<ExtArgs> = {}>(args?: Subset<T, Account$attendeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    confirmedAttendances<T extends Account$confirmedAttendancesArgs<ExtArgs> = {}>(args?: Subset<T, Account$confirmedAttendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2866,6 +3061,30 @@ export namespace Prisma {
   }
 
   /**
+   * Account.confirmedAttendances
+   */
+  export type Account$confirmedAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    cursor?: AttendanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
    * Account without action
    */
   export type AccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2906,8 +3125,6 @@ export namespace Prisma {
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
     verificationToken: string | null
-    attendanceMarked: boolean | null
-    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2927,8 +3144,6 @@ export namespace Prisma {
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
     verificationToken: string | null
-    attendanceMarked: boolean | null
-    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2948,8 +3163,6 @@ export namespace Prisma {
     convocationEligible: number
     convocationRegistered: number
     verificationToken: number
-    attendanceMarked: number
-    attendanceMarkedAt: number
     assignedEnclosure: number
     createdAt: number
     updatedAt: number
@@ -2971,8 +3184,6 @@ export namespace Prisma {
     convocationEligible?: true
     convocationRegistered?: true
     verificationToken?: true
-    attendanceMarked?: true
-    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -2992,8 +3203,6 @@ export namespace Prisma {
     convocationEligible?: true
     convocationRegistered?: true
     verificationToken?: true
-    attendanceMarked?: true
-    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -3013,8 +3222,6 @@ export namespace Prisma {
     convocationEligible?: true
     convocationRegistered?: true
     verificationToken?: true
-    attendanceMarked?: true
-    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -3107,8 +3314,6 @@ export namespace Prisma {
     convocationEligible: boolean
     convocationRegistered: boolean
     verificationToken: string | null
-    attendanceMarked: boolean
-    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date
     updatedAt: Date
@@ -3145,8 +3350,6 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: boolean
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: boolean
     assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3154,6 +3357,8 @@ export namespace Prisma {
     accountId?: boolean
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
+    attendances?: boolean | Attendee$attendancesArgs<ExtArgs>
+    _count?: boolean | AttendeeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attendee"]>
 
 
@@ -3170,8 +3375,6 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: boolean
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: boolean
     assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3179,10 +3382,12 @@ export namespace Prisma {
     accountId?: boolean
   }
 
-  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "verificationToken" | "attendanceMarked" | "attendanceMarkedAt" | "assignedEnclosure" | "createdAt" | "updatedAt" | "crr" | "accountId", ExtArgs["result"]["attendee"]>
+  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "verificationToken" | "assignedEnclosure" | "createdAt" | "updatedAt" | "crr" | "accountId", ExtArgs["result"]["attendee"]>
   export type AttendeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
+    attendances?: boolean | Attendee$attendancesArgs<ExtArgs>
+    _count?: boolean | AttendeeCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $AttendeePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3190,6 +3395,7 @@ export namespace Prisma {
     objects: {
       account: Prisma.$AccountPayload<ExtArgs> | null
       allocation: Prisma.$SeatAllocationPayload<ExtArgs> | null
+      attendances: Prisma.$AttendancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3203,8 +3409,6 @@ export namespace Prisma {
       convocationEligible: boolean
       convocationRegistered: boolean
       verificationToken: string | null
-      attendanceMarked: boolean
-      attendanceMarkedAt: Date | null
       assignedEnclosure: string | null
       createdAt: Date
       updatedAt: Date
@@ -3575,6 +3779,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     account<T extends Attendee$accountArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$accountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     allocation<T extends Attendee$allocationArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$allocationArgs<ExtArgs>>): Prisma__SeatAllocationClient<$Result.GetResult<Prisma.$SeatAllocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    attendances<T extends Attendee$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Attendee$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3615,8 +3820,6 @@ export namespace Prisma {
     readonly convocationEligible: FieldRef<"Attendee", 'Boolean'>
     readonly convocationRegistered: FieldRef<"Attendee", 'Boolean'>
     readonly verificationToken: FieldRef<"Attendee", 'String'>
-    readonly attendanceMarked: FieldRef<"Attendee", 'Boolean'>
-    readonly attendanceMarkedAt: FieldRef<"Attendee", 'DateTime'>
     readonly assignedEnclosure: FieldRef<"Attendee", 'String'>
     readonly createdAt: FieldRef<"Attendee", 'DateTime'>
     readonly updatedAt: FieldRef<"Attendee", 'DateTime'>
@@ -4027,6 +4230,30 @@ export namespace Prisma {
      */
     include?: SeatAllocationInclude<ExtArgs> | null
     where?: SeatAllocationWhereInput
+  }
+
+  /**
+   * Attendee.attendances
+   */
+  export type Attendee$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    cursor?: AttendanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
   }
 
   /**
@@ -8316,6 +8543,1137 @@ export namespace Prisma {
 
 
   /**
+   * Model Attendance
+   */
+
+  export type AggregateAttendance = {
+    _count: AttendanceCountAggregateOutputType | null
+    _min: AttendanceMinAggregateOutputType | null
+    _max: AttendanceMaxAggregateOutputType | null
+  }
+
+  export type AttendanceMinAggregateOutputType = {
+    id: string | null
+    attendeeId: string | null
+    convocationId: string | null
+    status: $Enums.AttendanceStatus | null
+    markedAt: Date | null
+    verificationMethod: $Enums.VerificationMethod | null
+    checkInTime: Date | null
+    checkOutTime: Date | null
+    location: string | null
+    confirmedBy: string | null
+    confirmedByName: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceMaxAggregateOutputType = {
+    id: string | null
+    attendeeId: string | null
+    convocationId: string | null
+    status: $Enums.AttendanceStatus | null
+    markedAt: Date | null
+    verificationMethod: $Enums.VerificationMethod | null
+    checkInTime: Date | null
+    checkOutTime: Date | null
+    location: string | null
+    confirmedBy: string | null
+    confirmedByName: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceCountAggregateOutputType = {
+    id: number
+    attendeeId: number
+    convocationId: number
+    status: number
+    markedAt: number
+    verificationMethod: number
+    checkInTime: number
+    checkOutTime: number
+    location: number
+    confirmedBy: number
+    confirmedByName: number
+    notes: number
+    seatInfo: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttendanceMinAggregateInputType = {
+    id?: true
+    attendeeId?: true
+    convocationId?: true
+    status?: true
+    markedAt?: true
+    verificationMethod?: true
+    checkInTime?: true
+    checkOutTime?: true
+    location?: true
+    confirmedBy?: true
+    confirmedByName?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceMaxAggregateInputType = {
+    id?: true
+    attendeeId?: true
+    convocationId?: true
+    status?: true
+    markedAt?: true
+    verificationMethod?: true
+    checkInTime?: true
+    checkOutTime?: true
+    location?: true
+    confirmedBy?: true
+    confirmedByName?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceCountAggregateInputType = {
+    id?: true
+    attendeeId?: true
+    convocationId?: true
+    status?: true
+    markedAt?: true
+    verificationMethod?: true
+    checkInTime?: true
+    checkOutTime?: true
+    location?: true
+    confirmedBy?: true
+    confirmedByName?: true
+    notes?: true
+    seatInfo?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttendanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attendance to aggregate.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Attendances
+    **/
+    _count?: true | AttendanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttendanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttendanceMaxAggregateInputType
+  }
+
+  export type GetAttendanceAggregateType<T extends AttendanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttendance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttendance[P]>
+      : GetScalarType<T[P], AggregateAttendance[P]>
+  }
+
+
+
+
+  export type AttendanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithAggregationInput | AttendanceOrderByWithAggregationInput[]
+    by: AttendanceScalarFieldEnum[] | AttendanceScalarFieldEnum
+    having?: AttendanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttendanceCountAggregateInputType | true
+    _min?: AttendanceMinAggregateInputType
+    _max?: AttendanceMaxAggregateInputType
+  }
+
+  export type AttendanceGroupByOutputType = {
+    id: string
+    attendeeId: string
+    convocationId: string | null
+    status: $Enums.AttendanceStatus
+    markedAt: Date
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime: Date | null
+    checkOutTime: Date | null
+    location: string | null
+    confirmedBy: string | null
+    confirmedByName: string | null
+    notes: string | null
+    seatInfo: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AttendanceCountAggregateOutputType | null
+    _min: AttendanceMinAggregateOutputType | null
+    _max: AttendanceMaxAggregateOutputType | null
+  }
+
+  type GetAttendanceGroupByPayload<T extends AttendanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttendanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttendanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
+            : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttendanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    attendeeId?: boolean
+    convocationId?: boolean
+    status?: boolean
+    markedAt?: boolean
+    verificationMethod?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    location?: boolean
+    confirmedBy?: boolean
+    confirmedByName?: boolean
+    notes?: boolean
+    seatInfo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
+    convocation?: boolean | Attendance$convocationArgs<ExtArgs>
+    confirmer?: boolean | Attendance$confirmerArgs<ExtArgs>
+  }, ExtArgs["result"]["attendance"]>
+
+
+
+  export type AttendanceSelectScalar = {
+    id?: boolean
+    attendeeId?: boolean
+    convocationId?: boolean
+    status?: boolean
+    markedAt?: boolean
+    verificationMethod?: boolean
+    checkInTime?: boolean
+    checkOutTime?: boolean
+    location?: boolean
+    confirmedBy?: boolean
+    confirmedByName?: boolean
+    notes?: boolean
+    seatInfo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttendanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "attendeeId" | "convocationId" | "status" | "markedAt" | "verificationMethod" | "checkInTime" | "checkOutTime" | "location" | "confirmedBy" | "confirmedByName" | "notes" | "seatInfo" | "createdAt" | "updatedAt", ExtArgs["result"]["attendance"]>
+  export type AttendanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendee?: boolean | AttendeeDefaultArgs<ExtArgs>
+    convocation?: boolean | Attendance$convocationArgs<ExtArgs>
+    confirmer?: boolean | Attendance$confirmerArgs<ExtArgs>
+  }
+
+  export type $AttendancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Attendance"
+    objects: {
+      attendee: Prisma.$AttendeePayload<ExtArgs>
+      convocation: Prisma.$ConvocationPayload<ExtArgs> | null
+      confirmer: Prisma.$AccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      attendeeId: string
+      convocationId: string | null
+      status: $Enums.AttendanceStatus
+      markedAt: Date
+      verificationMethod: $Enums.VerificationMethod
+      checkInTime: Date | null
+      checkOutTime: Date | null
+      location: string | null
+      confirmedBy: string | null
+      confirmedByName: string | null
+      notes: string | null
+      seatInfo: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["attendance"]>
+    composites: {}
+  }
+
+  type AttendanceGetPayload<S extends boolean | null | undefined | AttendanceDefaultArgs> = $Result.GetResult<Prisma.$AttendancePayload, S>
+
+  type AttendanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttendanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttendanceCountAggregateInputType | true
+    }
+
+  export interface AttendanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attendance'], meta: { name: 'Attendance' } }
+    /**
+     * Find zero or one Attendance that matches the filter.
+     * @param {AttendanceFindUniqueArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttendanceFindUniqueArgs>(args: SelectSubset<T, AttendanceFindUniqueArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Attendance that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttendanceFindUniqueOrThrowArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttendanceFindUniqueOrThrowArgs>(args: SelectSubset<T, AttendanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attendance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindFirstArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttendanceFindFirstArgs>(args?: SelectSubset<T, AttendanceFindFirstArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attendance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindFirstOrThrowArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttendanceFindFirstOrThrowArgs>(args?: SelectSubset<T, AttendanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Attendances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Attendances
+     * const attendances = await prisma.attendance.findMany()
+     * 
+     * // Get first 10 Attendances
+     * const attendances = await prisma.attendance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attendanceWithIdOnly = await prisma.attendance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttendanceFindManyArgs>(args?: SelectSubset<T, AttendanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Attendance.
+     * @param {AttendanceCreateArgs} args - Arguments to create a Attendance.
+     * @example
+     * // Create one Attendance
+     * const Attendance = await prisma.attendance.create({
+     *   data: {
+     *     // ... data to create a Attendance
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttendanceCreateArgs>(args: SelectSubset<T, AttendanceCreateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Attendances.
+     * @param {AttendanceCreateManyArgs} args - Arguments to create many Attendances.
+     * @example
+     * // Create many Attendances
+     * const attendance = await prisma.attendance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttendanceCreateManyArgs>(args?: SelectSubset<T, AttendanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Attendance.
+     * @param {AttendanceDeleteArgs} args - Arguments to delete one Attendance.
+     * @example
+     * // Delete one Attendance
+     * const Attendance = await prisma.attendance.delete({
+     *   where: {
+     *     // ... filter to delete one Attendance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttendanceDeleteArgs>(args: SelectSubset<T, AttendanceDeleteArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Attendance.
+     * @param {AttendanceUpdateArgs} args - Arguments to update one Attendance.
+     * @example
+     * // Update one Attendance
+     * const attendance = await prisma.attendance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttendanceUpdateArgs>(args: SelectSubset<T, AttendanceUpdateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Attendances.
+     * @param {AttendanceDeleteManyArgs} args - Arguments to filter Attendances to delete.
+     * @example
+     * // Delete a few Attendances
+     * const { count } = await prisma.attendance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttendanceDeleteManyArgs>(args?: SelectSubset<T, AttendanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attendances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Attendances
+     * const attendance = await prisma.attendance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttendanceUpdateManyArgs>(args: SelectSubset<T, AttendanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Attendance.
+     * @param {AttendanceUpsertArgs} args - Arguments to update or create a Attendance.
+     * @example
+     * // Update or create a Attendance
+     * const attendance = await prisma.attendance.upsert({
+     *   create: {
+     *     // ... data to create a Attendance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Attendance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttendanceUpsertArgs>(args: SelectSubset<T, AttendanceUpsertArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Attendances that matches the filter.
+     * @param {AttendanceFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const attendance = await prisma.attendance.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: AttendanceFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Attendance.
+     * @param {AttendanceAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const attendance = await prisma.attendance.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: AttendanceAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of Attendances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceCountArgs} args - Arguments to filter Attendances to count.
+     * @example
+     * // Count the number of Attendances
+     * const count = await prisma.attendance.count({
+     *   where: {
+     *     // ... the filter for the Attendances we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttendanceCountArgs>(
+      args?: Subset<T, AttendanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttendanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Attendance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttendanceAggregateArgs>(args: Subset<T, AttendanceAggregateArgs>): Prisma.PrismaPromise<GetAttendanceAggregateType<T>>
+
+    /**
+     * Group by Attendance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttendanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttendanceGroupByArgs['orderBy'] }
+        : { orderBy?: AttendanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttendanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttendanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Attendance model
+   */
+  readonly fields: AttendanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Attendance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttendanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    attendee<T extends AttendeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttendeeDefaultArgs<ExtArgs>>): Prisma__AttendeeClient<$Result.GetResult<Prisma.$AttendeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    convocation<T extends Attendance$convocationArgs<ExtArgs> = {}>(args?: Subset<T, Attendance$convocationArgs<ExtArgs>>): Prisma__ConvocationClient<$Result.GetResult<Prisma.$ConvocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    confirmer<T extends Attendance$confirmerArgs<ExtArgs> = {}>(args?: Subset<T, Attendance$confirmerArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Attendance model
+   */
+  interface AttendanceFieldRefs {
+    readonly id: FieldRef<"Attendance", 'String'>
+    readonly attendeeId: FieldRef<"Attendance", 'String'>
+    readonly convocationId: FieldRef<"Attendance", 'String'>
+    readonly status: FieldRef<"Attendance", 'AttendanceStatus'>
+    readonly markedAt: FieldRef<"Attendance", 'DateTime'>
+    readonly verificationMethod: FieldRef<"Attendance", 'VerificationMethod'>
+    readonly checkInTime: FieldRef<"Attendance", 'DateTime'>
+    readonly checkOutTime: FieldRef<"Attendance", 'DateTime'>
+    readonly location: FieldRef<"Attendance", 'String'>
+    readonly confirmedBy: FieldRef<"Attendance", 'String'>
+    readonly confirmedByName: FieldRef<"Attendance", 'String'>
+    readonly notes: FieldRef<"Attendance", 'String'>
+    readonly seatInfo: FieldRef<"Attendance", 'Json'>
+    readonly createdAt: FieldRef<"Attendance", 'DateTime'>
+    readonly updatedAt: FieldRef<"Attendance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Attendance findUnique
+   */
+  export type AttendanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance findUniqueOrThrow
+   */
+  export type AttendanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance findFirst
+   */
+  export type AttendanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance findFirstOrThrow
+   */
+  export type AttendanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance findMany
+   */
+  export type AttendanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendances to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance create
+   */
+  export type AttendanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Attendance.
+     */
+    data: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
+  }
+
+  /**
+   * Attendance createMany
+   */
+  export type AttendanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Attendances.
+     */
+    data: AttendanceCreateManyInput | AttendanceCreateManyInput[]
+  }
+
+  /**
+   * Attendance update
+   */
+  export type AttendanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Attendance.
+     */
+    data: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
+    /**
+     * Choose, which Attendance to update.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance updateMany
+   */
+  export type AttendanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Attendances.
+     */
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyInput>
+    /**
+     * Filter which Attendances to update
+     */
+    where?: AttendanceWhereInput
+    /**
+     * Limit how many Attendances to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attendance upsert
+   */
+  export type AttendanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Attendance to update in case it exists.
+     */
+    where: AttendanceWhereUniqueInput
+    /**
+     * In case the Attendance found by the `where` argument doesn't exist, create a new Attendance with this data.
+     */
+    create: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
+    /**
+     * In case the Attendance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
+  }
+
+  /**
+   * Attendance delete
+   */
+  export type AttendanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter which Attendance to delete.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance deleteMany
+   */
+  export type AttendanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attendances to delete
+     */
+    where?: AttendanceWhereInput
+    /**
+     * Limit how many Attendances to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attendance findRaw
+   */
+  export type AttendanceFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Attendance aggregateRaw
+   */
+  export type AttendanceAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Attendance.convocation
+   */
+  export type Attendance$convocationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Convocation
+     */
+    select?: ConvocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Convocation
+     */
+    omit?: ConvocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    where?: ConvocationWhereInput
+  }
+
+  /**
+   * Attendance.confirmer
+   */
+  export type Attendance$confirmerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Attendance without action
+   */
+  export type AttendanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Analytics
    */
 
@@ -11471,6 +12829,8 @@ export namespace Prisma {
     maxAttendees?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    attendances?: boolean | Convocation$attendancesArgs<ExtArgs>
+    _count?: boolean | ConvocationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["convocation"]>
 
 
@@ -11490,10 +12850,16 @@ export namespace Prisma {
   }
 
   export type ConvocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "eventDate" | "registrationStartDate" | "registrationEndDate" | "venue" | "isActive" | "maxAttendees" | "createdAt" | "updatedAt", ExtArgs["result"]["convocation"]>
+  export type ConvocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendances?: boolean | Convocation$attendancesArgs<ExtArgs>
+    _count?: boolean | ConvocationCountOutputTypeDefaultArgs<ExtArgs>
+  }
 
   export type $ConvocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Convocation"
-    objects: {}
+    objects: {
+      attendances: Prisma.$AttendancePayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
@@ -11869,6 +13235,7 @@ export namespace Prisma {
    */
   export interface Prisma__ConvocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    attendances<T extends Convocation$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Convocation$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11926,6 +13293,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * Filter, which Convocation to fetch.
      */
     where: ConvocationWhereUniqueInput
@@ -11944,6 +13315,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * Filter, which Convocation to fetch.
      */
     where: ConvocationWhereUniqueInput
@@ -11961,6 +13336,10 @@ export namespace Prisma {
      * Omit specific fields from the Convocation
      */
     omit?: ConvocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
     /**
      * Filter, which Convocation to fetch.
      */
@@ -12010,6 +13389,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * Filter, which Convocation to fetch.
      */
     where?: ConvocationWhereInput
@@ -12058,6 +13441,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * Filter, which Convocations to fetch.
      */
     where?: ConvocationWhereInput
@@ -12101,6 +13488,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * The data needed to create a Convocation.
      */
     data: XOR<ConvocationCreateInput, ConvocationUncheckedCreateInput>
@@ -12128,6 +13519,10 @@ export namespace Prisma {
      * Omit specific fields from the Convocation
      */
     omit?: ConvocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
     /**
      * The data needed to update a Convocation.
      */
@@ -12169,6 +13564,10 @@ export namespace Prisma {
      */
     omit?: ConvocationOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
+    /**
      * The filter to search for the Convocation to update in case it exists.
      */
     where: ConvocationWhereUniqueInput
@@ -12194,6 +13593,10 @@ export namespace Prisma {
      * Omit specific fields from the Convocation
      */
     omit?: ConvocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
     /**
      * Filter which Convocation to delete.
      */
@@ -12243,6 +13646,30 @@ export namespace Prisma {
   }
 
   /**
+   * Convocation.attendances
+   */
+  export type Convocation$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    cursor?: AttendanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
    * Convocation without action
    */
   export type ConvocationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12254,6 +13681,10 @@ export namespace Prisma {
      * Omit specific fields from the Convocation
      */
     omit?: ConvocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConvocationInclude<ExtArgs> | null
   }
 
 
@@ -12293,8 +13724,6 @@ export namespace Prisma {
     convocationEligible: 'convocationEligible',
     convocationRegistered: 'convocationRegistered',
     verificationToken: 'verificationToken',
-    attendanceMarked: 'attendanceMarked',
-    attendanceMarkedAt: 'attendanceMarkedAt',
     assignedEnclosure: 'assignedEnclosure',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -12363,6 +13792,27 @@ export namespace Prisma {
   };
 
   export type SeatReservationScalarFieldEnum = (typeof SeatReservationScalarFieldEnum)[keyof typeof SeatReservationScalarFieldEnum]
+
+
+  export const AttendanceScalarFieldEnum: {
+    id: 'id',
+    attendeeId: 'attendeeId',
+    convocationId: 'convocationId',
+    status: 'status',
+    markedAt: 'markedAt',
+    verificationMethod: 'verificationMethod',
+    checkInTime: 'checkInTime',
+    checkOutTime: 'checkOutTime',
+    location: 'location',
+    confirmedBy: 'confirmedBy',
+    confirmedByName: 'confirmedByName',
+    notes: 'notes',
+    seatInfo: 'seatInfo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
 
 
   export const AnalyticsScalarFieldEnum: {
@@ -12564,6 +14014,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AttendanceStatus'
+   */
+  export type EnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AttendanceStatus[]'
+   */
+  export type ListEnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'VerificationMethod'
+   */
+  export type EnumVerificationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationMethod'>
+    
+
+
+  /**
+   * Reference to a field of type 'VerificationMethod[]'
+   */
+  export type ListEnumVerificationMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationMethod[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -12592,6 +14070,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     attendees?: AttendeeListRelationFilter
+    confirmedAttendances?: AttendanceListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -12610,6 +14089,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     attendees?: AttendeeOrderByRelationAggregateInput
+    confirmedAttendances?: AttendanceOrderByRelationAggregateInput
   }
 
   export type AccountWhereUniqueInput = Prisma.AtLeast<{
@@ -12631,6 +14111,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     attendees?: AttendeeListRelationFilter
+    confirmedAttendances?: AttendanceListRelationFilter
   }, "id" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -12688,8 +14169,6 @@ export namespace Prisma {
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     verificationToken?: StringNullableFilter<"Attendee"> | string | null
-    attendanceMarked?: BoolFilter<"Attendee"> | boolean
-    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
@@ -12697,6 +14176,7 @@ export namespace Prisma {
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
+    attendances?: AttendanceListRelationFilter
   }
 
   export type AttendeeOrderByWithRelationInput = {
@@ -12711,8 +14191,6 @@ export namespace Prisma {
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
     verificationToken?: SortOrder
-    attendanceMarked?: SortOrder
-    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12720,6 +14198,7 @@ export namespace Prisma {
     accountId?: SortOrder
     account?: AccountOrderByWithRelationInput
     allocation?: SeatAllocationOrderByWithRelationInput
+    attendances?: AttendanceOrderByRelationAggregateInput
   }
 
   export type AttendeeWhereUniqueInput = Prisma.AtLeast<{
@@ -12737,8 +14216,6 @@ export namespace Prisma {
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     verificationToken?: StringNullableFilter<"Attendee"> | string | null
-    attendanceMarked?: BoolFilter<"Attendee"> | boolean
-    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
@@ -12746,6 +14223,7 @@ export namespace Prisma {
     accountId?: StringNullableFilter<"Attendee"> | string | null
     account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     allocation?: XOR<SeatAllocationNullableScalarRelationFilter, SeatAllocationWhereInput> | null
+    attendances?: AttendanceListRelationFilter
   }, "id" | "enrollmentId">
 
   export type AttendeeOrderByWithAggregationInput = {
@@ -12760,8 +14238,6 @@ export namespace Prisma {
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
     verificationToken?: SortOrder
-    attendanceMarked?: SortOrder
-    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12787,8 +14263,6 @@ export namespace Prisma {
     convocationEligible?: BoolWithAggregatesFilter<"Attendee"> | boolean
     convocationRegistered?: BoolWithAggregatesFilter<"Attendee"> | boolean
     verificationToken?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
-    attendanceMarked?: BoolWithAggregatesFilter<"Attendee"> | boolean
-    attendanceMarkedAt?: DateTimeNullableWithAggregatesFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
@@ -13110,6 +14584,117 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SeatReservation"> | Date | string
   }
 
+  export type AttendanceWhereInput = {
+    AND?: AttendanceWhereInput | AttendanceWhereInput[]
+    OR?: AttendanceWhereInput[]
+    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
+    id?: StringFilter<"Attendance"> | string
+    attendeeId?: StringFilter<"Attendance"> | string
+    convocationId?: StringNullableFilter<"Attendance"> | string | null
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    markedAt?: DateTimeFilter<"Attendance"> | Date | string
+    verificationMethod?: EnumVerificationMethodFilter<"Attendance"> | $Enums.VerificationMethod
+    checkInTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOutTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    location?: StringNullableFilter<"Attendance"> | string | null
+    confirmedBy?: StringNullableFilter<"Attendance"> | string | null
+    confirmedByName?: StringNullableFilter<"Attendance"> | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    seatInfo?: JsonNullableFilter<"Attendance">
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
+    attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
+    convocation?: XOR<ConvocationNullableScalarRelationFilter, ConvocationWhereInput> | null
+    confirmer?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }
+
+  export type AttendanceOrderByWithRelationInput = {
+    id?: SortOrder
+    attendeeId?: SortOrder
+    convocationId?: SortOrder
+    status?: SortOrder
+    markedAt?: SortOrder
+    verificationMethod?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    location?: SortOrder
+    confirmedBy?: SortOrder
+    confirmedByName?: SortOrder
+    notes?: SortOrder
+    seatInfo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    attendee?: AttendeeOrderByWithRelationInput
+    convocation?: ConvocationOrderByWithRelationInput
+    confirmer?: AccountOrderByWithRelationInput
+  }
+
+  export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AttendanceWhereInput | AttendanceWhereInput[]
+    OR?: AttendanceWhereInput[]
+    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
+    attendeeId?: StringFilter<"Attendance"> | string
+    convocationId?: StringNullableFilter<"Attendance"> | string | null
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    markedAt?: DateTimeFilter<"Attendance"> | Date | string
+    verificationMethod?: EnumVerificationMethodFilter<"Attendance"> | $Enums.VerificationMethod
+    checkInTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOutTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    location?: StringNullableFilter<"Attendance"> | string | null
+    confirmedBy?: StringNullableFilter<"Attendance"> | string | null
+    confirmedByName?: StringNullableFilter<"Attendance"> | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    seatInfo?: JsonNullableFilter<"Attendance">
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
+    attendee?: XOR<AttendeeScalarRelationFilter, AttendeeWhereInput>
+    convocation?: XOR<ConvocationNullableScalarRelationFilter, ConvocationWhereInput> | null
+    confirmer?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }, "id">
+
+  export type AttendanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    attendeeId?: SortOrder
+    convocationId?: SortOrder
+    status?: SortOrder
+    markedAt?: SortOrder
+    verificationMethod?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    location?: SortOrder
+    confirmedBy?: SortOrder
+    confirmedByName?: SortOrder
+    notes?: SortOrder
+    seatInfo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttendanceCountOrderByAggregateInput
+    _max?: AttendanceMaxOrderByAggregateInput
+    _min?: AttendanceMinOrderByAggregateInput
+  }
+
+  export type AttendanceScalarWhereWithAggregatesInput = {
+    AND?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
+    OR?: AttendanceScalarWhereWithAggregatesInput[]
+    NOT?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Attendance"> | string
+    attendeeId?: StringWithAggregatesFilter<"Attendance"> | string
+    convocationId?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    status?: EnumAttendanceStatusWithAggregatesFilter<"Attendance"> | $Enums.AttendanceStatus
+    markedAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+    verificationMethod?: EnumVerificationMethodWithAggregatesFilter<"Attendance"> | $Enums.VerificationMethod
+    checkInTime?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
+    checkOutTime?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
+    location?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    confirmedBy?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    confirmedByName?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    seatInfo?: JsonNullableWithAggregatesFilter<"Attendance">
+    createdAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+  }
+
   export type AnalyticsWhereInput = {
     AND?: AnalyticsWhereInput | AnalyticsWhereInput[]
     OR?: AnalyticsWhereInput[]
@@ -13323,6 +14908,7 @@ export namespace Prisma {
     maxAttendees?: IntNullableFilter<"Convocation"> | number | null
     createdAt?: DateTimeFilter<"Convocation"> | Date | string
     updatedAt?: DateTimeFilter<"Convocation"> | Date | string
+    attendances?: AttendanceListRelationFilter
   }
 
   export type ConvocationOrderByWithRelationInput = {
@@ -13337,6 +14923,7 @@ export namespace Prisma {
     maxAttendees?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    attendances?: AttendanceOrderByRelationAggregateInput
   }
 
   export type ConvocationWhereUniqueInput = Prisma.AtLeast<{
@@ -13354,6 +14941,7 @@ export namespace Prisma {
     maxAttendees?: IntNullableFilter<"Convocation"> | number | null
     createdAt?: DateTimeFilter<"Convocation"> | Date | string
     updatedAt?: DateTimeFilter<"Convocation"> | Date | string
+    attendances?: AttendanceListRelationFilter
   }, "id">
 
   export type ConvocationOrderByWithAggregationInput = {
@@ -13408,6 +14996,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendees?: AttendeeCreateNestedManyWithoutAccountInput
+    confirmedAttendances?: AttendanceCreateNestedManyWithoutConfirmerInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -13426,6 +15015,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attendees?: AttendeeUncheckedCreateNestedManyWithoutAccountInput
+    confirmedAttendances?: AttendanceUncheckedCreateNestedManyWithoutConfirmerInput
   }
 
   export type AccountUpdateInput = {
@@ -13443,6 +15033,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendees?: AttendeeUpdateManyWithoutAccountNestedInput
+    confirmedAttendances?: AttendanceUpdateManyWithoutConfirmerNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -13460,6 +15051,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendees?: AttendeeUncheckedUpdateManyWithoutAccountNestedInput
+    confirmedAttendances?: AttendanceUncheckedUpdateManyWithoutConfirmerNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -13523,14 +15115,13 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
+    attendances?: AttendanceCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateInput = {
@@ -13545,14 +15136,13 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     accountId?: string | null
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUpdateInput = {
@@ -13566,14 +15156,13 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateInput = {
@@ -13587,14 +15176,13 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeCreateManyInput = {
@@ -13609,8 +15197,6 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13629,8 +15215,6 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13648,8 +15232,6 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13982,6 +15564,125 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AttendanceCreateInput = {
+    id?: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendee: AttendeeCreateNestedOneWithoutAttendancesInput
+    convocation?: ConvocationCreateNestedOneWithoutAttendancesInput
+    confirmer?: AccountCreateNestedOneWithoutConfirmedAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateInput = {
+    id?: string
+    attendeeId: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateInput = {
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendee?: AttendeeUpdateOneRequiredWithoutAttendancesNestedInput
+    convocation?: ConvocationUpdateOneWithoutAttendancesNestedInput
+    confirmer?: AccountUpdateOneWithoutConfirmedAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceCreateManyInput = {
+    id?: string
+    attendeeId: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateManyMutationInput = {
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AnalyticsCreateInput = {
     id?: string
     date: Date | string
@@ -14206,6 +15907,7 @@ export namespace Prisma {
     maxAttendees?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    attendances?: AttendanceCreateNestedManyWithoutConvocationInput
   }
 
   export type ConvocationUncheckedCreateInput = {
@@ -14220,6 +15922,7 @@ export namespace Prisma {
     maxAttendees?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutConvocationInput
   }
 
   export type ConvocationUpdateInput = {
@@ -14233,6 +15936,7 @@ export namespace Prisma {
     maxAttendees?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceUpdateManyWithoutConvocationNestedInput
   }
 
   export type ConvocationUncheckedUpdateInput = {
@@ -14246,6 +15950,7 @@ export namespace Prisma {
     maxAttendees?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceUncheckedUpdateManyWithoutConvocationNestedInput
   }
 
   export type ConvocationCreateManyInput = {
@@ -14375,7 +16080,17 @@ export namespace Prisma {
     none?: AttendeeWhereInput
   }
 
+  export type AttendanceListRelationFilter = {
+    every?: AttendanceWhereInput
+    some?: AttendanceWhereInput
+    none?: AttendanceWhereInput
+  }
+
   export type AttendeeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttendanceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14544,8 +16259,6 @@ export namespace Prisma {
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
     verificationToken?: SortOrder
-    attendanceMarked?: SortOrder
-    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14565,8 +16278,6 @@ export namespace Prisma {
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
     verificationToken?: SortOrder
-    attendanceMarked?: SortOrder
-    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14586,8 +16297,6 @@ export namespace Prisma {
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
     verificationToken?: SortOrder
-    attendanceMarked?: SortOrder
-    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14921,6 +16630,124 @@ export namespace Prisma {
   export type SeatReservationSumOrderByAggregateInput = {
     seatNumber?: SortOrder
   }
+
+  export type EnumAttendanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
+  }
+
+  export type EnumVerificationMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.VerificationMethod | EnumVerificationMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumVerificationMethodFilter<$PrismaModel> | $Enums.VerificationMethod
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    isSet?: boolean
+  }
+
+  export type ConvocationNullableScalarRelationFilter = {
+    is?: ConvocationWhereInput | null
+    isNot?: ConvocationWhereInput | null
+  }
+
+  export type AttendanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    attendeeId?: SortOrder
+    convocationId?: SortOrder
+    status?: SortOrder
+    markedAt?: SortOrder
+    verificationMethod?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    location?: SortOrder
+    confirmedBy?: SortOrder
+    confirmedByName?: SortOrder
+    notes?: SortOrder
+    seatInfo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    attendeeId?: SortOrder
+    convocationId?: SortOrder
+    status?: SortOrder
+    markedAt?: SortOrder
+    verificationMethod?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    location?: SortOrder
+    confirmedBy?: SortOrder
+    confirmedByName?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    attendeeId?: SortOrder
+    convocationId?: SortOrder
+    status?: SortOrder
+    markedAt?: SortOrder
+    verificationMethod?: SortOrder
+    checkInTime?: SortOrder
+    checkOutTime?: SortOrder
+    location?: SortOrder
+    confirmedBy?: SortOrder
+    confirmedByName?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+  }
+
+  export type EnumVerificationMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VerificationMethod | EnumVerificationMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumVerificationMethodWithAggregatesFilter<$PrismaModel> | $Enums.VerificationMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVerificationMethodFilter<$PrismaModel>
+    _max?: NestedEnumVerificationMethodFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -15137,11 +16964,25 @@ export namespace Prisma {
     connect?: AttendeeWhereUniqueInput | AttendeeWhereUniqueInput[]
   }
 
+  export type AttendanceCreateNestedManyWithoutConfirmerInput = {
+    create?: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput> | AttendanceCreateWithoutConfirmerInput[] | AttendanceUncheckedCreateWithoutConfirmerInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConfirmerInput | AttendanceCreateOrConnectWithoutConfirmerInput[]
+    createMany?: AttendanceCreateManyConfirmerInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
   export type AttendeeUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<AttendeeCreateWithoutAccountInput, AttendeeUncheckedCreateWithoutAccountInput> | AttendeeCreateWithoutAccountInput[] | AttendeeUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AttendeeCreateOrConnectWithoutAccountInput | AttendeeCreateOrConnectWithoutAccountInput[]
     createMany?: AttendeeCreateManyAccountInputEnvelope
     connect?: AttendeeWhereUniqueInput | AttendeeWhereUniqueInput[]
+  }
+
+  export type AttendanceUncheckedCreateNestedManyWithoutConfirmerInput = {
+    create?: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput> | AttendanceCreateWithoutConfirmerInput[] | AttendanceUncheckedCreateWithoutConfirmerInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConfirmerInput | AttendanceCreateOrConnectWithoutConfirmerInput[]
+    createMany?: AttendanceCreateManyConfirmerInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -15193,6 +17034,20 @@ export namespace Prisma {
     deleteMany?: AttendeeScalarWhereInput | AttendeeScalarWhereInput[]
   }
 
+  export type AttendanceUpdateManyWithoutConfirmerNestedInput = {
+    create?: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput> | AttendanceCreateWithoutConfirmerInput[] | AttendanceUncheckedCreateWithoutConfirmerInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConfirmerInput | AttendanceCreateOrConnectWithoutConfirmerInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutConfirmerInput | AttendanceUpsertWithWhereUniqueWithoutConfirmerInput[]
+    createMany?: AttendanceCreateManyConfirmerInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutConfirmerInput | AttendanceUpdateWithWhereUniqueWithoutConfirmerInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutConfirmerInput | AttendanceUpdateManyWithWhereWithoutConfirmerInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
   export type AttendeeUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<AttendeeCreateWithoutAccountInput, AttendeeUncheckedCreateWithoutAccountInput> | AttendeeCreateWithoutAccountInput[] | AttendeeUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AttendeeCreateOrConnectWithoutAccountInput | AttendeeCreateOrConnectWithoutAccountInput[]
@@ -15207,6 +17062,20 @@ export namespace Prisma {
     deleteMany?: AttendeeScalarWhereInput | AttendeeScalarWhereInput[]
   }
 
+  export type AttendanceUncheckedUpdateManyWithoutConfirmerNestedInput = {
+    create?: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput> | AttendanceCreateWithoutConfirmerInput[] | AttendanceUncheckedCreateWithoutConfirmerInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConfirmerInput | AttendanceCreateOrConnectWithoutConfirmerInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutConfirmerInput | AttendanceUpsertWithWhereUniqueWithoutConfirmerInput[]
+    createMany?: AttendanceCreateManyConfirmerInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutConfirmerInput | AttendanceUpdateWithWhereUniqueWithoutConfirmerInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutConfirmerInput | AttendanceUpdateManyWithWhereWithoutConfirmerInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
   export type AccountCreateNestedOneWithoutAttendeesInput = {
     create?: XOR<AccountCreateWithoutAttendeesInput, AccountUncheckedCreateWithoutAttendeesInput>
     connectOrCreate?: AccountCreateOrConnectWithoutAttendeesInput
@@ -15219,10 +17088,24 @@ export namespace Prisma {
     connect?: SeatAllocationWhereUniqueInput
   }
 
+  export type AttendanceCreateNestedManyWithoutAttendeeInput = {
+    create?: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput> | AttendanceCreateWithoutAttendeeInput[] | AttendanceUncheckedCreateWithoutAttendeeInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutAttendeeInput | AttendanceCreateOrConnectWithoutAttendeeInput[]
+    createMany?: AttendanceCreateManyAttendeeInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
   export type SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput = {
     create?: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
     connectOrCreate?: SeatAllocationCreateOrConnectWithoutAttendeeInput
     connect?: SeatAllocationWhereUniqueInput
+  }
+
+  export type AttendanceUncheckedCreateNestedManyWithoutAttendeeInput = {
+    create?: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput> | AttendanceCreateWithoutAttendeeInput[] | AttendanceUncheckedCreateWithoutAttendeeInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutAttendeeInput | AttendanceCreateOrConnectWithoutAttendeeInput[]
+    createMany?: AttendanceCreateManyAttendeeInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
   export type AccountUpdateOneWithoutAttendeesNestedInput = {
@@ -15245,6 +17128,20 @@ export namespace Prisma {
     update?: XOR<XOR<SeatAllocationUpdateToOneWithWhereWithoutAttendeeInput, SeatAllocationUpdateWithoutAttendeeInput>, SeatAllocationUncheckedUpdateWithoutAttendeeInput>
   }
 
+  export type AttendanceUpdateManyWithoutAttendeeNestedInput = {
+    create?: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput> | AttendanceCreateWithoutAttendeeInput[] | AttendanceUncheckedCreateWithoutAttendeeInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutAttendeeInput | AttendanceCreateOrConnectWithoutAttendeeInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutAttendeeInput | AttendanceUpsertWithWhereUniqueWithoutAttendeeInput[]
+    createMany?: AttendanceCreateManyAttendeeInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutAttendeeInput | AttendanceUpdateWithWhereUniqueWithoutAttendeeInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutAttendeeInput | AttendanceUpdateManyWithWhereWithoutAttendeeInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
   export type SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput = {
     create?: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
     connectOrCreate?: SeatAllocationCreateOrConnectWithoutAttendeeInput
@@ -15253,6 +17150,20 @@ export namespace Prisma {
     delete?: SeatAllocationWhereInput | boolean
     connect?: SeatAllocationWhereUniqueInput
     update?: XOR<XOR<SeatAllocationUpdateToOneWithWhereWithoutAttendeeInput, SeatAllocationUpdateWithoutAttendeeInput>, SeatAllocationUncheckedUpdateWithoutAttendeeInput>
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutAttendeeNestedInput = {
+    create?: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput> | AttendanceCreateWithoutAttendeeInput[] | AttendanceUncheckedCreateWithoutAttendeeInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutAttendeeInput | AttendanceCreateOrConnectWithoutAttendeeInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutAttendeeInput | AttendanceUpsertWithWhereUniqueWithoutAttendeeInput[]
+    createMany?: AttendanceCreateManyAttendeeInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutAttendeeInput | AttendanceUpdateWithWhereUniqueWithoutAttendeeInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutAttendeeInput | AttendanceUpdateManyWithWhereWithoutAttendeeInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type EnclosureCreateNestedOneWithoutSeatAllocationsInput = {
@@ -15406,6 +17317,60 @@ export namespace Prisma {
     update?: XOR<XOR<EnclosureUpdateToOneWithWhereWithoutRowsInput, EnclosureUpdateWithoutRowsInput>, EnclosureUncheckedUpdateWithoutRowsInput>
   }
 
+  export type AttendeeCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<AttendeeCreateWithoutAttendancesInput, AttendeeUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: AttendeeCreateOrConnectWithoutAttendancesInput
+    connect?: AttendeeWhereUniqueInput
+  }
+
+  export type ConvocationCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<ConvocationCreateWithoutAttendancesInput, ConvocationUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: ConvocationCreateOrConnectWithoutAttendancesInput
+    connect?: ConvocationWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutConfirmedAttendancesInput = {
+    create?: XOR<AccountCreateWithoutConfirmedAttendancesInput, AccountUncheckedCreateWithoutConfirmedAttendancesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutConfirmedAttendancesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type EnumAttendanceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AttendanceStatus
+  }
+
+  export type EnumVerificationMethodFieldUpdateOperationsInput = {
+    set?: $Enums.VerificationMethod
+  }
+
+  export type AttendeeUpdateOneRequiredWithoutAttendancesNestedInput = {
+    create?: XOR<AttendeeCreateWithoutAttendancesInput, AttendeeUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: AttendeeCreateOrConnectWithoutAttendancesInput
+    upsert?: AttendeeUpsertWithoutAttendancesInput
+    connect?: AttendeeWhereUniqueInput
+    update?: XOR<XOR<AttendeeUpdateToOneWithWhereWithoutAttendancesInput, AttendeeUpdateWithoutAttendancesInput>, AttendeeUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type ConvocationUpdateOneWithoutAttendancesNestedInput = {
+    create?: XOR<ConvocationCreateWithoutAttendancesInput, ConvocationUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: ConvocationCreateOrConnectWithoutAttendancesInput
+    upsert?: ConvocationUpsertWithoutAttendancesInput
+    disconnect?: boolean
+    delete?: ConvocationWhereInput | boolean
+    connect?: ConvocationWhereUniqueInput
+    update?: XOR<XOR<ConvocationUpdateToOneWithWhereWithoutAttendancesInput, ConvocationUpdateWithoutAttendancesInput>, ConvocationUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type AccountUpdateOneWithoutConfirmedAttendancesNestedInput = {
+    create?: XOR<AccountCreateWithoutConfirmedAttendancesInput, AccountUncheckedCreateWithoutConfirmedAttendancesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutConfirmedAttendancesInput
+    upsert?: AccountUpsertWithoutConfirmedAttendancesInput
+    disconnect?: boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutConfirmedAttendancesInput, AccountUpdateWithoutConfirmedAttendancesInput>, AccountUncheckedUpdateWithoutConfirmedAttendancesInput>
+  }
+
   export type IAMPolicyCreatepermissionsInput = {
     set: string[]
   }
@@ -15415,6 +17380,20 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type AttendanceCreateNestedManyWithoutConvocationInput = {
+    create?: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput> | AttendanceCreateWithoutConvocationInput[] | AttendanceUncheckedCreateWithoutConvocationInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConvocationInput | AttendanceCreateOrConnectWithoutConvocationInput[]
+    createMany?: AttendanceCreateManyConvocationInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
+  export type AttendanceUncheckedCreateNestedManyWithoutConvocationInput = {
+    create?: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput> | AttendanceCreateWithoutConvocationInput[] | AttendanceUncheckedCreateWithoutConvocationInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConvocationInput | AttendanceCreateOrConnectWithoutConvocationInput[]
+    createMany?: AttendanceCreateManyConvocationInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -15422,6 +17401,34 @@ export namespace Prisma {
     multiply?: number
     divide?: number
     unset?: boolean
+  }
+
+  export type AttendanceUpdateManyWithoutConvocationNestedInput = {
+    create?: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput> | AttendanceCreateWithoutConvocationInput[] | AttendanceUncheckedCreateWithoutConvocationInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConvocationInput | AttendanceCreateOrConnectWithoutConvocationInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutConvocationInput | AttendanceUpsertWithWhereUniqueWithoutConvocationInput[]
+    createMany?: AttendanceCreateManyConvocationInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutConvocationInput | AttendanceUpdateWithWhereUniqueWithoutConvocationInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutConvocationInput | AttendanceUpdateManyWithWhereWithoutConvocationInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutConvocationNestedInput = {
+    create?: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput> | AttendanceCreateWithoutConvocationInput[] | AttendanceUncheckedCreateWithoutConvocationInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutConvocationInput | AttendanceCreateOrConnectWithoutConvocationInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutConvocationInput | AttendanceUpsertWithWhereUniqueWithoutConvocationInput[]
+    createMany?: AttendanceCreateManyConvocationInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutConvocationInput | AttendanceUpdateWithWhereUniqueWithoutConvocationInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutConvocationInput | AttendanceUpdateManyWithWhereWithoutConvocationInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -15699,6 +17706,52 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
     isSet?: boolean
   }
+
+  export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
+  }
+
+  export type NestedEnumVerificationMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.VerificationMethod | EnumVerificationMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumVerificationMethodFilter<$PrismaModel> | $Enums.VerificationMethod
+  }
+
+  export type NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumVerificationMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.VerificationMethod | EnumVerificationMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VerificationMethod[] | ListEnumVerificationMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumVerificationMethodWithAggregatesFilter<$PrismaModel> | $Enums.VerificationMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumVerificationMethodFilter<$PrismaModel>
+    _max?: NestedEnumVerificationMethodFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    isSet?: boolean
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -15740,13 +17793,12 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
+    attendances?: AttendanceCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateWithoutAccountInput = {
@@ -15761,13 +17813,12 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeCreateOrConnectWithoutAccountInput = {
@@ -15777,6 +17828,49 @@ export namespace Prisma {
 
   export type AttendeeCreateManyAccountInputEnvelope = {
     data: AttendeeCreateManyAccountInput | AttendeeCreateManyAccountInput[]
+  }
+
+  export type AttendanceCreateWithoutConfirmerInput = {
+    id?: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendee: AttendeeCreateNestedOneWithoutAttendancesInput
+    convocation?: ConvocationCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateWithoutConfirmerInput = {
+    id?: string
+    attendeeId: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceCreateOrConnectWithoutConfirmerInput = {
+    where: AttendanceWhereUniqueInput
+    create: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput>
+  }
+
+  export type AttendanceCreateManyConfirmerInputEnvelope = {
+    data: AttendanceCreateManyConfirmerInput | AttendanceCreateManyConfirmerInput[]
   }
 
   export type AttendeeUpsertWithWhereUniqueWithoutAccountInput = {
@@ -15810,13 +17904,48 @@ export namespace Prisma {
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
     verificationToken?: StringNullableFilter<"Attendee"> | string | null
-    attendanceMarked?: BoolFilter<"Attendee"> | boolean
-    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
     crr?: StringFilter<"Attendee"> | string
     accountId?: StringNullableFilter<"Attendee"> | string | null
+  }
+
+  export type AttendanceUpsertWithWhereUniqueWithoutConfirmerInput = {
+    where: AttendanceWhereUniqueInput
+    update: XOR<AttendanceUpdateWithoutConfirmerInput, AttendanceUncheckedUpdateWithoutConfirmerInput>
+    create: XOR<AttendanceCreateWithoutConfirmerInput, AttendanceUncheckedCreateWithoutConfirmerInput>
+  }
+
+  export type AttendanceUpdateWithWhereUniqueWithoutConfirmerInput = {
+    where: AttendanceWhereUniqueInput
+    data: XOR<AttendanceUpdateWithoutConfirmerInput, AttendanceUncheckedUpdateWithoutConfirmerInput>
+  }
+
+  export type AttendanceUpdateManyWithWhereWithoutConfirmerInput = {
+    where: AttendanceScalarWhereInput
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutConfirmerInput>
+  }
+
+  export type AttendanceScalarWhereInput = {
+    AND?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+    OR?: AttendanceScalarWhereInput[]
+    NOT?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+    id?: StringFilter<"Attendance"> | string
+    attendeeId?: StringFilter<"Attendance"> | string
+    convocationId?: StringNullableFilter<"Attendance"> | string | null
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    markedAt?: DateTimeFilter<"Attendance"> | Date | string
+    verificationMethod?: EnumVerificationMethodFilter<"Attendance"> | $Enums.VerificationMethod
+    checkInTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOutTime?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    location?: StringNullableFilter<"Attendance"> | string | null
+    confirmedBy?: StringNullableFilter<"Attendance"> | string | null
+    confirmedByName?: StringNullableFilter<"Attendance"> | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    seatInfo?: JsonNullableFilter<"Attendance">
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
   }
 
   export type AccountCreateWithoutAttendeesInput = {
@@ -15834,6 +17963,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    confirmedAttendances?: AttendanceCreateNestedManyWithoutConfirmerInput
   }
 
   export type AccountUncheckedCreateWithoutAttendeesInput = {
@@ -15851,6 +17981,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    confirmedAttendances?: AttendanceUncheckedCreateNestedManyWithoutConfirmerInput
   }
 
   export type AccountCreateOrConnectWithoutAttendeesInput = {
@@ -15881,6 +18012,49 @@ export namespace Prisma {
     create: XOR<SeatAllocationCreateWithoutAttendeeInput, SeatAllocationUncheckedCreateWithoutAttendeeInput>
   }
 
+  export type AttendanceCreateWithoutAttendeeInput = {
+    id?: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    convocation?: ConvocationCreateNestedOneWithoutAttendancesInput
+    confirmer?: AccountCreateNestedOneWithoutConfirmedAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateWithoutAttendeeInput = {
+    id?: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceCreateOrConnectWithoutAttendeeInput = {
+    where: AttendanceWhereUniqueInput
+    create: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput>
+  }
+
+  export type AttendanceCreateManyAttendeeInputEnvelope = {
+    data: AttendanceCreateManyAttendeeInput | AttendanceCreateManyAttendeeInput[]
+  }
+
   export type AccountUpsertWithoutAttendeesInput = {
     update: XOR<AccountUpdateWithoutAttendeesInput, AccountUncheckedUpdateWithoutAttendeesInput>
     create: XOR<AccountCreateWithoutAttendeesInput, AccountUncheckedCreateWithoutAttendeesInput>
@@ -15906,6 +18080,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    confirmedAttendances?: AttendanceUpdateManyWithoutConfirmerNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAttendeesInput = {
@@ -15922,6 +18097,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    confirmedAttendances?: AttendanceUncheckedUpdateManyWithoutConfirmerNestedInput
   }
 
   export type SeatAllocationUpsertWithoutAttendeeInput = {
@@ -15949,6 +18125,22 @@ export namespace Prisma {
     seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enclosureId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttendanceUpsertWithWhereUniqueWithoutAttendeeInput = {
+    where: AttendanceWhereUniqueInput
+    update: XOR<AttendanceUpdateWithoutAttendeeInput, AttendanceUncheckedUpdateWithoutAttendeeInput>
+    create: XOR<AttendanceCreateWithoutAttendeeInput, AttendanceUncheckedCreateWithoutAttendeeInput>
+  }
+
+  export type AttendanceUpdateWithWhereUniqueWithoutAttendeeInput = {
+    where: AttendanceWhereUniqueInput
+    data: XOR<AttendanceUpdateWithoutAttendeeInput, AttendanceUncheckedUpdateWithoutAttendeeInput>
+  }
+
+  export type AttendanceUpdateManyWithWhereWithoutAttendeeInput = {
+    where: AttendanceScalarWhereInput
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutAttendeeInput>
   }
 
   export type EnclosureCreateWithoutSeatAllocationsInput = {
@@ -16006,13 +18198,12 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     account?: AccountCreateNestedOneWithoutAttendeesInput
+    attendances?: AttendanceCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeUncheckedCreateWithoutAllocationInput = {
@@ -16027,13 +18218,12 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
     accountId?: string | null
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutAttendeeInput
   }
 
   export type AttendeeCreateOrConnectWithoutAllocationInput = {
@@ -16110,13 +18300,12 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     account?: AccountUpdateOneWithoutAttendeesNestedInput
+    attendances?: AttendanceUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateWithoutAllocationInput = {
@@ -16130,13 +18319,12 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    attendances?: AttendanceUncheckedUpdateManyWithoutAttendeeNestedInput
   }
 
   export type RowCreateWithoutEnclosureInput = {
@@ -16341,6 +18529,315 @@ export namespace Prisma {
     seatAllocations?: SeatAllocationUncheckedUpdateManyWithoutEnclosureNestedInput
   }
 
+  export type AttendeeCreateWithoutAttendancesInput = {
+    id?: string
+    enrollmentId: string
+    name: string
+    course: string
+    school: string
+    degree: string
+    email: string
+    phone?: string | null
+    convocationEligible?: boolean
+    convocationRegistered?: boolean
+    verificationToken?: string | null
+    assignedEnclosure?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crr: string
+    account?: AccountCreateNestedOneWithoutAttendeesInput
+    allocation?: SeatAllocationCreateNestedOneWithoutAttendeeInput
+  }
+
+  export type AttendeeUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    enrollmentId: string
+    name: string
+    course: string
+    school: string
+    degree: string
+    email: string
+    phone?: string | null
+    convocationEligible?: boolean
+    convocationRegistered?: boolean
+    verificationToken?: string | null
+    assignedEnclosure?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crr: string
+    accountId?: string | null
+    allocation?: SeatAllocationUncheckedCreateNestedOneWithoutAttendeeInput
+  }
+
+  export type AttendeeCreateOrConnectWithoutAttendancesInput = {
+    where: AttendeeWhereUniqueInput
+    create: XOR<AttendeeCreateWithoutAttendancesInput, AttendeeUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type ConvocationCreateWithoutAttendancesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    eventDate: Date | string
+    registrationStartDate: Date | string
+    registrationEndDate: Date | string
+    venue: string
+    isActive?: boolean
+    maxAttendees?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConvocationUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    eventDate: Date | string
+    registrationStartDate: Date | string
+    registrationEndDate: Date | string
+    venue: string
+    isActive?: boolean
+    maxAttendees?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConvocationCreateOrConnectWithoutAttendancesInput = {
+    where: ConvocationWhereUniqueInput
+    create: XOR<ConvocationCreateWithoutAttendancesInput, ConvocationUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type AccountCreateWithoutConfirmedAttendancesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    displayName: string
+    profileImageURL?: string | null
+    role?: $Enums.UserRole
+    assignedIAMPolicies?: AccountCreateassignedIAMPoliciesInput | string[]
+    accountState?: $Enums.AccountState
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendees?: AttendeeCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountUncheckedCreateWithoutConfirmedAttendancesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    displayName: string
+    profileImageURL?: string | null
+    role?: $Enums.UserRole
+    assignedIAMPolicies?: AccountCreateassignedIAMPoliciesInput | string[]
+    accountState?: $Enums.AccountState
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendees?: AttendeeUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountCreateOrConnectWithoutConfirmedAttendancesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutConfirmedAttendancesInput, AccountUncheckedCreateWithoutConfirmedAttendancesInput>
+  }
+
+  export type AttendeeUpsertWithoutAttendancesInput = {
+    update: XOR<AttendeeUpdateWithoutAttendancesInput, AttendeeUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<AttendeeCreateWithoutAttendancesInput, AttendeeUncheckedCreateWithoutAttendancesInput>
+    where?: AttendeeWhereInput
+  }
+
+  export type AttendeeUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: AttendeeWhereInput
+    data: XOR<AttendeeUpdateWithoutAttendancesInput, AttendeeUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type AttendeeUpdateWithoutAttendancesInput = {
+    enrollmentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    course?: StringFieldUpdateOperationsInput | string
+    school?: StringFieldUpdateOperationsInput | string
+    degree?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    convocationEligible?: BoolFieldUpdateOperationsInput | boolean
+    convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneWithoutAttendeesNestedInput
+    allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
+  }
+
+  export type AttendeeUncheckedUpdateWithoutAttendancesInput = {
+    enrollmentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    course?: StringFieldUpdateOperationsInput | string
+    school?: StringFieldUpdateOperationsInput | string
+    degree?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    convocationEligible?: BoolFieldUpdateOperationsInput | boolean
+    convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crr?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
+  }
+
+  export type ConvocationUpsertWithoutAttendancesInput = {
+    update: XOR<ConvocationUpdateWithoutAttendancesInput, ConvocationUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<ConvocationCreateWithoutAttendancesInput, ConvocationUncheckedCreateWithoutAttendancesInput>
+    where?: ConvocationWhereInput
+  }
+
+  export type ConvocationUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: ConvocationWhereInput
+    data: XOR<ConvocationUpdateWithoutAttendancesInput, ConvocationUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type ConvocationUpdateWithoutAttendancesInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    eventDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    venue?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    maxAttendees?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConvocationUncheckedUpdateWithoutAttendancesInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    eventDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationStartDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationEndDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    venue?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    maxAttendees?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccountUpsertWithoutConfirmedAttendancesInput = {
+    update: XOR<AccountUpdateWithoutConfirmedAttendancesInput, AccountUncheckedUpdateWithoutConfirmedAttendancesInput>
+    create: XOR<AccountCreateWithoutConfirmedAttendancesInput, AccountUncheckedCreateWithoutConfirmedAttendancesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutConfirmedAttendancesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutConfirmedAttendancesInput, AccountUncheckedUpdateWithoutConfirmedAttendancesInput>
+  }
+
+  export type AccountUpdateWithoutConfirmedAttendancesInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    profileImageURL?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    assignedIAMPolicies?: AccountUpdateassignedIAMPoliciesInput | string[]
+    accountState?: EnumAccountStateFieldUpdateOperationsInput | $Enums.AccountState
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendees?: AttendeeUpdateManyWithoutAccountNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutConfirmedAttendancesInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    profileImageURL?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    assignedIAMPolicies?: AccountUpdateassignedIAMPoliciesInput | string[]
+    accountState?: EnumAccountStateFieldUpdateOperationsInput | $Enums.AccountState
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendees?: AttendeeUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type AttendanceCreateWithoutConvocationInput = {
+    id?: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attendee: AttendeeCreateNestedOneWithoutAttendancesInput
+    confirmer?: AccountCreateNestedOneWithoutConfirmedAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateWithoutConvocationInput = {
+    id?: string
+    attendeeId: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceCreateOrConnectWithoutConvocationInput = {
+    where: AttendanceWhereUniqueInput
+    create: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput>
+  }
+
+  export type AttendanceCreateManyConvocationInputEnvelope = {
+    data: AttendanceCreateManyConvocationInput | AttendanceCreateManyConvocationInput[]
+  }
+
+  export type AttendanceUpsertWithWhereUniqueWithoutConvocationInput = {
+    where: AttendanceWhereUniqueInput
+    update: XOR<AttendanceUpdateWithoutConvocationInput, AttendanceUncheckedUpdateWithoutConvocationInput>
+    create: XOR<AttendanceCreateWithoutConvocationInput, AttendanceUncheckedCreateWithoutConvocationInput>
+  }
+
+  export type AttendanceUpdateWithWhereUniqueWithoutConvocationInput = {
+    where: AttendanceWhereUniqueInput
+    data: XOR<AttendanceUpdateWithoutConvocationInput, AttendanceUncheckedUpdateWithoutConvocationInput>
+  }
+
+  export type AttendanceUpdateManyWithWhereWithoutConvocationInput = {
+    where: AttendanceScalarWhereInput
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutConvocationInput>
+  }
+
   export type AttendeeCreateManyAccountInput = {
     id?: string
     enrollmentId: string
@@ -16353,12 +18850,27 @@ export namespace Prisma {
     convocationEligible?: boolean
     convocationRegistered?: boolean
     verificationToken?: string | null
-    attendanceMarked?: boolean
-    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     crr: string
+  }
+
+  export type AttendanceCreateManyConfirmerInput = {
+    id?: string
+    attendeeId: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AttendeeUpdateWithoutAccountInput = {
@@ -16372,13 +18884,12 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUpdateOneWithoutAttendeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateWithoutAccountInput = {
@@ -16392,13 +18903,12 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
     allocation?: SeatAllocationUncheckedUpdateOneWithoutAttendeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutAttendeeNestedInput
   }
 
   export type AttendeeUncheckedUpdateManyWithoutAccountInput = {
@@ -16412,12 +18922,123 @@ export namespace Prisma {
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
     verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
-    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crr?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttendanceUpdateWithoutConfirmerInput = {
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendee?: AttendeeUpdateOneRequiredWithoutAttendancesNestedInput
+    convocation?: ConvocationUpdateOneWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateWithoutConfirmerInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutConfirmerInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceCreateManyAttendeeInput = {
+    id?: string
+    convocationId?: string | null
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateWithoutAttendeeInput = {
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    convocation?: ConvocationUpdateOneWithoutAttendancesNestedInput
+    confirmer?: AccountUpdateOneWithoutConfirmedAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateWithoutAttendeeInput = {
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutAttendeeInput = {
+    convocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RowCreateManyEnclosureInput = {
@@ -16484,6 +19105,71 @@ export namespace Prisma {
     seatNumber?: IntFieldUpdateOperationsInput | number
     allocatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attendeeId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttendanceCreateManyConvocationInput = {
+    id?: string
+    attendeeId: string
+    status?: $Enums.AttendanceStatus
+    markedAt?: Date | string
+    verificationMethod: $Enums.VerificationMethod
+    checkInTime?: Date | string | null
+    checkOutTime?: Date | string | null
+    location?: string | null
+    confirmedBy?: string | null
+    confirmedByName?: string | null
+    notes?: string | null
+    seatInfo?: InputJsonValue | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateWithoutConvocationInput = {
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendee?: AttendeeUpdateOneRequiredWithoutAttendancesNestedInput
+    confirmer?: AccountUpdateOneWithoutConfirmedAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateWithoutConvocationInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutConvocationInput = {
+    attendeeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    markedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verificationMethod?: EnumVerificationMethodFieldUpdateOperationsInput | $Enums.VerificationMethod
+    checkInTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOutTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmedByName?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    seatInfo?: InputJsonValue | InputJsonValue | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

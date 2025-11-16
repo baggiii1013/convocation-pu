@@ -143,8 +143,6 @@ exports.Prisma.AttendeeScalarFieldEnum = {
   convocationEligible: 'convocationEligible',
   convocationRegistered: 'convocationRegistered',
   verificationToken: 'verificationToken',
-  attendanceMarked: 'attendanceMarked',
-  attendanceMarkedAt: 'attendanceMarkedAt',
   assignedEnclosure: 'assignedEnclosure',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -198,6 +196,24 @@ exports.Prisma.SeatReservationScalarFieldEnum = {
   reservedFor: 'reservedFor',
   reservedBy: 'reservedBy',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.AttendanceScalarFieldEnum = {
+  id: 'id',
+  attendeeId: 'attendeeId',
+  convocationId: 'convocationId',
+  status: 'status',
+  markedAt: 'markedAt',
+  verificationMethod: 'verificationMethod',
+  checkInTime: 'checkInTime',
+  checkOutTime: 'checkOutTime',
+  location: 'location',
+  confirmedBy: 'confirmedBy',
+  confirmedByName: 'confirmedByName',
+  notes: 'notes',
+  seatInfo: 'seatInfo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.AnalyticsScalarFieldEnum = {
@@ -291,6 +307,21 @@ exports.Direction = exports.$Enums.Direction = {
   CENTER: 'CENTER'
 };
 
+exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  EXCUSED: 'EXCUSED'
+};
+
+exports.VerificationMethod = exports.$Enums.VerificationMethod = {
+  QR_SCAN: 'QR_SCAN',
+  MANUAL: 'MANUAL',
+  BIOMETRIC: 'BIOMETRIC',
+  NFC: 'NFC',
+  FACIAL: 'FACIAL'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Attendee: 'Attendee',
@@ -298,6 +329,7 @@ exports.Prisma.ModelName = {
   Enclosure: 'Enclosure',
   Row: 'Row',
   SeatReservation: 'SeatReservation',
+  Attendance: 'Attendance',
   Analytics: 'Analytics',
   IAMPolicy: 'IAMPolicy',
   Department: 'Department',

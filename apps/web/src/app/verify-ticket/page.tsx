@@ -164,7 +164,7 @@ export default function VerifyTicketPage() {
       await qrCodeScanner.start(
         { facingMode: "environment" }, // Use back camera on mobile
         {
-          fps: 10, // Scans per second
+          fps: 5, // Scans per second
           qrbox: { width: 250, height: 250 }, // Scanning box size
         },
         (decodedText) => {
