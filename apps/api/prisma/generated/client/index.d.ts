@@ -390,8 +390,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.16.3
-   * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
+   * Prisma Client JS version: 6.19.0
+   * Query Engine version: 2ba551f319ab1df4bc874a89965d8b3641056773
    */
   export type PrismaVersion = {
     client: string
@@ -404,6 +404,7 @@ export namespace Prisma {
    */
 
 
+  export import Bytes = runtime.Bytes
   export import JsonObject = runtime.JsonObject
   export import JsonArray = runtime.JsonArray
   export import JsonValue = runtime.JsonValue
@@ -2904,6 +2905,9 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
+    verificationToken: string | null
+    attendanceMarked: boolean | null
+    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2922,6 +2926,9 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean | null
     convocationRegistered: boolean | null
+    verificationToken: string | null
+    attendanceMarked: boolean | null
+    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2940,6 +2947,9 @@ export namespace Prisma {
     phone: number
     convocationEligible: number
     convocationRegistered: number
+    verificationToken: number
+    attendanceMarked: number
+    attendanceMarkedAt: number
     assignedEnclosure: number
     createdAt: number
     updatedAt: number
@@ -2960,6 +2970,9 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    verificationToken?: true
+    attendanceMarked?: true
+    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -2978,6 +2991,9 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    verificationToken?: true
+    attendanceMarked?: true
+    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -2996,6 +3012,9 @@ export namespace Prisma {
     phone?: true
     convocationEligible?: true
     convocationRegistered?: true
+    verificationToken?: true
+    attendanceMarked?: true
+    attendanceMarkedAt?: true
     assignedEnclosure?: true
     createdAt?: true
     updatedAt?: true
@@ -3087,6 +3106,9 @@ export namespace Prisma {
     phone: string | null
     convocationEligible: boolean
     convocationRegistered: boolean
+    verificationToken: string | null
+    attendanceMarked: boolean
+    attendanceMarkedAt: Date | null
     assignedEnclosure: string | null
     createdAt: Date
     updatedAt: Date
@@ -3122,6 +3144,9 @@ export namespace Prisma {
     phone?: boolean
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: boolean
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: boolean
     assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3144,6 +3169,9 @@ export namespace Prisma {
     phone?: boolean
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: boolean
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: boolean
     assignedEnclosure?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3151,7 +3179,7 @@ export namespace Prisma {
     accountId?: boolean
   }
 
-  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "assignedEnclosure" | "createdAt" | "updatedAt" | "crr" | "accountId", ExtArgs["result"]["attendee"]>
+  export type AttendeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enrollmentId" | "name" | "course" | "school" | "degree" | "email" | "phone" | "convocationEligible" | "convocationRegistered" | "verificationToken" | "attendanceMarked" | "attendanceMarkedAt" | "assignedEnclosure" | "createdAt" | "updatedAt" | "crr" | "accountId", ExtArgs["result"]["attendee"]>
   export type AttendeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | Attendee$accountArgs<ExtArgs>
     allocation?: boolean | Attendee$allocationArgs<ExtArgs>
@@ -3174,6 +3202,9 @@ export namespace Prisma {
       phone: string | null
       convocationEligible: boolean
       convocationRegistered: boolean
+      verificationToken: string | null
+      attendanceMarked: boolean
+      attendanceMarkedAt: Date | null
       assignedEnclosure: string | null
       createdAt: Date
       updatedAt: Date
@@ -3583,6 +3614,9 @@ export namespace Prisma {
     readonly phone: FieldRef<"Attendee", 'String'>
     readonly convocationEligible: FieldRef<"Attendee", 'Boolean'>
     readonly convocationRegistered: FieldRef<"Attendee", 'Boolean'>
+    readonly verificationToken: FieldRef<"Attendee", 'String'>
+    readonly attendanceMarked: FieldRef<"Attendee", 'Boolean'>
+    readonly attendanceMarkedAt: FieldRef<"Attendee", 'DateTime'>
     readonly assignedEnclosure: FieldRef<"Attendee", 'String'>
     readonly createdAt: FieldRef<"Attendee", 'DateTime'>
     readonly updatedAt: FieldRef<"Attendee", 'DateTime'>
@@ -12258,6 +12292,9 @@ export namespace Prisma {
     phone: 'phone',
     convocationEligible: 'convocationEligible',
     convocationRegistered: 'convocationRegistered',
+    verificationToken: 'verificationToken',
+    attendanceMarked: 'attendanceMarked',
+    attendanceMarkedAt: 'attendanceMarkedAt',
     assignedEnclosure: 'assignedEnclosure',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -12650,6 +12687,9 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    verificationToken?: StringNullableFilter<"Attendee"> | string | null
+    attendanceMarked?: BoolFilter<"Attendee"> | boolean
+    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
@@ -12670,6 +12710,9 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    verificationToken?: SortOrder
+    attendanceMarked?: SortOrder
+    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12693,6 +12736,9 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    verificationToken?: StringNullableFilter<"Attendee"> | string | null
+    attendanceMarked?: BoolFilter<"Attendee"> | boolean
+    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
@@ -12713,6 +12759,9 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    verificationToken?: SortOrder
+    attendanceMarked?: SortOrder
+    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12737,6 +12786,9 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     convocationEligible?: BoolWithAggregatesFilter<"Attendee"> | boolean
     convocationRegistered?: BoolWithAggregatesFilter<"Attendee"> | boolean
+    verificationToken?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
+    attendanceMarked?: BoolWithAggregatesFilter<"Attendee"> | boolean
+    attendanceMarkedAt?: DateTimeNullableWithAggregatesFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Attendee"> | Date | string
@@ -13470,6 +13522,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13489,6 +13544,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13507,6 +13565,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13525,6 +13586,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13544,6 +13608,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13561,6 +13628,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13577,6 +13647,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14470,6 +14543,9 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    verificationToken?: SortOrder
+    attendanceMarked?: SortOrder
+    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14488,6 +14564,9 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    verificationToken?: SortOrder
+    attendanceMarked?: SortOrder
+    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14506,6 +14585,9 @@ export namespace Prisma {
     phone?: SortOrder
     convocationEligible?: SortOrder
     convocationRegistered?: SortOrder
+    verificationToken?: SortOrder
+    attendanceMarked?: SortOrder
+    attendanceMarkedAt?: SortOrder
     assignedEnclosure?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15657,6 +15739,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15675,6 +15760,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15721,6 +15809,9 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
     convocationRegistered?: BoolFilter<"Attendee"> | boolean
+    verificationToken?: StringNullableFilter<"Attendee"> | string | null
+    attendanceMarked?: BoolFilter<"Attendee"> | boolean
+    attendanceMarkedAt?: DateTimeNullableFilter<"Attendee"> | Date | string | null
     assignedEnclosure?: StringNullableFilter<"Attendee"> | string | null
     createdAt?: DateTimeFilter<"Attendee"> | Date | string
     updatedAt?: DateTimeFilter<"Attendee"> | Date | string
@@ -15914,6 +16005,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15932,6 +16026,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16012,6 +16109,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16029,6 +16129,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16249,6 +16352,9 @@ export namespace Prisma {
     phone?: string | null
     convocationEligible?: boolean
     convocationRegistered?: boolean
+    verificationToken?: string | null
+    attendanceMarked?: boolean
+    attendanceMarkedAt?: Date | string | null
     assignedEnclosure?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16265,6 +16371,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16282,6 +16391,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16299,6 +16411,9 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
     convocationRegistered?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    attendanceMarked?: BoolFieldUpdateOperationsInput | boolean
+    attendanceMarkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedEnclosure?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

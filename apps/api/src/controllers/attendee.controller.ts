@@ -471,5 +471,124 @@ export class AttendeeController {
       });
     }
   }
+
+  /**
+   * Public endpoint to search for seat allocation by enrollment ID
+   * GET /api/attendees/public/search/:enrollmentId
+   */
+  static async publicSearch(req: Request, res: Response): Promise<void> {
+    try {
+      const { enrollmentId } = req.params;
+      
+      logger.info(`Public search request for enrollment ID: ${enrollmentId}`);
+
+      if (!enrollmentId) {
+        res.status(400).json({
+          success: false,
+          message: 'Enrollment ID is required',
+          code: 'INVALID_ENROLLMENT_ID'
+        });
+        return;
+      }
+
+      const attendee = await AttendeeService.getByEnrollmentIdWithSeat(enrollmentId);
+      
+      logger.info(`Attendee lookup result: ${attendee ? 'Found' : 'Not found'}`);
+
+      if (!attendee) {
+        res.status(404).json({
+          success: false,
+          message: 'No record found for this enrollment ID',
+          code: 'ATTENDEE_NOT_FOUND'
+        });
+        return;
+      }
+
+      // Return public information only (cast to any for allocation property)
+      const attendeeWithAllocation = attendee as any;
+      res.json({
+        success: true,
+        message: 'Attendee found',
+        data: {
+          enrollmentId: attendeeWithAllocation.enrollmentId,
+          name: attendeeWithAllocation.name,
+          course: attendeeWithAllocation.course,
+          school: attendeeWithAllocation.school,
+          degree: attendeeWithAllocation.degree,
+          convocationEligible: attendeeWithAllocation.convocationEligible,
+          convocationRegistered: attendeeWithAllocation.convocationRegistered,
+          allocation: attendeeWithAllocation.allocation ? {
+            enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+            row: attendeeWithAllocation.allocation.rowLetter,
+            seat: attendeeWithAllocation.allocation.seatNumber,
+            allocatedAt: attendeeWithAllocation.allocation.allocatedAt
+          } : null,
+          verificationToken: attendeeWithAllocation.verificationToken
+        }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.publicSearch:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Search failed',
+        code: 'SEARCH_ERROR'
+      });
+    }
+  }
+
+  /**
+   * Verify ticket and mark attendance
+   * POST /api/attendees/verify-ticket
+   */
+  static async verifyTicket(req: Request, res: Response): Promise<void> {
+    try {
+      const { token } = req.body;
+
+      if (!token) {
+        res.status(400).json({
+          success: false,
+          message: 'Verification token is required',
+          code: 'INVALID_TOKEN'
+        });
+        return;
+      }
+
+      const result = await AttendeeService.verifyAndMarkAttendance(token);
+
+      if (!result.success) {
+        res.status(404).json({
+          success: false,
+          message: result.message,
+          code: 'VERIFICATION_FAILED'
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        message: result.message,
+        data: {
+          attendee: {
+            enrollmentId: result.attendee?.enrollmentId,
+            name: result.attendee?.name,
+            course: result.attendee?.course,
+            school: result.attendee?.school,
+            allocation: result.attendee?.allocation,
+            attendanceMarked: result.attendee?.attendanceMarked,
+            attendanceMarkedAt: result.attendee?.attendanceMarkedAt
+          },
+          alreadyMarked: result.alreadyMarked
+        }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.verifyTicket:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Verification failed',
+        code: 'VERIFICATION_ERROR'
+      });
+    }
+  }
 }
+
 

@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { PrismaClient } from '../../prisma/generated/client/index.js';
 import { logger } from '../utils/logger.js';
 
@@ -234,11 +235,25 @@ export class SeatAllocationService {
     // Bulk create all allocations
     if (allocations.length > 0) {
       try {
-        await this.prisma.seatAllocation.createMany({
-          data: allocations
+        // Create allocations in a transaction, also generating tokens for attendees
+        await this.prisma.$transaction(async (tx) => {
+          // Create all seat allocations
+          await tx.seatAllocation.createMany({
+            data: allocations
+          });
+
+          // Generate and update verification tokens for all allocated attendees
+          for (const allocation of allocations) {
+            const verificationToken = this.generateVerificationToken();
+            await tx.attendee.update({
+              where: { id: allocation.attendeeId },
+              data: { verificationToken }
+            });
+          }
         });
+
         logger.info(
-          `Successfully created ${allocations.length} seat allocations in enclosure ${enclosureLetter}`
+          `Successfully created ${allocations.length} seat allocations with verification tokens in enclosure ${enclosureLetter}`
         );
       } catch (error) {
         logger.error(`Error creating seat allocations:`, error);
@@ -278,6 +293,14 @@ export class SeatAllocationService {
       .split(',')
       .map((s) => parseInt(s.trim()))
       .filter((n) => !isNaN(n));
+  }
+
+  /**
+   * Generate a unique verification token for ticket QR code
+   */
+  private generateVerificationToken(): string {
+    // Generate a secure random token (32 bytes = 64 hex characters)
+    return crypto.randomBytes(32).toString('hex');
   }
 
   /**

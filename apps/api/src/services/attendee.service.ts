@@ -637,5 +637,116 @@ export class AttendeeService {
       throw error;
     }
   }
+
+  /**
+   * Get attendee by enrollment ID with seat allocation (for public search)
+   */
+  static async getByEnrollmentIdWithSeat(enrollmentId: string): Promise<Attendee | null> {
+    try {
+      const attendee = await prisma.attendee.findUnique({
+        where: { enrollmentId },
+        include: {
+          allocation: true
+        }
+      });
+
+      return attendee;
+    } catch (error) {
+      logger.error(`Error getting attendee by enrollment ID ${enrollmentId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Verify ticket token and mark attendance
+   */
+  static async verifyAndMarkAttendance(token: string): Promise<{
+    success: boolean;
+    message: string;
+    attendee?: any;
+    alreadyMarked?: boolean;
+  }> {
+    try {
+      // Find attendee by verification token (using findFirst since verificationToken is not unique)
+      const attendee = await prisma.attendee.findFirst({
+        where: { verificationToken: token },
+        include: {
+          allocation: true
+        }
+      });
+
+      if (!attendee) {
+        return {
+          success: false,
+          message: 'Invalid verification token'
+        };
+      }
+
+      // Cast to any to access allocation property
+      const attendeeWithAllocation = attendee as any;
+
+      // Check if attendance already marked
+      if (attendeeWithAllocation.attendanceMarked) {
+        return {
+          success: true,
+          message: 'Attendance already marked',
+          attendee: {
+            enrollmentId: attendeeWithAllocation.enrollmentId,
+            name: attendeeWithAllocation.name,
+            course: attendeeWithAllocation.course,
+            school: attendeeWithAllocation.school,
+            allocation: attendeeWithAllocation.allocation ? {
+              enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+              row: attendeeWithAllocation.allocation.rowLetter,
+              seat: attendeeWithAllocation.allocation.seatNumber
+            } : null,
+            attendanceMarked: attendeeWithAllocation.attendanceMarked,
+            attendanceMarkedAt: attendeeWithAllocation.attendanceMarkedAt
+          },
+          alreadyMarked: true
+        };
+      }
+
+      // Mark attendance
+      const updatedAttendee = await prisma.attendee.update({
+        where: { id: attendee.id },
+        data: {
+          attendanceMarked: true,
+          attendanceMarkedAt: new Date()
+        },
+        include: {
+          allocation: true
+        }
+      });
+
+      // Cast to any to access allocation property
+      const updatedWithAllocation = updatedAttendee as any;
+
+      logger.info(`Attendance marked for ${updatedWithAllocation.enrollmentId} at ${updatedWithAllocation.attendanceMarkedAt}`);
+
+      return {
+        success: true,
+        message: 'Attendance marked successfully',
+        attendee: {
+          enrollmentId: updatedWithAllocation.enrollmentId,
+          name: updatedWithAllocation.name,
+          course: updatedWithAllocation.course,
+          school: updatedWithAllocation.school,
+          allocation: updatedWithAllocation.allocation ? {
+            enclosure: updatedWithAllocation.allocation.enclosureLetter,
+            row: updatedWithAllocation.allocation.rowLetter,
+            seat: updatedWithAllocation.allocation.seatNumber
+          } : null,
+          attendanceMarked: updatedWithAllocation.attendanceMarked,
+          attendanceMarkedAt: updatedWithAllocation.attendanceMarkedAt
+        },
+        alreadyMarked: false
+      };
+    } catch (error) {
+      logger.error('Error verifying ticket:', error);
+      throw error;
+    }
+  }
 }
+
 

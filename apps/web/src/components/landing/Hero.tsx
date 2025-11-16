@@ -112,23 +112,14 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a href="https://ums.paruluniversity.ac.in" target="_blank" rel="noopener noreferrer">
+            <a href="/search-seat">
               <Button
                 size="lg"
                 variant="default"
                 className="bg-white text-primary-600 hover:bg-white/90 min-w-[200px]"
               >
-                Register Now
+                Find Your Seat
                 <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </a>
-            <a href="https://www.instagram.com/paruluniversity/?hl=en" target="_blank" rel="noopener noreferrer">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 min-w-[200px] my-2"
-              >
-                Learn More
               </Button>
             </a>
           </motion.div>

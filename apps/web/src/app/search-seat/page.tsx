@@ -1,0 +1,326 @@
+"use client";
+
+import Ticket from "@/components/ticket/Ticket";
+import { Button } from "@/components/ui/Button";
+import { motion } from "framer-motion";
+import { AlertCircle, Loader2, Search } from "lucide-react";
+import { useState } from "react";
+
+interface SeatAllocation {
+  enclosure: string;
+  row: string;
+  seat: number;
+  allocatedAt: string;
+}
+
+interface AttendeeData {
+  enrollmentId: string;
+  name: string;
+  course: string;
+  school: string;
+  degree: string;
+  convocationEligible: boolean;
+  convocationRegistered: boolean;
+  allocation: SeatAllocation | null;
+  verificationToken: string | null;
+}
+
+export default function SearchSeatPage() {
+  const [enrollmentId, setEnrollmentId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [attendeeData, setAttendeeData] = useState<AttendeeData | null>(null);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!enrollmentId.trim()) {
+      setError("Please enter your enrollment number");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setAttendeeData(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/search/${enrollmentId.trim()}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(data.message || "No record found for this enrollment ID");
+        return;
+      }
+
+      setAttendeeData(data.data);
+    } catch (err) {
+      setError("Failed to search. Please try again later.");
+      console.error("Search error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setEnrollmentId("");
+    setError(null);
+    setAttendeeData(null);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+      
+      <motion.div
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -100, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute top-20 left-20 w-96 h-96 bg-primary-400 rounded-full blur-3xl opacity-30"
+      />
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Find Your Seat
+            </h1>
+            <p className="text-lg text-white/90">
+              Enter your enrollment number to view your seat allocation
+            </p>
+          </motion.div>
+
+          {/* Search Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 border border-white/20"
+          >
+            <form onSubmit={handleSearch} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="enrollmentId"
+                  className="block text-white font-medium mb-2"
+                >
+                  Enrollment Number
+                </label>
+                <input
+                  id="enrollmentId"
+                  type="text"
+                  value={enrollmentId}
+                  onChange={(e) => setEnrollmentId(e.target.value.toUpperCase())}
+                  placeholder="Enter your enrollment number"
+                  className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-white text-primary-600 hover:bg-white/90"
+                  size="lg"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="mr-2 h-5 w-5" />
+                      Search
+                    </>
+                  )}
+                </Button>
+
+                {attendeeData && (
+                  <Button
+                    type="button"
+                    onClick={handleReset}
+                    variant="outline"
+                    className="border-white text-white hover:bg-white/10"
+                    size="lg"
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </form>
+          </motion.div>
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-500/20 backdrop-blur-md border border-red-500/50 rounded-xl p-6 mb-8"
+            >
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-6 h-6 text-red-200 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-red-100 font-semibold mb-1">
+                    Search Failed
+                  </h3>
+                  <p className="text-red-200">{error}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Results */}
+          {attendeeData && !error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              {/* Attendee Info Card */}
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <h2 className="text-2xl font-bold text-white mb-6">
+                  Student Information
+                </h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-white/70 text-sm">Name</p>
+                    <p className="text-white font-semibold text-lg">
+                      {attendeeData.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm">Enrollment ID</p>
+                    <p className="text-white font-semibold text-lg">
+                      {attendeeData.enrollmentId}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm">Course</p>
+                    <p className="text-white font-semibold">
+                      {attendeeData.course}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm">School</p>
+                    <p className="text-white font-semibold">
+                      {attendeeData.school}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm">Degree</p>
+                    <p className="text-white font-semibold">
+                      {attendeeData.degree}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm">Status</p>
+                    <div className="flex gap-2 mt-1">
+                      {attendeeData.convocationEligible && (
+                        <span className="px-3 py-1 bg-green-500/30 text-green-100 text-xs rounded-full border border-green-500/50">
+                          Eligible
+                        </span>
+                      )}
+                      {attendeeData.convocationRegistered && (
+                        <span className="px-3 py-1 bg-blue-500/30 text-blue-100 text-xs rounded-full border border-blue-500/50">
+                          Registered
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Seat Allocation */}
+              {attendeeData.allocation ? (
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                  <h2 className="text-2xl font-bold text-white mb-6">
+                    Seat Allocation
+                  </h2>
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                    <div className="text-center">
+                      <p className="text-white/70 text-sm mb-2">Enclosure</p>
+                      <p className="text-4xl font-bold text-white">
+                        {attendeeData.allocation.enclosure}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-white/70 text-sm mb-2">Row</p>
+                      <p className="text-4xl font-bold text-white">
+                        {attendeeData.allocation.row}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-white/70 text-sm mb-2">Seat</p>
+                      <p className="text-4xl font-bold text-white">
+                        {attendeeData.allocation.seat}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Ticket Preview with QR */}
+                  {attendeeData.verificationToken && (
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-4 text-center">
+                        Your Digital Ticket
+                      </h3>
+                      <div className="flex justify-center">
+                        {/* @ts-ignore - Ticket is JSX component with default props */}
+                        <Ticket
+                          mode="ticket"
+                          name={attendeeData.name}
+                          title={attendeeData.course}
+                          handle={attendeeData.enrollmentId}
+                          status={`${attendeeData.allocation.enclosure}-${attendeeData.allocation.row}-${attendeeData.allocation.seat}`}
+                          verificationToken={attendeeData.verificationToken}
+                          contactText="Download"
+                          onContactClick={() => {
+                            alert("Download feature coming soon!");
+                          }}
+                        />
+                      </div>
+                      <p className="text-white/70 text-sm text-center mt-4">
+                        Show this QR code at the venue for entry verification
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-6 h-6 text-yellow-200 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-yellow-100 font-semibold mb-1">
+                        No Seat Allocated Yet
+                      </h3>
+                      <p className="text-yellow-200">
+                        Your seat has not been allocated yet. Please check back
+                        later or contact the administration.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

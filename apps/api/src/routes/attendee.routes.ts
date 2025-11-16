@@ -135,6 +135,17 @@ router.get(
   AttendeeController.getByEnrollmentId
 );
 
+// Public routes (no authentication required) - MUST be before /:id route
+router.get(
+  '/public/search/:enrollmentId',
+  AttendeeController.publicSearch
+);
+
+router.post(
+  '/verify-ticket',
+  AttendeeController.verifyTicket
+);
+
 // CRUD operations
 router.post(
   '/',

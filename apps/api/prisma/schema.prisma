@@ -46,6 +46,9 @@ model Attendee {
   phone                 String?
   convocationEligible   Boolean  @default(false)
   convocationRegistered Boolean  @default(false)
+  verificationToken     String?  // Generated when seat is allocated, used for QR code
+  attendanceMarked      Boolean  @default(false)
+  attendanceMarkedAt    DateTime? // Timestamp when attendance is marked via QR scan
   
   // Enclosure assignment - stored in database
   assignedEnclosure     String?  // Enclosure letter (A, B, C, etc.)
