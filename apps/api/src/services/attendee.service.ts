@@ -660,7 +660,7 @@ export class AttendeeService {
   /**
    * Verify ticket token and mark attendance
    */
-  static async verifyAndMarkAttendance(token: string): Promise<{
+  static async verifyAndMarkAttendance(token: string, verifyOnly: boolean = false): Promise<{
     success: boolean;
     message: string;
     attendee?: any;
@@ -704,6 +704,28 @@ export class AttendeeService {
             attendanceMarkedAt: attendeeWithAllocation.attendanceMarkedAt
           },
           alreadyMarked: true
+        };
+      }
+
+      // If verifyOnly is true, just return the attendee details without marking attendance
+      if (verifyOnly) {
+        return {
+          success: true,
+          message: 'Ticket verified successfully',
+          attendee: {
+            enrollmentId: attendeeWithAllocation.enrollmentId,
+            name: attendeeWithAllocation.name,
+            course: attendeeWithAllocation.course,
+            school: attendeeWithAllocation.school,
+            allocation: attendeeWithAllocation.allocation ? {
+              enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+              row: attendeeWithAllocation.allocation.rowLetter,
+              seat: attendeeWithAllocation.allocation.seatNumber
+            } : null,
+            attendanceMarked: false,
+            attendanceMarkedAt: null
+          },
+          alreadyMarked: false
         };
       }
 

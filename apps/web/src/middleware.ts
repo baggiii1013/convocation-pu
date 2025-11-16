@@ -22,6 +22,7 @@ const protectedRoutes = [
   '/dashboard',
   '/profile',
   '/settings',
+  '/verify-ticket',
 ];
 
 // Define admin-only routes

@@ -542,7 +542,7 @@ export class AttendeeController {
    */
   static async verifyTicket(req: Request, res: Response): Promise<void> {
     try {
-      const { token } = req.body;
+      const { token, verifyOnly } = req.body;
 
       if (!token) {
         res.status(400).json({
@@ -553,7 +553,8 @@ export class AttendeeController {
         return;
       }
 
-      const result = await AttendeeService.verifyAndMarkAttendance(token);
+      // If verifyOnly is true, just verify the token without marking attendance
+      const result = await AttendeeService.verifyAndMarkAttendance(token, verifyOnly === true);
 
       if (!result.success) {
         res.status(404).json({

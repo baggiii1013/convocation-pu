@@ -54,9 +54,9 @@ const adminCards: BentoCardProps[] = [
   },
   {
     color: '#060010',
-    title: 'Aerial View',
-    description: 'Visualize venue layout and seating',
-    label: 'Visualization'
+    title: 'Attendance',
+    description: 'Helps you verify and mark a ticket',
+    label: 'Ticket verification'
   },
   {
     color: '#060010',
@@ -112,9 +112,9 @@ const userCards: BentoCardProps[] = [
   },
   {
     color: '#060010',
-    title: 'Venue View',
-    description: 'Explore the venue layout',
-    label: 'Venue'
+    title: 'Attendance',
+    description: 'Helps you verify and mark a ticket',
+    label: 'Ticket verification'
   },
   {
     color: '#060010',
@@ -130,7 +130,7 @@ const adminRoutes = [
   '/admin/seat-allocation',
   '/admin/reserve-seats',
   '/admin/enclosures',
-  '/admin/aerial-view',
+  '/verify-ticket',
   '/admin/aerial-view-editor',
   '/admin/upload-students',
   '/admin/users',
@@ -143,7 +143,7 @@ const userRoutes = [
   '/dashboard',
   '/dashboard/profile',
   '/attendee',
-  '/admin/aerial-view',
+  '/verify-ticket',
   '/settings'
 ];
 

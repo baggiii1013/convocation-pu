@@ -23,11 +23,13 @@ interface VerificationResult {
     attendanceMarkedAt: string;
   };
   alreadyMarked?: boolean;
+  verified?: boolean; // Whether token is verified but attendance not yet marked
 }
 
 export default function VerifyTicketPage() {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmingAttendance, setConfirmingAttendance] = useState(false);
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string>("");
@@ -55,12 +57,25 @@ export default function VerifyTicketPage() {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ token: verificationToken })
+          body: JSON.stringify({ token: verificationToken, verifyOnly: true })
         }
       );
 
       const data = await response.json();
-      setResult(data);
+      
+      console.log("Verification API Response:", data);
+      
+      // API returns data wrapped in a 'data' object, so we need to extract it
+      if (data.success && data.data) {
+        setResult({
+          success: data.success,
+          message: data.message,
+          attendee: data.data.attendee,
+          alreadyMarked: data.data.alreadyMarked
+        });
+      } else {
+        setResult(data);
+      }
     } catch (err) {
       setResult({
         success: false,
@@ -69,6 +84,51 @@ export default function VerifyTicketPage() {
       console.error("Verification error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmAttendance = async () => {
+    if (!token.trim()) {
+      return;
+    }
+
+    setConfirmingAttendance(true);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/verify-ticket`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ token: token, verifyOnly: false })
+        }
+      );
+
+      const data = await response.json();
+      
+      console.log("Confirm Attendance API Response:", data);
+      
+      // API returns data wrapped in a 'data' object, so we need to extract it
+      if (data.success && data.data) {
+        setResult({
+          success: data.success,
+          message: data.message,
+          attendee: data.data.attendee,
+          alreadyMarked: data.data.alreadyMarked
+        });
+      } else {
+        setResult(data);
+      }
+    } catch (err) {
+      setResult({
+        success: false,
+        message: "Failed to mark attendance. Please try again."
+      });
+      console.error("Attendance marking error:", err);
+    } finally {
+      setConfirmingAttendance(false);
     }
   };
 
@@ -372,6 +432,35 @@ export default function VerifyTicketPage() {
                     </div>
                   )}
 
+                  {/* Show confirm attendance button if ticket is verified but not marked */}
+                  {!result.attendee.attendanceMarked && !result.alreadyMarked && (
+                    <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-6">
+                      <div className="flex flex-col items-center gap-4">
+                        <p className="text-blue-100 text-lg font-medium text-center">
+                          ✓ Ticket verified successfully! Click below to mark attendance.
+                        </p>
+                        <Button
+                          onClick={handleConfirmAttendance}
+                          disabled={confirmingAttendance}
+                          className="bg-green-600 text-white hover:bg-green-700 px-8 py-3 text-lg font-semibold"
+                          size="lg"
+                        >
+                          {confirmingAttendance ? (
+                            <>
+                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              Confirming...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="mr-2 h-5 w-5" />
+                              Confirm Attendance
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="bg-white/10 rounded-xl p-6 border border-white/20">
                     <h4 className="text-white font-bold text-lg mb-4">
                       Attendee Information
@@ -470,10 +559,14 @@ export default function VerifyTicketPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-white font-bold">3.</span>
-                <span>The system will verify the token and mark attendance automatically</span>
+                <span>Review the attendee details and seat allocation carefully</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-white font-bold">4.</span>
+                <span>Click "Confirm Attendance" button to mark the attendance</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-white font-bold">5.</span>
                 <span>Allow the attendee to proceed to their allocated seat</span>
               </li>
             </ul>
