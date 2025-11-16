@@ -58,8 +58,8 @@
 }
 
 .pc-card {
-  height: 80svh;
-  max-height: 540px;
+  height: 85svh;
+  max-height: 580px;
   display: grid;
   aspect-ratio: 0.718;
   border-radius: var(--card-radius);
@@ -367,16 +367,23 @@
 .pc-details {
   width: 100%;
   position: absolute;
-  top: 3em;
+  top: 2.5em;
   display: flex;
   flex-direction: column;
+  padding: 0 1.5em;
 }
 
 .pc-details h3 {
   font-weight: 600;
   margin: 0;
-  font-size: min(5svh, 3em);
+  font-size: min(4.5svh, 2.5em);
   margin: 0;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  text-align: center;
+  max-width: 100%;
   background-image: linear-gradient(to bottom, #fff, #6f6fbe);
   background-size: 1em 1.5em;
   -webkit-text-fill-color: transparent;
@@ -387,11 +394,14 @@
 .pc-details p {
   font-weight: 600;
   position: relative;
-  top: -12px;
-  white-space: nowrap;
-  font-size: 16px;
+  top: -8px;
+  font-size: 15px;
   margin: 0 auto;
-  width: min-content;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  max-width: 100%;
   background-image: linear-gradient(to bottom, #fff, #4a4ac0);
   background-size: 1em 1.5em;
   -webkit-text-fill-color: transparent;
@@ -427,20 +437,23 @@
 
 @media (max-width: 768px) {
   .pc-card {
-    height: 70svh;
-    max-height: 450px;
+    height: 75svh;
+    max-height: 480px;
   }
 
   .pc-details {
     top: 2em;
+    padding: 0 1.2em;
   }
 
   .pc-details h3 {
-    font-size: min(4svh, 2.5em);
+    font-size: min(4svh, 2.2em);
+    line-height: 1.2;
   }
 
   .pc-details p {
     font-size: 14px;
+    top: -6px;
   }
 
   .pc-user-info {
@@ -473,21 +486,23 @@
 
 @media (max-width: 480px) {
   .pc-card {
-    height: 60svh;
-    max-height: 380px;
+    height: 65svh;
+    max-height: 420px;
   }
 
   .pc-details {
     top: 1.5em;
+    padding: 0 1em;
   }
 
   .pc-details h3 {
-    font-size: min(3.5svh, 2em);
+    font-size: min(3.5svh, 1.8em);
+    line-height: 1.2;
   }
 
   .pc-details p {
     font-size: 12px;
-    top: -8px;
+    top: -6px;
   }
 
   .pc-user-info {
@@ -521,16 +536,22 @@
 
 @media (max-width: 320px) {
   .pc-card {
-    height: 55svh;
-    max-height: 320px;
+    height: 60svh;
+    max-height: 360px;
+  }
+
+  .pc-details {
+    padding: 0 0.8em;
   }
 
   .pc-details h3 {
     font-size: min(3svh, 1.5em);
+    line-height: 1.1;
   }
 
   .pc-details p {
     font-size: 11px;
+    top: -4px;
   }
 
   .pc-user-info {
@@ -558,5 +579,57 @@
     padding: 4px 8px;
     font-size: 9px;
     border-radius: 50px;
+  }
+}
+
+/* Specific styles for ticket mode to ensure proper spacing */
+.qr-code-container {
+  padding: 1.5rem 1rem;
+  height: 100%;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+}
+
+/* Ensure text doesn't interfere with QR code on tickets */
+.pc-card .pc-details {
+  z-index: 10;
+}
+
+.pc-card .qr-code-container {
+  z-index: 5;
+}
+
+/* Adjust spacing for longer names in ticket mode */
+@media (min-width: 769px) {
+  .pc-details h3 {
+    max-height: 3.5em;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 768px) {
+  .qr-code-container {
+    padding: 1rem 0.8rem;
+    min-height: 200px;
+  }
+  
+  .qr-code {
+    max-width: 90%;
+    max-height: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-code-container {
+    padding: 0.8rem 0.6rem;
+    min-height: 180px;
   }
 }

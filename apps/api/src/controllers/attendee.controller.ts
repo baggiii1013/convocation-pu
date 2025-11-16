@@ -590,6 +590,61 @@ export class AttendeeController {
       });
     }
   }
+
+  /**
+   * Verify by enrollment ID and mark attendance
+   * POST /api/attendees/verify-by-enrollment
+   */
+  static async verifyByEnrollment(req: Request, res: Response): Promise<void> {
+    try {
+      const { enrollmentId, verifyOnly } = req.body;
+
+      if (!enrollmentId) {
+        res.status(400).json({
+          success: false,
+          message: 'Enrollment ID is required',
+          code: 'INVALID_ENROLLMENT_ID'
+        });
+        return;
+      }
+
+      // If verifyOnly is true, just verify the enrollment without marking attendance
+      const result = await AttendeeService.verifyAndMarkAttendanceByEnrollment(enrollmentId, verifyOnly === true);
+
+      if (!result.success) {
+        res.status(404).json({
+          success: false,
+          message: result.message,
+          code: 'VERIFICATION_FAILED'
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        message: result.message,
+        data: {
+          attendee: {
+            enrollmentId: result.attendee?.enrollmentId,
+            name: result.attendee?.name,
+            course: result.attendee?.course,
+            school: result.attendee?.school,
+            allocation: result.attendee?.allocation,
+            attendanceMarked: result.attendee?.attendanceMarked,
+            attendanceMarkedAt: result.attendee?.attendanceMarkedAt
+          },
+          alreadyMarked: result.alreadyMarked
+        }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.verifyByEnrollment:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Verification failed',
+        code: 'VERIFICATION_ERROR'
+      });
+    }
+  }
 }
 
 

@@ -146,6 +146,11 @@ router.post(
   AttendeeController.verifyTicket
 );
 
+router.post(
+  '/verify-by-enrollment',
+  AttendeeController.verifyByEnrollment
+);
+
 // CRUD operations
 router.post(
   '/',

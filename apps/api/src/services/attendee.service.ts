@@ -755,6 +755,132 @@ export class AttendeeService {
       throw error;
     }
   }
+
+  /**
+   * Verify by enrollment ID and mark attendance
+   */
+  static async verifyAndMarkAttendanceByEnrollment(enrollmentId: string, verifyOnly: boolean = false): Promise<{
+    success: boolean;
+    message: string;
+    attendee?: any;
+    alreadyMarked?: boolean;
+  }> {
+    try {
+      // Find attendee by enrollment ID
+      const attendee = await prisma.attendee.findUnique({
+        where: { enrollmentId: enrollmentId },
+        include: {
+          allocation: true
+        }
+      });
+
+      if (!attendee) {
+        return {
+          success: false,
+          message: 'No attendee found with this enrollment ID'
+        };
+      }
+
+      // Cast to any to access allocation property
+      const attendeeWithAllocation = attendee as any;
+
+      // Check if attendance was already marked
+      const existingAttendanceList = await AttendanceService.getAll({ attendeeId: attendee.id }, { page: 1, limit: 1 });
+      if (existingAttendanceList.pagination.total > 0 && existingAttendanceList.data.length > 0) {
+        const existingAttendance = existingAttendanceList.data[0];
+        if (existingAttendance) {
+          return {
+            success: true,
+            message: 'Attendance was already marked for this attendee',
+            attendee: {
+              enrollmentId: attendeeWithAllocation.enrollmentId,
+              name: attendeeWithAllocation.name,
+              course: attendeeWithAllocation.course,
+              school: attendeeWithAllocation.school,
+              allocation: attendeeWithAllocation.allocation ? {
+                enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+                row: attendeeWithAllocation.allocation.rowLetter,
+                seat: attendeeWithAllocation.allocation.seatNumber
+              } : null,
+              attendanceMarked: true,
+              attendanceMarkedAt: existingAttendance.checkInTime
+            },
+            alreadyMarked: true
+          };
+        }
+      }
+
+      // If verifyOnly is true, just return the attendee details without marking attendance
+      if (verifyOnly) {
+        return {
+          success: true,
+          message: 'Student verified successfully',
+          attendee: {
+            enrollmentId: attendeeWithAllocation.enrollmentId,
+            name: attendeeWithAllocation.name,
+            course: attendeeWithAllocation.course,
+            school: attendeeWithAllocation.school,
+            allocation: attendeeWithAllocation.allocation ? {
+              enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+              row: attendeeWithAllocation.allocation.rowLetter,
+              seat: attendeeWithAllocation.allocation.seatNumber
+            } : null,
+            attendanceMarked: false,
+            attendanceMarkedAt: null
+          },
+          alreadyMarked: false
+        };
+      }
+
+      // Create attendance record in the Attendance collection
+      try {
+        const attendanceRecord = await AttendanceService.create({
+          attendeeId: attendee.id,
+          verificationMethod: 'MANUAL', // Since they're using enrollment ID to verify
+          status: 'PRESENT',
+          checkInTime: new Date(),
+          location: 'Manual Check-in', // Manual verification by staff
+          notes: 'Verified via enrollment ID',
+          seatInfo: attendeeWithAllocation.allocation ? {
+            enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+            row: attendeeWithAllocation.allocation.rowLetter,
+            seat: attendeeWithAllocation.allocation.seatNumber
+          } : undefined
+        });
+        
+        logger.info(`Attendance record created for ${attendeeWithAllocation.enrollmentId}`);
+
+        return {
+          success: true,
+          message: 'Attendance marked successfully',
+          attendee: {
+            enrollmentId: attendeeWithAllocation.enrollmentId,
+            name: attendeeWithAllocation.name,
+            course: attendeeWithAllocation.course,
+            school: attendeeWithAllocation.school,
+            allocation: attendeeWithAllocation.allocation ? {
+              enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+              row: attendeeWithAllocation.allocation.rowLetter,
+              seat: attendeeWithAllocation.allocation.seatNumber
+            } : null,
+            attendanceMarked: true,
+            attendanceMarkedAt: attendanceRecord.checkInTime
+          },
+          alreadyMarked: false
+        };
+      } catch (attendanceError) {
+        logger.error('Error creating attendance record:', attendanceError);
+        // Return error for attendance creation failure
+        return {
+          success: false,
+          message: 'Failed to mark attendance. Please try again.'
+        };
+      }
+    } catch (error) {
+      logger.error('Error verifying by enrollment ID:', error);
+      throw error;
+    }
+  }
 }
 
 

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { Html5Qrcode } from "html5-qrcode";
-import { AlertCircle, Camera, CheckCircle, Loader2, QrCode, X } from "lucide-react";
+import { AlertCircle, Camera, CheckCircle, Loader2, QrCode, User, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface VerificationResult {
@@ -28,6 +28,8 @@ interface VerificationResult {
 
 export default function VerifyTicketPage() {
   const [token, setToken] = useState("");
+  const [enrollmentId, setEnrollmentId] = useState("");
+  const [verificationMethod, setVerificationMethod] = useState<'token' | 'enrollment'>('token');
   const [loading, setLoading] = useState(false);
   const [confirmingAttendance, setConfirmingAttendance] = useState(false);
   const [result, setResult] = useState<VerificationResult | null>(null);
@@ -36,6 +38,56 @@ export default function VerifyTicketPage() {
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const scannerDivId = "qr-reader";
   const isProcessingRef = useRef(false);
+
+  const handleVerifyByEnrollment = async (enrollmentIdToVerify: string) => {
+    if (!enrollmentIdToVerify.trim()) {
+      setResult({
+        success: false,
+        message: "Please enter an enrollment ID"
+      });
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/verify-by-enrollment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ enrollmentId: enrollmentIdToVerify, verifyOnly: true })
+        }
+      );
+
+      const data = await response.json();
+      
+      console.log("Enrollment Verification API Response:", data);
+      
+      if (data.success && data.data) {
+        setResult({
+          success: data.success,
+          message: data.message,
+          attendee: data.data.attendee,
+          alreadyMarked: data.data.alreadyMarked,
+          verified: true
+        });
+      } else {
+        setResult(data);
+      }
+    } catch (err) {
+      setResult({
+        success: false,
+        message: "Verification failed. Please try again."
+      });
+      console.error("Enrollment verification error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleVerify = async (verificationToken: string) => {
     if (!verificationToken.trim()) {
@@ -87,6 +139,50 @@ export default function VerifyTicketPage() {
     }
   };
 
+  const handleConfirmAttendanceByEnrollment = async () => {
+    if (!enrollmentId.trim()) {
+      return;
+    }
+
+    setConfirmingAttendance(true);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/verify-by-enrollment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ enrollmentId: enrollmentId, verifyOnly: false })
+        }
+      );
+
+      const data = await response.json();
+      
+      console.log("Confirm Attendance by Enrollment API Response:", data);
+      
+      if (data.success && data.data) {
+        setResult({
+          success: data.success,
+          message: data.message,
+          attendee: data.data.attendee,
+          alreadyMarked: data.data.alreadyMarked
+        });
+      } else {
+        setResult(data);
+      }
+    } catch (err) {
+      setResult({
+        success: false,
+        message: "Failed to mark attendance. Please try again."
+      });
+      console.error("Attendance marking error:", err);
+    } finally {
+      setConfirmingAttendance(false);
+    }
+  };
+
   const handleConfirmAttendance = async () => {
     if (!token.trim()) {
       return;
@@ -134,7 +230,11 @@ export default function VerifyTicketPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleVerify(token);
+    if (verificationMethod === 'token') {
+      handleVerify(token);
+    } else {
+      handleVerifyByEnrollment(enrollmentId);
+    }
   };
 
   const startScanning = async () => {
@@ -227,7 +327,9 @@ export default function VerifyTicketPage() {
 
   const handleReset = () => {
     setToken("");
+    setEnrollmentId("");
     setResult(null);
+    setVerificationMethod('token');
     stopScanning();
   };
 
@@ -263,10 +365,10 @@ export default function VerifyTicketPage() {
               <QrCode className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Verify Ticket
+              Verify Ticket & Mark Attendance
             </h1>
             <p className="text-lg text-white/90">
-              Scan QR code or enter verification token to mark attendance
+              Scan QR code, enter verification token, or use enrollment ID to mark attendance
             </p>
           </motion.div>
 
@@ -277,24 +379,81 @@ export default function VerifyTicketPage() {
             transition={{ delay: 0.1 }}
             className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 border border-white/20"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="token"
-                  className="block text-white font-medium mb-2"
+            {/* Method Selection */}
+            <div className="mb-6">
+              <p className="text-white font-medium mb-3">Choose Verification Method:</p>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVerificationMethod('token');
+                    setResult(null);
+                  }}
+                  className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                    verificationMethod === 'token'
+                      ? 'border-white bg-white/20 text-white'
+                      : 'border-white/30 text-white/70 hover:border-white/50 hover:text-white/90'
+                  }`}
                 >
-                  Verification Token
-                </label>
-                <input
-                  id="token"
-                  type="text"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  placeholder="Enter verification token"
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 font-mono text-sm"
-                  disabled={loading || scanning}
-                />
+                  <QrCode className="w-5 h-5 mx-auto mb-1" />
+                  <div className="text-sm font-medium">QR Code / Token</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVerificationMethod('enrollment');
+                    setResult(null);
+                  }}
+                  className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                    verificationMethod === 'enrollment'
+                      ? 'border-white bg-white/20 text-white'
+                      : 'border-white/30 text-white/70 hover:border-white/50 hover:text-white/90'
+                  }`}
+                >
+                  <User className="w-5 h-5 mx-auto mb-1" />
+                  <div className="text-sm font-medium">Enrollment ID</div>
+                </button>
               </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {verificationMethod === 'token' ? (
+                <div>
+                  <label
+                    htmlFor="token"
+                    className="block text-white font-medium mb-2"
+                  >
+                    Verification Token
+                  </label>
+                  <input
+                    id="token"
+                    type="text"
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                    placeholder="Enter verification token"
+                    className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 font-mono text-sm"
+                    disabled={loading || scanning}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label
+                    htmlFor="enrollmentId"
+                    className="block text-white font-medium mb-2"
+                  >
+                    Enrollment Number
+                  </label>
+                  <input
+                    id="enrollmentId"
+                    type="text"
+                    value={enrollmentId}
+                    onChange={(e) => setEnrollmentId(e.target.value.toUpperCase())}
+                    placeholder="Enter enrollment number (e.g., PU22CS001)"
+                    className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    disabled={loading}
+                  />
+                </div>
+              )}
 
               <div className="flex gap-4">
                 <Button
@@ -316,17 +475,19 @@ export default function VerifyTicketPage() {
                   )}
                 </Button>
 
-                <Button
-                  type="button"
-                  onClick={scanning ? stopScanning : startScanning}
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/10"
-                  size="lg"
-                  disabled={loading}
-                >
-                  <Camera className="mr-2 h-5 w-5" />
-                  {scanning ? "Stop Scan" : "Scan QR"}
-                </Button>
+                {verificationMethod === 'token' && (
+                  <Button
+                    type="button"
+                    onClick={scanning ? stopScanning : startScanning}
+                    variant="outline"
+                    className="border-white text-white hover:bg-white/10"
+                    size="lg"
+                    disabled={loading}
+                  >
+                    <Camera className="mr-2 h-5 w-5" />
+                    {scanning ? "Stop Scan" : "Scan QR"}
+                  </Button>
+                )}
 
                 {result && (
                   <Button
@@ -342,8 +503,8 @@ export default function VerifyTicketPage() {
               </div>
             </form>
 
-            {/* QR Scanner */}
-            {scanning && (
+            {/* QR Scanner - Only show in token mode */}
+            {scanning && verificationMethod === 'token' && (
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -437,10 +598,10 @@ export default function VerifyTicketPage() {
                     <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-6">
                       <div className="flex flex-col items-center gap-4">
                         <p className="text-blue-100 text-lg font-medium text-center">
-                          ✓ Ticket verified successfully! Click below to mark attendance.
+                          ✓ {verificationMethod === 'token' ? 'Ticket' : 'Student'} verified successfully! Click below to mark attendance.
                         </p>
                         <Button
-                          onClick={handleConfirmAttendance}
+                          onClick={verificationMethod === 'token' ? handleConfirmAttendance : handleConfirmAttendanceByEnrollment}
                           disabled={confirmingAttendance}
                           className="bg-green-600 text-white hover:bg-green-700 px-8 py-3 text-lg font-semibold"
                           size="lg"
@@ -546,30 +707,55 @@ export default function VerifyTicketPage() {
             className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mt-8 border border-white/20"
           >
             <h3 className="text-white font-bold text-lg mb-3">
-              How to Verify
+              How to Verify & Mark Attendance
             </h3>
-            <ul className="space-y-2 text-white/80">
-              <li className="flex items-start gap-2">
-                <span className="text-white font-bold">1.</span>
-                <span>Ask the attendee to show their QR code from the seat search page</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-white font-bold">2.</span>
-                <span>Scan the QR code using your device camera or enter the token manually</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-white font-bold">3.</span>
-                <span>Review the attendee details and seat allocation carefully</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-white font-bold">4.</span>
-                <span>Click "Confirm Attendance" button to mark the attendance</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-white font-bold">5.</span>
-                <span>Allow the attendee to proceed to their allocated seat</span>
-              </li>
-            </ul>
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-white font-semibold mb-2">Method 1: QR Code / Token</h4>
+                <ul className="space-y-2 text-white/80 pl-4">
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Ask the attendee to show their QR code from the seat search page</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Click "Scan QR" and use your device camera or enter the token manually</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className="text-white font-semibold mb-2">Method 2: Enrollment ID</h4>
+                <ul className="space-y-2 text-white/80 pl-4">
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Switch to "Enrollment ID" method</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Ask for and enter the attendee's enrollment number (e.g., PU22CS001)</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-white font-semibold mb-2">Final Steps (Both Methods)</h4>
+                <ul className="space-y-2 text-white/80 pl-4">
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Review the attendee details and seat allocation carefully</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Click "Confirm Attendance" button to mark the attendance</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white font-bold">•</span>
+                    <span>Allow the attendee to proceed to their allocated seat</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
