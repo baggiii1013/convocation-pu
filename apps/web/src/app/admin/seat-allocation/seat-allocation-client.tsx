@@ -270,10 +270,6 @@ export function SeatAllocationClient({ initialEnclosures, initialStats }: SeatAl
     return stats.byEnclosure?.[enclosureLetter]?.available || 0;
   };
 
-  const getTotalCapacity = (enclosureLetter: string): number => {
-    return stats.byEnclosure?.[enclosureLetter]?.totalCapacity || 0;
-  };
-
   return (
     <div className="min-h-screen p-8 bg-dark-surface">
       <div className="max-w-7xl mx-auto">

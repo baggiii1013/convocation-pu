@@ -280,7 +280,7 @@ export function ProtectedQRTicket({ attendeeData, onDownload }: ProtectedQRTicke
             </div>
 
             <div className="flex justify-center">
-              {/* @ts-ignore - Ticket is JSX component with default props */}
+              {/* @ts-expect-error - Ticket is JSX component with default props */}
               <Ticket
                 mode="ticket"
                 name={attendeeData.name}

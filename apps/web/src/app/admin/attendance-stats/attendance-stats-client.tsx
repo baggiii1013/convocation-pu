@@ -1,7 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface AttendanceRecord {
   id: string;
@@ -43,15 +43,7 @@ interface Statistics {
   byVerificationMethod: Record<string, number>;
 }
 
-interface PaginatedResponse {
-  data: AttendanceRecord[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
+// Remove unused interface PaginatedResponse
 
 export function AttendanceStatsClient() {
   const [statistics, setStatistics] = useState<Statistics | null>(null);
@@ -76,7 +68,7 @@ export function AttendanceStatsClient() {
   // Detailed view
   const [selectedRecord, setSelectedRecord] = useState<AttendanceRecord | null>(null);
 
-  const fetchStatistics = async () => {
+  const fetchStatistics = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       // Only add date params if they have values and convert to ISO datetime format
@@ -108,13 +100,14 @@ export function AttendanceStatsClient() {
       console.log('Statistics API response:', result);
       // API returns { success: true, data: stats }
       setStatistics(result.data || result);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching statistics:', err);
-      setError(err.message || 'Failed to load statistics');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load statistics';
+      setError(errorMessage);
     }
-  };
+  }, [dateFrom, dateTo]);
 
-  const fetchAttendanceRecords = async (page: number = 1) => {
+  const fetchAttendanceRecords = useCallback(async (page: number = 1) => {
     try {
       setRefreshing(true);
       const params = new URLSearchParams({
@@ -166,31 +159,32 @@ export function AttendanceStatsClient() {
         setTotalPages(result.pagination?.totalPages || 1);
         setTotalRecords(result.pagination?.total || 0);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching attendance records:', err);
-      setError(err.message || 'Failed to load attendance records');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load attendance records';
+      setError(errorMessage);
     } finally {
       setRefreshing(false);
     }
-  };
+  }, [statusFilter, verificationFilter, dateFrom, dateTo, limit]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
     await Promise.all([fetchStatistics(), fetchAttendanceRecords(1)]);
     setLoading(false);
-  };
+  }, [fetchStatistics, fetchAttendanceRecords]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     if (!loading) {
       fetchAttendanceRecords(1);
       fetchStatistics();
     }
-  }, [statusFilter, verificationFilter, dateFrom, dateTo]);
+  }, [statusFilter, verificationFilter, dateFrom, dateTo, loading, fetchAttendanceRecords, fetchStatistics]);
 
   const handleRefresh = () => {
     loadData();

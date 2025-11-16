@@ -288,14 +288,15 @@ export default function VerifyTicketPage() {
             }, 1000);
           });
         },
-        (errorMessage) => {
+        () => {
           // Handle scan failure (most are just "No QR code found")
           // We can ignore these as they happen continuously while scanning
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error starting QR scanner:", err);
-      setScanError(err?.message || "Unable to access camera. Please check permissions.");
+      const errorMessage = err instanceof Error ? err.message : "Unable to access camera. Please check permissions.";
+      setScanError(errorMessage);
       setScanning(false);
     }
   };
@@ -719,7 +720,7 @@ export default function VerifyTicketPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-white font-bold">•</span>
-                    <span>Click "Scan QR" and use your device camera or enter the token manually</span>
+                    <span>Click &ldquo;Scan QR&rdquo; and use your device camera or enter the token manually</span>
                   </li>
                 </ul>
               </div>
@@ -729,11 +730,11 @@ export default function VerifyTicketPage() {
                 <ul className="space-y-2 text-white/80 pl-4">
                   <li className="flex items-start gap-2">
                     <span className="text-white font-bold">•</span>
-                    <span>Switch to "Enrollment ID" method</span>
+                    <span>Switch to &ldquo;Enrollment ID&rdquo; method</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-white font-bold">•</span>
-                    <span>Ask for and enter the attendee's enrollment number (e.g., PU22CS001)</span>
+                    <span>Ask for and enter the attendee&apos;s enrollment number (e.g., PU22CS001)</span>
                   </li>
                 </ul>
               </div>
@@ -747,7 +748,7 @@ export default function VerifyTicketPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-white font-bold">•</span>
-                    <span>Click "Confirm Attendance" button to mark the attendance</span>
+                    <span>Click &ldquo;Confirm Attendance&rdquo; button to mark the attendance</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-white font-bold">•</span>

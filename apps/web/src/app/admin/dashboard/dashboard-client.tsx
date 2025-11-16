@@ -24,10 +24,6 @@ interface AllocationStats {
   }>;
 }
 
-interface DashboardClientProps {
-  initialStats: AllocationStats;
-}
-
 export function DashboardClient() {
   return (
     <div className="space-y-8">
