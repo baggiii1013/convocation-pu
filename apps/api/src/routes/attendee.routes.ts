@@ -107,6 +107,13 @@ const bulkCreateSchema = z.object({
   })
 });
 
+const verifyCrrSchema = z.object({
+  body: z.object({
+    enrollmentId: z.string().min(1, 'Enrollment ID is required'),
+    crr: z.string().min(1, 'CRR number is required')
+  })
+});
+
 // Routes
 
 // Statistics (must be before /:id route)
@@ -139,6 +146,12 @@ router.get(
 router.get(
   '/public/search/:enrollmentId',
   AttendeeController.publicSearch
+);
+
+router.post(
+  '/public/verify-crr',
+  validate(verifyCrrSchema),
+  AttendeeController.verifyCrrAndGetToken
 );
 
 router.post(

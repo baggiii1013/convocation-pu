@@ -505,6 +505,7 @@ export class AttendeeController {
       }
 
       // Return public information only (cast to any for allocation property)
+      // Note: verificationToken is excluded for security, must be fetched via CRR verification
       const attendeeWithAllocation = attendee as any;
       res.json({
         success: true,
@@ -517,13 +518,14 @@ export class AttendeeController {
           degree: attendeeWithAllocation.degree,
           convocationEligible: attendeeWithAllocation.convocationEligible,
           convocationRegistered: attendeeWithAllocation.convocationRegistered,
+          crr: attendeeWithAllocation.crr, // Include CRR for verification
           allocation: attendeeWithAllocation.allocation ? {
             enclosure: attendeeWithAllocation.allocation.enclosureLetter,
             row: attendeeWithAllocation.allocation.rowLetter,
             seat: attendeeWithAllocation.allocation.seatNumber,
             allocatedAt: attendeeWithAllocation.allocation.allocatedAt
           } : null,
-          verificationToken: attendeeWithAllocation.verificationToken
+          hasVerificationToken: !!attendeeWithAllocation.verificationToken // Indicate if QR is available
         }
       });
     } catch (error) {
@@ -532,6 +534,67 @@ export class AttendeeController {
         success: false,
         message: 'Search failed',
         code: 'SEARCH_ERROR'
+      });
+    }
+  }
+
+  /**
+   * Verify attendee CRR and return verification token for QR code
+   * POST /api/attendees/public/verify-crr
+   */
+  static async verifyCrrAndGetToken(req: Request, res: Response): Promise<void> {
+    try {
+      const { enrollmentId, crr } = req.body;
+
+      if (!enrollmentId || !crr) {
+        res.status(400).json({
+          success: false,
+          message: 'Enrollment ID and CRR number are required',
+          code: 'INVALID_REQUEST'
+        });
+        return;
+      }
+
+      logger.info(`CRR verification request for enrollment ID: ${enrollmentId}`);
+
+      const attendee = await AttendeeService.getByEnrollmentIdWithSeat(enrollmentId);
+
+      if (!attendee) {
+        res.status(404).json({
+          success: false,
+          message: 'No record found for this enrollment ID',
+          code: 'ATTENDEE_NOT_FOUND'
+        });
+        return;
+      }
+
+      // Verify CRR matches
+      if (attendee.crr !== crr) {
+        logger.warn(`CRR verification failed for enrollment ID: ${enrollmentId}`);
+        res.status(401).json({
+          success: false,
+          message: 'Invalid CRR number. Please check your CRR number and try again.',
+          code: 'INVALID_CRR'
+        });
+        return;
+      }
+
+      // CRR verified successfully, return verification token
+      logger.info(`CRR verification successful for enrollment ID: ${enrollmentId}`);
+      res.json({
+        success: true,
+        message: 'CRR verified successfully',
+        data: {
+          verificationToken: attendee.verificationToken,
+          verified: true
+        }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.verifyCrrAndGetToken:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Verification failed',
+        code: 'VERIFICATION_ERROR'
       });
     }
   }

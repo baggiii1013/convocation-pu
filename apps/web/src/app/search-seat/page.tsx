@@ -1,6 +1,6 @@
 "use client";
 
-import Ticket from "@/components/ticket/Ticket";
+import { ProtectedQRTicket } from "@/components/ticket/ProtectedQRTicket";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { AlertCircle, Loader2, Search } from "lucide-react";
@@ -21,8 +21,9 @@ interface AttendeeData {
   degree: string;
   convocationEligible: boolean;
   convocationRegistered: boolean;
+  crr: string; // Added CRR field
   allocation: SeatAllocation | null;
-  verificationToken: string | null;
+  hasVerificationToken: boolean; // Instead of direct verificationToken
 }
 
 export default function SearchSeatPage() {
@@ -274,32 +275,10 @@ export default function SearchSeatPage() {
                     </div>
                   </div>
 
-                  {/* Ticket Preview with QR */}
-                  {attendeeData.verificationToken && (
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-4 text-center">
-                        Your Digital Ticket
-                      </h3>
-                      <div className="flex justify-center">
-                        {/* @ts-ignore - Ticket is JSX component with default props */}
-                        <Ticket
-                          mode="ticket"
-                          name={attendeeData.name}
-                          title={attendeeData.course}
-                          handle={attendeeData.enrollmentId}
-                          status={`${attendeeData.allocation.enclosure}-${attendeeData.allocation.row}-${attendeeData.allocation.seat}`}
-                          verificationToken={attendeeData.verificationToken}
-                          contactText="Download"
-                          onContactClick={() => {
-                            alert("Download feature coming soon!");
-                          }}
-                        />
-                      </div>
-                      <p className="text-white/70 text-sm text-center mt-4">
-                        Show this QR code at the venue for entry verification
-                      </p>
-                    </div>
-                  )}
+                  {/* Protected QR Ticket */}
+                  <ProtectedQRTicket
+                    attendeeData={attendeeData}
+                  />
                 </div>
               ) : (
                 <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
