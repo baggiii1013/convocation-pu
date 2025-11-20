@@ -7,23 +7,6 @@ import DashboardBento from "@/components/DashboardBento";
 // } from "lucide-react";
 import React from "react";
 
-interface AllocationStats {
-  totalAttendees: number;
-  totalAllocated: number;
-  totalUnallocated: number;
-  totalEnclosures: number;
-  byCategory: Record<string, number>;
-  enclosureStats: Array<{
-    letter: string;
-    name: string;
-    allocatedFor: string;
-    totalSeats: number;
-    allocatedSeats: number;
-    availableSeats: number;
-    utilizationRate: number;
-  }>;
-}
-
 export function DashboardClient() {
   return (
     <div className="space-y-8">

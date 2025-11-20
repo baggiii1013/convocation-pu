@@ -72,6 +72,12 @@ const adminCards: BentoCardProps[] = [
   },
   {
     color: '#060010',
+    title: 'Email Attendees',
+    description: 'Send emails to attendees by enclosure',
+    label: 'Email Communication'
+  },
+  {
+    color: '#060010',
     title: 'User Management',
     description: 'Manage user accounts and permissions',
     label: 'Users'
@@ -127,6 +133,7 @@ const adminRoutes = [
   '/verify-ticket',
   '/admin/aerial-view-editor',
   '/admin/upload-students',
+  '/admin/email',
   '/admin/users',
   '/admin/create-account',
   '/dashboard/profile'

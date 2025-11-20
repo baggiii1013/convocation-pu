@@ -5,6 +5,7 @@ import allocationRoutes from './allocation.routes.js';
 import attendanceRoutes from './attendance.routes.js';
 import attendeeRoutes from './attendee.routes.js';
 import authRoutes from './auth.routes.js';
+import emailRoutes from './email.routes.js';
 import enclosureRoutes from './enclosure.routes.js';
 import seatReservationRoutes from './seatReservation.routes.js';
 
@@ -49,6 +50,9 @@ router.use('/admin', seatReservationRoutes);
 
 // Attendance tracking routes
 router.use('/attendance', attendanceRoutes);
+
+// Email management routes (Admin only)
+router.use('/emails', emailRoutes);
 
 // TODO: Add route modules here as they are created
 // router.use('/config', configRoutes);

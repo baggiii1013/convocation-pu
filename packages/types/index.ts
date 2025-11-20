@@ -205,3 +205,43 @@ export interface ApiSuccess<T = any> {
   data?: T;
   message?: string;
 }
+
+// Email Types
+export enum EmailType {
+  PROMOTIONAL = 'PROMOTIONAL',
+  INFORMATIONAL = 'INFORMATIONAL',
+  REMINDER = 'REMINDER',
+  ANNOUNCEMENT = 'ANNOUNCEMENT',
+  TICKET = 'TICKET',
+}
+
+export interface SendEmailRequest {
+  recipients: {
+    enclosures?: string[]; // Filter by enclosure letters
+    attendeeIds?: string[]; // Specific attendee IDs
+    all?: boolean; // Send to all attendees
+  };
+  subject: string;
+  message: string; // Plain text or HTML
+  emailType: EmailType;
+  sendAsHtml?: boolean;
+}
+
+export interface EmailRecipient {
+  enrollmentId: string;
+  name: string;
+  email: string;
+  enclosure?: string;
+}
+
+export interface SendEmailResponse {
+  success: number;
+  failed: number;
+  totalRecipients: number;
+  recipients: EmailRecipient[];
+  errors?: {
+    email: string;
+    error: string;
+  }[];
+}
+
