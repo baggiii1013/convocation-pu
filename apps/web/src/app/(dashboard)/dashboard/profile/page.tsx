@@ -38,7 +38,6 @@ export default function ProfilePage() {
   };
 
   const handleSave = async (data: ProfileFormData) => {
-    console.log("Saving profile:", data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsEditing(false);
     toast.success("Profile updated successfully!");

@@ -119,7 +119,6 @@ export class SeatReservationController {
         errors
       });
     } catch (error) {
-      console.error('Seat reservation error:', error);
       res.status(500).json({ error: 'Failed to reserve seats' });
     }
   }
@@ -147,7 +146,6 @@ export class SeatReservationController {
 
       res.json({ reservations });
     } catch (error) {
-      console.error('Get reservations error:', error);
       res.status(500).json({ error: 'Failed to fetch reservations' });
     }
   }
@@ -166,7 +164,6 @@ export class SeatReservationController {
 
       res.json({ message: 'Reservation removed successfully' });
     } catch (error) {
-      console.error('Remove reservation error:', error);
       res.status(500).json({ error: 'Failed to remove reservation' });
     }
   }
@@ -180,7 +177,6 @@ export class SeatReservationController {
       const result = await prisma.seatReservation.deleteMany({});
       res.json({ message: `Cleared ${result.count} reservations` });
     } catch (error) {
-      console.error('Clear reservations error:', error);
       res.status(500).json({ error: 'Failed to clear reservations' });
     }
   }

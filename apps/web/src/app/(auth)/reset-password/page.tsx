@@ -83,8 +83,6 @@ function ResetPasswordForm() {
       // TODO: Replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      console.log('Password reset data:', data.password ? '***' : ''); // Log without exposing password
-      
       setIsSuccess(true);
       toast.success('Password reset successfully!');
       

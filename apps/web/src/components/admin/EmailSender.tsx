@@ -5,20 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
 } from "@/components/ui/Select";
 import {
-  AlertCircle,
-  CheckCircle,
-  Eye,
-  Loader2,
-  Mail,
-  Send,
-  Users
+    AlertCircle,
+    CheckCircle,
+    Eye,
+    Loader2,
+    Mail,
+    Send,
+    Users
 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -49,10 +49,6 @@ export function EmailSender({ enclosures }: EmailSenderProps) {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
-  // Debug log
-  console.log('EmailSender - Enclosures:', enclosures);
-  console.log('EmailSender - selectAll:', selectAll);
-  console.log('EmailSender - selectedEnclosures:', selectedEnclosures);
   const [emailType, setEmailType] = useState<EmailType>('INFORMATIONAL');
   const [sending, setSending] = useState(false);
   const [previewing, setPreviewing] = useState(false);

@@ -84,7 +84,6 @@ export function AttendanceStatsClient() {
       }
 
       const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendance/statistics${params.toString() ? '?' + params.toString() : ''}`;
-      console.log('Fetching statistics from:', url);
 
       const response = await fetch(url, {
         credentials: 'include'
@@ -97,7 +96,6 @@ export function AttendanceStatsClient() {
       }
 
       const result = await response.json();
-      console.log('Statistics API response:', result);
       // API returns { success: true, data: stats }
       setStatistics(result.data || result);
     } catch (err: unknown) {
@@ -145,7 +143,6 @@ export function AttendanceStatsClient() {
       }
 
       const result = await response.json();
-      console.log('Attendance records API response:', result);
       // API returns { success: true, data: [...], pagination: {...} }
       if (result.success && result.data) {
         setAttendanceRecords(result.data);

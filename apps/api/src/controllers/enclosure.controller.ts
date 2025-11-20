@@ -28,7 +28,6 @@ export class EnclosureController {
 
       return res.json(enclosuresWithSeats);
     } catch (error) {
-      console.error('Get enclosures error:', error);
       return res.status(500).json({ error: 'Failed to fetch enclosures' });
     }
   }
@@ -64,7 +63,6 @@ export class EnclosureController {
 
       return res.json(enclosureWithSeats);
     } catch (error) {
-      console.error('Get enclosure error:', error);
       return res.status(500).json({ error: 'Failed to fetch enclosure' });
     }
   }
@@ -129,7 +127,6 @@ export class EnclosureController {
 
       return res.status(201).json(updatedEnclosure);
     } catch (error) {
-      console.error('Create enclosure error:', error);
       return res.status(500).json({ error: 'Failed to create enclosure' });
     }
   }
@@ -206,7 +203,6 @@ export class EnclosureController {
 
       return res.json(updatedEnclosure);
     } catch (error) {
-      console.error('Update enclosure error:', error);
       return res.status(500).json({ error: 'Failed to update enclosure' });
     }
   }
@@ -227,7 +223,6 @@ export class EnclosureController {
       });
 
       if (!existing) {
-        console.error(`Enclosure not found: ${id}`);
         return res.status(404).json({ error: 'Enclosure not found' });
       }
 
@@ -259,7 +254,6 @@ export class EnclosureController {
 
       return res.json(enclosure);
     } catch (error) {
-      console.error('Update enclosure layout error:', error);
       return res.status(500).json({ error: 'Failed to update enclosure layout' });
     }
   }
@@ -288,7 +282,6 @@ export class EnclosureController {
 
       return res.json({ message: 'Enclosure deleted successfully' });
     } catch (error) {
-      console.error('Delete enclosure error:', error);
       return res.status(500).json({ error: 'Failed to delete enclosure' });
     }
   }

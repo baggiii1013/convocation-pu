@@ -83,7 +83,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
   };
 
   const handlePositionChange = (letter: string, position: { x: number; y: number }) => {
-    console.log(`Position changed for ${letter}:`, position);
     
     // Track pending changes
     const newPendingChanges = new Map(pendingChanges);
@@ -110,8 +109,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
       setError(null);
       setSaveSuccess(false);
 
-      console.log('Saving layout changes:', pendingChanges);
-
       // Save each changed enclosure
       const savePromises = Array.from(pendingChanges.entries()).map(async ([letter, position]) => {
         const enclosure = enclosures.find(e => e.letter === letter);
@@ -120,8 +117,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
           return { ok: false };
         }
 
-        console.log(`Saving ${letter} (${enclosure.id}):`, position);
-        
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enclosure.id}/layout`, {
           method: 'PATCH',
           headers: {
@@ -139,7 +134,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
           console.error(`Failed to save ${letter}:`, response.status, errorData);
         } else {
           const result = await response.json();
-          console.log(`Successfully saved ${letter}:`, result);
         }
 
         return response;
@@ -166,7 +160,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
       setTimeout(() => setSaveSuccess(false), 3000);
       
       toast.success('Layout saved successfully!');
-      console.log('Layout saved successfully!');
     } catch (err) {
       console.error('Error saving layout:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save layout. Please try again.';

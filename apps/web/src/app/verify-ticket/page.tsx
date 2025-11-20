@@ -65,8 +65,6 @@ export default function VerifyTicketPage() {
 
       const data = await response.json();
       
-      console.log("Enrollment Verification API Response:", data);
-      
       if (data.success && data.data) {
         setResult({
           success: data.success,
@@ -115,8 +113,6 @@ export default function VerifyTicketPage() {
 
       const data = await response.json();
       
-      console.log("Verification API Response:", data);
-      
       // API returns data wrapped in a 'data' object, so we need to extract it
       if (data.success && data.data) {
         setResult({
@@ -160,8 +156,6 @@ export default function VerifyTicketPage() {
 
       const data = await response.json();
       
-      console.log("Confirm Attendance by Enrollment API Response:", data);
-      
       if (data.success && data.data) {
         setResult({
           success: data.success,
@@ -203,8 +197,6 @@ export default function VerifyTicketPage() {
       );
 
       const data = await response.json();
-      
-      console.log("Confirm Attendance API Response:", data);
       
       // API returns data wrapped in a 'data' object, so we need to extract it
       if (data.success && data.data) {
@@ -275,7 +267,6 @@ export default function VerifyTicketPage() {
           }
           
           isProcessingRef.current = true;
-          console.log("QR Code scanned:", decodedText);
           setToken(decodedText);
           
           // Stop scanning first

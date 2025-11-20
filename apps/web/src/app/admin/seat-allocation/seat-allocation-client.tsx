@@ -114,8 +114,6 @@ export function SeatAllocationClient({ initialEnclosures, initialStats }: SeatAl
 
       const data = await res.json();
       
-      console.log('Allocation response:', { status: res.status, data });
-
       if (!res.ok) {
         const errorMsg = data.message || data.error || 'Failed to allocate seats';
         console.error('Allocation failed:', { status: res.status, code: data.code, error: errorMsg });

@@ -8,13 +8,13 @@
  */
 
 import {
-  checkRole,
-  getOptionalSession,
-  requireAdmin,
-  requireAuth,
-  requireRole,
-  requireStaff,
-  type UserSession
+    checkRole,
+    getOptionalSession,
+    requireAdmin,
+    requireAuth,
+    requireRole,
+    requireStaff,
+    type UserSession
 } from '@/lib/auth';
 
 // ============================================================================
@@ -225,7 +225,6 @@ async function Example10_AdminOnlyServerAction(userId: string) {
   const session = await requireAdmin();
   
   // Log admin action for audit trail
-  console.log(`Admin ${session.user.email} deleting user ${userId}`);
   
   await db.user.delete({
     where: { id: userId },
@@ -249,8 +248,6 @@ async function Example11_RoleBasedServerAction(eventId: string, data: Record<str
     where: { id: eventId },
     data,
   });
-  
-  console.log('Session:', session); // Use session to avoid warning
   
   return { success: true };
 }
@@ -318,8 +315,6 @@ export async function Example15_APIRouteWithAuth(request: NextRequest) {
   // Get session in API route (works in route handlers too!)
   const session = await getOptionalSession();
   
-  console.log('Request:', request); // Use request to avoid warning
-  
   if (!session) {
     return NextResponse.json(
       { error: 'Unauthorized' },
@@ -339,8 +334,6 @@ export async function Example15_APIRouteWithAuth(request: NextRequest) {
 
 export async function Example16_NestedRoleChecks() {
   const session = await requireAuth();
-  
-  console.log('Session user:', session.user.id); // Use session to avoid warning
   
   // Check multiple roles for different sections
   const canManageUsers = await checkRole(['ADMIN']);
@@ -371,7 +364,6 @@ export async function Example17_TypeSafeSession() {
   const userEmail: string = session.user.email;
   
   // All properly typed!
-  console.log('User info:', { userId, userRole, userEmail });
   
   // Type checking prevents errors
   if (session.user.role === 'ADMIN') {
@@ -450,8 +442,6 @@ export async function Example19_ErrorHandlingPattern() {
 
 export async function Example20_ParallelRoleChecks() {
   const session = await requireAuth();
-  
-  console.log('Session user:', session.user.id); // Use session to avoid warning
   
   // Check multiple roles in parallel for better performance
   const [isAdmin, isStaff, isStudent] = await Promise.all([

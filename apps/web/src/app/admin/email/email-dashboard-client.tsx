@@ -41,7 +41,6 @@ export function EmailDashboardClient() {
       }
 
       const data = await res.json();
-      console.log('Fetched enclosures data:', data);
       // The API returns the array directly, not wrapped in { data: [...] }
       const enclosuresArray = Array.isArray(data) ? data : (data.data || []);
       // console.log('Enclosures array:', enclosuresArray);
@@ -63,7 +62,6 @@ export function EmailDashboardClient() {
       totalSeats: enc.totalSeats,
       allocatedSeats: enc.allocatedSeats || 0
     }));
-    console.log('Formatted enclosures for EmailSender:', formatted);
     return formatted;
   }, [enclosures]);
 
