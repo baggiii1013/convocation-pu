@@ -2,16 +2,16 @@
   "name": "api",
   "module": "index.ts",
   "scripts": {
-    "dev": "nodemon src/server.ts",
-    "start:prod": "node dist/server.js",
+    "dev": "bun --watch src/server.ts",
+    "start:prod": "bun dist/server.js",
     "build": "prisma generate && tsc",
     "type-check": "tsc --noEmit",
     "seed": "bun src/seeders/seedDatabase.ts",
     "seed:reset": "bun src/seeders/seedDatabase.ts --reset",
-    "postinstall": "prisma generate",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "postinstall": "bun prisma generate",
+    "db:generate": "bun prisma generate",
+    "db:push": "bun prisma db push",
+    "db:migrate": "bun prisma migrate dev"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

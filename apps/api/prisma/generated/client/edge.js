@@ -326,7 +326,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/mnt/240GB_SATA/Development/Parul/convocation-pu/apps/api/prisma/generated/client",
+      "value": "/home/appadmin/convocation-pu/apps/api/prisma/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -335,12 +335,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "rhel-openssl-3.0.x",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/mnt/240GB_SATA/Development/Parul/convocation-pu/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "/home/appadmin/convocation-pu/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -354,6 +354,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
