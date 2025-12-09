@@ -31,10 +31,10 @@ const adminRoutes = [
 ];
 
 /**
- * Enhanced middleware with proper JWT validation and role-based access control
+ * Enhanced proxy with proper JWT validation and role-based access control
  * This acts as the first line of defense at the edge
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if the current path is public

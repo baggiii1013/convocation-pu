@@ -6,13 +6,13 @@ import axios from 'axios';
  * This file has been cleaned up as part of Phase 5 (Remove Client-Side Guards).
  * 
  * Key changes:
- * - Removed client-side redirect logic (middleware handles this)
+ * - Removed client-side redirect logic (proxy handles this)
  * - Removed isLoggedOut state tracking (no longer needed)
  * - Simplified interceptor to only handle token refresh
- * - Let server components and middleware handle authentication
+ * - Let server components and proxy handle authentication
  * 
  * Architecture:
- * - Middleware: Redirects unauthenticated users before they reach pages
+ * - Proxy: Redirects unauthenticated users before they reach pages
  * - Server Components: Use requireAuth() and requireRole() for protection
  * - Axios Interceptor: Only handles token refresh attempts, no redirects
  */
@@ -36,14 +36,14 @@ const api = axios.create({
  * Simplified Response Interceptor
  * 
  * Handles automatic token refresh for 401 errors.
- * Does NOT redirect users - middleware handles that on next navigation.
+ * Does NOT redirect users - proxy handles that on next navigation.
  * 
  * Flow:
  * 1. Request fails with 401
  * 2. Try to refresh token (once)
  * 3. If refresh succeeds, retry original request
  * 4. If refresh fails, reject error (let component handle it)
- * 5. Middleware will catch user on next page navigation
+ * 5. Proxy will catch user on next page navigation
  */
 api.interceptors.response.use(
   (response) => {
@@ -64,7 +64,7 @@ api.interceptors.response.use(
       
       if (isSkipRefreshEndpoint) {
         // For refresh and logout endpoints, just reject
-        // Middleware will redirect on next navigation
+        // Proxy will redirect on next navigation
         return Promise.reject(error);
       }
       
@@ -78,7 +78,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed - session is truly expired
         // Just reject the error, don't redirect
-        // Middleware will handle redirect on next page navigation
+        // Proxy will handle redirect on next page navigation
         return Promise.reject(refreshError);
       }
     }
