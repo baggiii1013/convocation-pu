@@ -4,9 +4,9 @@ import { prisma } from '../lib/prisma.js';
 import { logger } from '../utils/logger.js';
 
 // Initialize SendGrid
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'noreply@convocation.edu';
-const SENDGRID_FROM_NAME = process.env.SENDGRID_FROM_NAME || 'PU Convocation';
+const SENDGRID_API_KEY = Bun.env.SENDGRID_API_KEY;
+const SENDGRID_FROM_EMAIL = Bun.env.SENDGRID_FROM_EMAIL || 'noreply@convocation.edu';
+const SENDGRID_FROM_NAME = Bun.env.SENDGRID_FROM_NAME || 'PU Convocation';
 
 if (!SENDGRID_API_KEY) {
   logger.warn('SENDGRID_API_KEY not configured. Email functionality will be disabled.');

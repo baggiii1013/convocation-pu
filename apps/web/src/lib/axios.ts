@@ -18,13 +18,13 @@ import axios from 'axios';
  */
 
 // Validate that the API URL is configured
-if (!process.env.NEXT_PUBLIC_API_URL) {
+if (!Bun.env.NEXT_PUBLIC_API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL environment variable is required but not set');
 }
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: Bun.env.NEXT_PUBLIC_API_URL,
   timeout: 30000, // 30 seconds
   withCredentials: true, // Important: allows cookies to be sent
   headers: {

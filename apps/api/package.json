@@ -41,7 +41,6 @@
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "express-mongo-sanitize": "^2.2.0",

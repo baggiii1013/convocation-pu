@@ -20,7 +20,7 @@ export class AttendanceController {
       res.status(error.message.includes('not found') ? 404 : 500).json({
         success: false,
         message: error.message || 'Failed to create attendance record',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -57,7 +57,7 @@ export class AttendanceController {
       res.status(500).json({
         success: false,
         message: 'Failed to fetch attendance record',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -95,7 +95,7 @@ export class AttendanceController {
       res.status(500).json({
         success: false,
         message: 'Failed to fetch attendance records',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -126,7 +126,7 @@ export class AttendanceController {
       res.status(error.message.includes('not found') ? 404 : 500).json({
         success: false,
         message: error.message || 'Failed to update attendance record',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -156,7 +156,7 @@ export class AttendanceController {
       res.status(error.message.includes('not found') ? 404 : 500).json({
         success: false,
         message: error.message || 'Failed to delete attendance record',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -195,7 +195,7 @@ export class AttendanceController {
       res.status(500).json({
         success: false,
         message: 'Failed to fetch attendee attendance history',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -231,7 +231,7 @@ export class AttendanceController {
       res.status(error.message.includes('Invalid') || error.message.includes('already marked') ? 400 : 500).json({
         success: false,
         message: error.message || 'Failed to mark attendance',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -270,7 +270,7 @@ export class AttendanceController {
       res.status(500).json({
         success: false,
         message: 'Failed to bulk mark attendance',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }
@@ -297,7 +297,7 @@ export class AttendanceController {
       res.status(500).json({
         success: false,
         message: 'Failed to fetch attendance statistics',
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: Bun.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   }

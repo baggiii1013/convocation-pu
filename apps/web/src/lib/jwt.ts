@@ -1,8 +1,8 @@
 import { jwtVerify } from 'jose';
 
 // JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-change-in-production';
+const JWT_SECRET = Bun.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
+const JWT_REFRESH_SECRET = Bun.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-change-in-production';
 
 // Convert string secret to Uint8Array for jose library
 const getSecretKey = (secret: string) => new TextEncoder().encode(secret);

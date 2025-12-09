@@ -17,7 +17,7 @@ router.get('/health', (req: Request, res: Response) => {
     success: true,
     message: 'PU Convocation API is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
+    environment: Bun.env.NODE_ENV || 'development',
   });
 });
 

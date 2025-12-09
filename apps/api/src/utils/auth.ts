@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
 // JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-change-this-in-production';
+const JWT_SECRET = Bun.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
+const JWT_REFRESH_SECRET = Bun.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-change-this-in-production';
 
 // Token expiration times
-const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || '15m'; // 15 minutes
-const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || '7d'; // 7 days
+const ACCESS_TOKEN_EXPIRY = Bun.env.ACCESS_TOKEN_EXPIRY || '15m'; // 15 minutes
+const REFRESH_TOKEN_EXPIRY = Bun.env.REFRESH_TOKEN_EXPIRY || '7d'; // 7 days
 
 // Account interface for typing (matches Prisma Account model)
 interface Account {
@@ -177,8 +177,8 @@ export const generateTokenPair = (user: Account) => {
  * @param secure - Whether to use secure cookies (HTTPS only)
  * @returns Cookie options object with all security measures
  */
-export const getAccessTokenCookieOptions = (secure: boolean = process.env.NODE_ENV === 'production') => {
-  const isProduction = process.env.NODE_ENV === 'production';
+export const getAccessTokenCookieOptions = (secure: boolean = Bun.env.NODE_ENV === 'production') => {
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: true, // Prevent XSS attacks - cookie not accessible via JavaScript
@@ -186,7 +186,7 @@ export const getAccessTokenCookieOptions = (secure: boolean = process.env.NODE_E
     sameSite: 'strict' as const, // Strictest CSRF protection - cookie only sent for same-site requests
     maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds (matches ACCESS_TOKEN_EXPIRY)
     path: '/', // Restrict to root path only
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined // Restrict domain in production
   };
 };
 
@@ -195,8 +195,8 @@ export const getAccessTokenCookieOptions = (secure: boolean = process.env.NODE_E
  * @param secure - Whether to use secure cookies (HTTPS only)
  * @returns Cookie options object with all security measures
  */
-export const getRefreshTokenCookieOptions = (secure: boolean = process.env.NODE_ENV === 'production') => {
-  const isProduction = process.env.NODE_ENV === 'production';
+export const getRefreshTokenCookieOptions = (secure: boolean = Bun.env.NODE_ENV === 'production') => {
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: true, // Prevent XSS attacks - cookie not accessible via JavaScript
@@ -204,7 +204,7 @@ export const getRefreshTokenCookieOptions = (secure: boolean = process.env.NODE_
     sameSite: 'strict' as const, // Strictest CSRF protection - cookie only sent for same-site requests
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     path: '/', // Restrict to root path only
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined // Restrict domain in production
   };
 };
 
@@ -214,7 +214,7 @@ export const getRefreshTokenCookieOptions = (secure: boolean = process.env.NODE_
  * @returns Cookie options object with security measures
  */
 export const getUserRoleCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: false, // Must be false for Next.js middleware access
@@ -222,7 +222,7 @@ export const getUserRoleCookieOptions = () => {
     sameSite: 'strict' as const, // Strictest CSRF protection
     maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
     path: '/', // Restrict to root path only
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Restrict domain in production
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined // Restrict domain in production
   };
 };
 
@@ -232,14 +232,14 @@ export const getUserRoleCookieOptions = () => {
  * @returns Cookie clearing options
  */
 export const getAccessTokenClearOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: true,
     secure: isProduction,
     sameSite: 'strict' as const,
     path: '/',
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined
   };
 };
 
@@ -249,14 +249,14 @@ export const getAccessTokenClearOptions = () => {
  * @returns Cookie clearing options
  */
 export const getRefreshTokenClearOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: true,
     secure: isProduction,
     sameSite: 'strict' as const,
     path: '/',
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined
   };
 };
 
@@ -266,14 +266,14 @@ export const getRefreshTokenClearOptions = () => {
  * @returns Cookie clearing options
  */
 export const getUserRoleClearOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = Bun.env.NODE_ENV === 'production';
   
   return {
     httpOnly: false,
     secure: isProduction,
     sameSite: 'strict' as const,
     path: '/',
-    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined
+    domain: isProduction ? Bun.env.COOKIE_DOMAIN : undefined
   };
 };
 
