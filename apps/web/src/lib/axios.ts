@@ -17,14 +17,12 @@ import axios from 'axios';
  * - Axios Interceptor: Only handles token refresh attempts, no redirects
  */
 
-// Validate that the API URL is configured
-if (!Bun.env.NEXT_PUBLIC_API_URL) {
-  throw new Error('NEXT_PUBLIC_API_URL environment variable is required but not set');
-}
+// Get API URL - empty string means same origin (browser will use current domain)
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: Bun.env.NEXT_PUBLIC_API_URL,
+  baseURL: apiBaseUrl,
   timeout: 30000, // 30 seconds
   withCredentials: true, // Important: allows cookies to be sent
   headers: {

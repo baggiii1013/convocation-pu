@@ -1,6 +1,7 @@
 import { AerialVenueWrapper } from '@/components/attendee/AerialVenueWrapper';
 import { TheaterSeatMap } from '@/components/attendee/TheaterSeatMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { getServerApiUrl } from '@/lib/api-server';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
@@ -10,7 +11,7 @@ interface PageProps {
 
 async function getAttendeeSeat(enrollmentId: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/attendees/${enrollmentId}/seat`,
+    `${getServerApiUrl()}/api/attendees/${enrollmentId}/seat`,
     { cache: 'no-store' }
   );
 
@@ -20,7 +21,7 @@ async function getAttendeeSeat(enrollmentId: string) {
 
 async function getAllEnclosures() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/enclosures`,
+    `${getServerApiUrl()}/api/enclosures`,
     { cache: 'no-store' }
   );
 

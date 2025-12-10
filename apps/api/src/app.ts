@@ -100,7 +100,7 @@ export const createApp = (): express.Application => {
   // Apply auth rate limiter to auth routes specifically
   app.use('/api/v1/auth', authLimiter);
 
-  // Routes
+  // Routes - mounted at /api/v1 to match Nginx proxy configuration
   app.use('/api/v1', routes);
 
   // Root endpoint

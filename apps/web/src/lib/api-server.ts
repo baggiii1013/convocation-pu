@@ -11,6 +11,15 @@ import { cookies } from 'next/headers';
 import 'server-only';
 
 /**
+ * Get the API URL for server-side requests
+ * Server components need an absolute URL for fetch()
+ * Uses API_URL (server-only) with fallback to localhost
+ */
+export function getServerApiUrl(): string {
+  return process.env.API_URL || 'http://localhost:3001';
+}
+
+/**
  * Server-side API client that forwards authentication cookies
  * 
  * @example
@@ -73,11 +82,8 @@ export const apiServer = {
    * Internal method to make HTTP requests with proper cookie forwarding
    */
   async request<T = unknown>(path: string, options: RequestInit = {}): Promise<T> {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    
-    if (!apiUrl) {
-      throw new Error('NEXT_PUBLIC_API_URL environment variable is required but not set');
-    }
+    // For server-side calls, use API_URL (server-only) or fallback to localhost
+    const apiUrl = getServerApiUrl();
 
     // Get cookies from Next.js
     const cookieStore = await cookies();

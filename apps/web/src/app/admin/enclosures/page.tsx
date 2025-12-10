@@ -1,3 +1,4 @@
+import { getServerApiUrl } from '@/lib/api-server';
 import { requireAdmin } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { EnclosuresClient } from './enclosures-client';
@@ -48,7 +49,7 @@ async function fetchEnclosures(): Promise<Enclosure[]> {
       return [];
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
+    const res = await fetch(`${getServerApiUrl()}/api/v1/enclosures`, {
       headers: {
         'Cookie': `accessToken=${accessToken}`,
       },

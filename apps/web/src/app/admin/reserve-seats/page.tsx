@@ -1,3 +1,4 @@
+import { getServerApiUrl } from '@/lib/api-server';
 import { requireAdmin } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { ReserveSeatsClient } from './reserve-seats-client';
@@ -53,7 +54,7 @@ export default async function ReserveSeatsPage() {
   const accessToken = cookieStore.get('accessToken')?.value;
 
   // Fetch initial enclosures
-  const enclosuresRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
+  const enclosuresRes = await fetch(`${getServerApiUrl()}/api/v1/enclosures`, {
     headers: accessToken ? {
       'Cookie': `accessToken=${accessToken}`,
     } : {},
@@ -66,7 +67,7 @@ export default async function ReserveSeatsPage() {
     : (enclosuresData.data || enclosuresData || []);
 
   // Fetch initial reservations
-  const reservationsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/reservations`, {
+  const reservationsRes = await fetch(`${getServerApiUrl()}/api/v1/admin/reservations`, {
     headers: accessToken ? {
       'Cookie': `accessToken=${accessToken}`,
     } : {},

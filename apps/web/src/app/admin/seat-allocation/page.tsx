@@ -1,3 +1,4 @@
+import { getServerApiUrl } from '@/lib/api-server';
 import { requireAdmin } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { SeatAllocationClient } from './seat-allocation-client';
@@ -57,7 +58,7 @@ async function fetchEnclosures(): Promise<Enclosure[]> {
       return [];
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
+    const res = await fetch(`${getServerApiUrl()}/api/v1/enclosures`, {
       headers: {
         'Cookie': `accessToken=${accessToken}`,
       },
@@ -102,7 +103,7 @@ async function fetchAllocationStats(): Promise<{
       };
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/allocations/stats`, {
+    const res = await fetch(`${getServerApiUrl()}/api/v1/allocations/stats`, {
       headers: {
         'Cookie': `accessToken=${accessToken}`,
       },

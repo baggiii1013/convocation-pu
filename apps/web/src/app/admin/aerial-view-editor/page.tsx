@@ -1,3 +1,4 @@
+import { getServerApiUrl } from '@/lib/api-server';
 import { requireAdmin } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { AerialViewEditorClient } from './aerial-view-editor-client';
@@ -52,7 +53,7 @@ export default async function AerialViewEditorPage() {
   const accessToken = cookieStore.get('accessToken')?.value;
 
   // Fetch initial enclosures with layout data
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
+  const res = await fetch(`${getServerApiUrl()}/api/v1/enclosures`, {
     headers: accessToken ? {
       'Cookie': `accessToken=${accessToken}`,
     } : {},

@@ -1,0 +1,48 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+      - develop
+
+jobs:
+  check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: 🔍 Type Check API
+        working-directory: ./apps/api
+        run: bun run type-check
+
+      - name: 🔍 Lint Web
+        working-directory: ./apps/web
+        run: bun run lint
+
+      - name: 🔨 Build API
+        working-directory: ./apps/api
+        run: bun run build
+        env:
+          DATABASE_URL: "mongodb://localhost:27017/test"
+
+      - name: 🔨 Build Web
+        working-directory: ./apps/web
+        run: bun run build
+        env:
+          NEXT_PUBLIC_API_URL: "http://localhost:3001"
+
+      - name: ✅ All Checks Passed
+        run: echo "All checks passed!"
