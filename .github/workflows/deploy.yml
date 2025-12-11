@@ -98,5 +98,5 @@ jobs:
       - name: Health Check
         run: |
           sleep 5
-          curl -sf http://localhost:3001/health && echo "API OK" || echo "API Warning"
+          curl -sf http://localhost:3001/api/v1/health && echo "API OK" || echo "API Warning"
           curl -sf -o /dev/null http://localhost:3000/ && echo "Web OK" || echo "Web Warning"
