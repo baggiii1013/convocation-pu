@@ -29,7 +29,7 @@ env:
 
 jobs:
   # ===========================================
-  # JOB 1: BUILD AND TEST
+  # JOB 1: BUILD AND TEST (runs on GitHub servers)
   # ===========================================
   build-and-test:
     name: Build and Test
@@ -86,193 +86,174 @@ jobs:
         run: echo "Build completed successfully!"
 
   # ===========================================
-  # JOB 2: DEPLOY TO SERVER (ZERO DOWNTIME)
+  # JOB 2: DEPLOY TO SERVER (runs on self-hosted runner)
   # ===========================================
   deploy:
     name: Deploy to Production Server
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, convocation]
     needs: build-and-test
     if: |
       always() && 
       (needs.build-and-test.result == 'success' || needs.build-and-test.result == 'skipped') &&
       github.ref == 'refs/heads/master'
-    environment: production
     
     steps:
-      - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: 🔑 Setup SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-
       - name: 🔒 Acquire Deployment Lock
         id: lock
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            LOCK_FILE="/tmp/deploy.lock"
-            
-            # Check if lock exists and is recent (within 30 minutes)
-            if [ -f "$LOCK_FILE" ]; then
-              LOCK_AGE=$(($(date +%s) - $(stat -c %Y "$LOCK_FILE")))
-              if [ $LOCK_AGE -lt 1800 ]; then
-                echo "❌ Another deployment is in progress. Lock age: ${LOCK_AGE}s"
-                exit 1
-              else
-                echo "⚠️ Stale lock found (${LOCK_AGE}s old). Removing..."
-                rm -f "$LOCK_FILE"
-              fi
+          LOCK_FILE="/tmp/deploy.lock"
+          
+          # Check if lock exists and is recent (within 30 minutes)
+          if [ -f "$LOCK_FILE" ]; then
+            LOCK_AGE=$(($(date +%s) - $(stat -c %Y "$LOCK_FILE")))
+            if [ $LOCK_AGE -lt 1800 ]; then
+              echo "❌ Another deployment is in progress. Lock age: ${LOCK_AGE}s"
+              exit 1
+            else
+              echo "⚠️ Stale lock found (${LOCK_AGE}s old). Removing..."
+              rm -f "$LOCK_FILE"
             fi
-            
-            # Create lock
-            echo "${{ github.run_id }}" > "$LOCK_FILE"
-            echo "✅ Deployment lock acquired"
-          ENDSSH
+          fi
+          
+          # Create lock
+          echo "${{ github.run_id }}" > "$LOCK_FILE"
+          echo "✅ Deployment lock acquired"
 
       - name: 💾 Create Pre-Deployment Backup
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            set -e
-            
-            BACKUP_DIR="${{ env.BACKUP_PATH }}/$(date +%Y%m%d_%H%M%S)_${{ github.sha }}"
-            mkdir -p "$BACKUP_DIR"
-            
-            echo "💾 Creating backup at $BACKUP_DIR..."
-            
-            # Backup built artifacts
-            if [ -d "${{ env.DEPLOY_PATH }}/apps/api/dist" ]; then
-              cp -r "${{ env.DEPLOY_PATH }}/apps/api/dist" "$BACKUP_DIR/api-dist"
-            fi
-            
-            if [ -d "${{ env.DEPLOY_PATH }}/apps/web/.next" ]; then
-              cp -r "${{ env.DEPLOY_PATH }}/apps/web/.next" "$BACKUP_DIR/web-next"
-            fi
-            
-            # Save current commit hash
-            cd "${{ env.DEPLOY_PATH }}"
-            git rev-parse HEAD > "$BACKUP_DIR/commit_hash"
-            
-            # Store backup path for potential rollback
-            echo "$BACKUP_DIR" > /tmp/last_backup_path
-            
-            # Clean old backups (keep last 5)
-            cd "${{ env.BACKUP_PATH }}"
-            ls -dt */ | tail -n +6 | xargs -r rm -rf
-            
-            echo "✅ Backup created successfully"
-          ENDSSH
+          set -e
+          
+          BACKUP_DIR="${{ env.BACKUP_PATH }}/$(date +%Y%m%d_%H%M%S)_${{ github.sha }}"
+          mkdir -p "$BACKUP_DIR"
+          
+          echo "💾 Creating backup at $BACKUP_DIR..."
+          
+          # Backup built artifacts
+          if [ -d "${{ env.DEPLOY_PATH }}/apps/api/dist" ]; then
+            cp -r "${{ env.DEPLOY_PATH }}/apps/api/dist" "$BACKUP_DIR/api-dist"
+          fi
+          
+          if [ -d "${{ env.DEPLOY_PATH }}/apps/web/.next" ]; then
+            cp -r "${{ env.DEPLOY_PATH }}/apps/web/.next" "$BACKUP_DIR/web-next"
+          fi
+          
+          # Save current commit hash
+          cd "${{ env.DEPLOY_PATH }}"
+          git rev-parse HEAD > "$BACKUP_DIR/commit_hash"
+          
+          # Store backup path for potential rollback
+          echo "$BACKUP_DIR" > /tmp/last_backup_path
+          
+          # Clean old backups (keep last 5)
+          cd "${{ env.BACKUP_PATH }}"
+          ls -dt */ 2>/dev/null | tail -n +6 | xargs -r rm -rf || true
+          
+          echo "✅ Backup created successfully"
 
       - name: 🔐 Sync Environment Files
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << ENDSSH
-            echo "🔐 Syncing API environment file..."
-            cat > ${{ env.DEPLOY_PATH }}/apps/api/.env << 'ENVEOF'
+          echo "🔐 Syncing API environment file..."
+          cat > ${{ env.DEPLOY_PATH }}/apps/api/.env << 'ENVEOF'
           ${{ secrets.API_ENV_FILE }}
           ENVEOF
-            echo "✓ API .env synced"
-            
-            echo "🔐 Syncing Web environment file..."
-            cat > ${{ env.DEPLOY_PATH }}/apps/web/.env.production << 'ENVEOF'
+          echo "✓ API .env synced"
+          
+          echo "🔐 Syncing Web environment file..."
+          cat > ${{ env.DEPLOY_PATH }}/apps/web/.env.production << 'ENVEOF'
           ${{ secrets.WEB_ENV_FILE }}
           ENVEOF
-            echo "✓ Web .env.production synced"
-          ENDSSH
+          echo "✓ Web .env.production synced"
 
-      - name: 🚀 Deploy to Server (Zero Downtime)
+      - name: 🚀 Deploy (Zero Downtime)
         id: deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            set -e
-            
-            echo "=========================================="
-            echo "🚀 Starting Zero-Downtime Deployment"
-            echo "=========================================="
-            
-            cd ${{ env.DEPLOY_PATH }}
-            
-            # Save current commit for rollback reference
-            PREVIOUS_COMMIT=$(git rev-parse HEAD)
-            echo "📌 Previous commit: $PREVIOUS_COMMIT"
-            
-            echo ""
-            echo "📥 Step 1: Pulling latest changes..."
-            git fetch origin master
-            git reset --hard origin/master
-            NEW_COMMIT=$(git rev-parse HEAD)
-            echo "✅ Updated to commit: $NEW_COMMIT"
-            
-            echo ""
-            echo "📦 Step 2: Installing dependencies..."
-            /home/appadmin/.bun/bin/bun install --frozen-lockfile
-            echo "✅ Dependencies installed"
-            
-            echo ""
-            echo "🔨 Step 3: Building API..."
-            cd apps/api
-            /home/appadmin/.bun/bin/bun run build
-            cd ../..
-            echo "✅ API built"
-            
-            echo ""
-            echo "🔨 Step 4: Building Web..."
-            cd apps/web
-            /home/appadmin/.bun/bin/bun run build
-            cd ../..
-            echo "✅ Web built"
-            
-            echo ""
-            echo "🔄 Step 5: Performing rolling restart..."
-            
-            # PM2 reload does rolling restart (one instance at a time)
-            # This ensures zero downtime as new instances start before old ones stop
-            pm2 reload ecosystem.config.cjs --update-env
-            
-            echo ""
-            echo "⏳ Step 6: Waiting for applications to stabilize..."
-            sleep 10
-            
-            # Check if processes are running
-            echo ""
-            echo "📊 PM2 Status:"
-            pm2 status
-            
-            # Verify processes are online
-            API_STATUS=$(pm2 jlist | jq -r '.[] | select(.name == "convocation-api") | .pm2_env.status')
-            WEB_STATUS=$(pm2 jlist | jq -r '.[] | select(.name == "convocation-web") | .pm2_env.status')
-            
-            if [ "$API_STATUS" != "online" ] || [ "$WEB_STATUS" != "online" ]; then
-              echo "❌ One or more services failed to start!"
-              echo "API Status: $API_STATUS"
-              echo "Web Status: $WEB_STATUS"
-              exit 1
-            fi
-            
-            echo ""
-            echo "=========================================="
-            echo "🎉 Deployment completed successfully!"
-            echo "=========================================="
-          ENDSSH
+          set -e
+          
+          echo "=========================================="
+          echo "🚀 Starting Zero-Downtime Deployment"
+          echo "=========================================="
+          
+          cd ${{ env.DEPLOY_PATH }}
+          
+          # Save current commit for rollback reference
+          PREVIOUS_COMMIT=$(git rev-parse HEAD)
+          echo "📌 Previous commit: $PREVIOUS_COMMIT"
+          
+          echo ""
+          echo "📥 Step 1: Pulling latest changes..."
+          git fetch origin master
+          git reset --hard origin/master
+          NEW_COMMIT=$(git rev-parse HEAD)
+          echo "✅ Updated to commit: $NEW_COMMIT"
+          
+          echo ""
+          echo "📦 Step 2: Installing dependencies..."
+          /home/appadmin/.bun/bin/bun install --frozen-lockfile
+          echo "✅ Dependencies installed"
+          
+          echo ""
+          echo "🔨 Step 3: Building API..."
+          cd apps/api
+          /home/appadmin/.bun/bin/bun run build
+          cd ../..
+          echo "✅ API built"
+          
+          echo ""
+          echo "🔨 Step 4: Building Web..."
+          cd apps/web
+          /home/appadmin/.bun/bin/bun run build
+          cd ../..
+          echo "✅ Web built"
+          
+          echo ""
+          echo "🔄 Step 5: Performing rolling restart..."
+          
+          # PM2 reload does rolling restart (one instance at a time)
+          # This ensures zero downtime as new instances start before old ones stop
+          pm2 reload ecosystem.config.cjs --update-env
+          
+          echo ""
+          echo "⏳ Step 6: Waiting for applications to stabilize..."
+          sleep 10
+          
+          # Check if processes are running
+          echo ""
+          echo "📊 PM2 Status:"
+          pm2 status
+          
+          # Verify processes are online
+          API_STATUS=$(pm2 jlist | jq -r '.[] | select(.name == "convocation-api") | .pm2_env.status')
+          WEB_STATUS=$(pm2 jlist | jq -r '.[] | select(.name == "convocation-web") | .pm2_env.status')
+          
+          if [ "$API_STATUS" != "online" ] || [ "$WEB_STATUS" != "online" ]; then
+            echo "❌ One or more services failed to start!"
+            echo "API Status: $API_STATUS"
+            echo "Web Status: $WEB_STATUS"
+            exit 1
+          fi
+          
+          echo ""
+          echo "=========================================="
+          echo "🎉 Deployment completed successfully!"
+          echo "=========================================="
 
       - name: 🏥 Health Check (with retries)
         id: health_check
         run: |
           echo "Waiting for services to be fully ready..."
-          sleep 10
+          sleep 5
           
           MAX_RETRIES=5
-          RETRY_DELAY=10
+          RETRY_DELAY=5
           
           for i in $(seq 1 $MAX_RETRIES); do
             echo "Health check attempt $i of $MAX_RETRIES..."
             
-            # Check API health
-            API_HEALTH=$(curl -sf "http://${{ secrets.SERVER_HOST }}:3001/health" || echo "failed")
+            # Check API health (localhost since we're on the server)
+            API_HEALTH=$(curl -sf "http://localhost:3001/health" || echo "failed")
             
-            # Check Web health (homepage loads)
-            WEB_HEALTH=$(curl -sf -o /dev/null -w "%{http_code}" "https://${{ secrets.SERVER_HOST }}/" || echo "000")
+            # Check Web health
+            WEB_HEALTH=$(curl -sf -o /dev/null -w "%{http_code}" "http://localhost:3000/" || echo "000")
             
             echo "API Health: $API_HEALTH"
             echo "Web Health: $WEB_HEALTH"
@@ -297,52 +278,48 @@ jobs:
         run: |
           echo "🔙 Initiating rollback due to failed health checks..."
           
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            set -e
-            
-            BACKUP_DIR=$(cat /tmp/last_backup_path 2>/dev/null || echo "")
-            
-            if [ -z "$BACKUP_DIR" ] || [ ! -d "$BACKUP_DIR" ]; then
-              echo "❌ No backup found for rollback!"
-              exit 1
-            fi
-            
-            echo "🔙 Rolling back to backup: $BACKUP_DIR"
-            
-            cd ${{ env.DEPLOY_PATH }}
-            
-            # Restore previous commit
-            if [ -f "$BACKUP_DIR/commit_hash" ]; then
-              PREV_COMMIT=$(cat "$BACKUP_DIR/commit_hash")
-              echo "Resetting to commit: $PREV_COMMIT"
-              git reset --hard "$PREV_COMMIT"
-            fi
-            
-            # Restore built artifacts
-            if [ -d "$BACKUP_DIR/api-dist" ]; then
-              rm -rf apps/api/dist
-              cp -r "$BACKUP_DIR/api-dist" apps/api/dist
-            fi
-            
-            if [ -d "$BACKUP_DIR/web-next" ]; then
-              rm -rf apps/web/.next
-              cp -r "$BACKUP_DIR/web-next" apps/web/.next
-            fi
-            
-            # Reload PM2 with rolled back code
-            pm2 reload ecosystem.config.cjs --update-env
-            
-            echo "✅ Rollback completed!"
-            pm2 status
-          ENDSSH
+          set -e
+          
+          BACKUP_DIR=$(cat /tmp/last_backup_path 2>/dev/null || echo "")
+          
+          if [ -z "$BACKUP_DIR" ] || [ ! -d "$BACKUP_DIR" ]; then
+            echo "❌ No backup found for rollback!"
+            exit 1
+          fi
+          
+          echo "🔙 Rolling back to backup: $BACKUP_DIR"
+          
+          cd ${{ env.DEPLOY_PATH }}
+          
+          # Restore previous commit
+          if [ -f "$BACKUP_DIR/commit_hash" ]; then
+            PREV_COMMIT=$(cat "$BACKUP_DIR/commit_hash")
+            echo "Resetting to commit: $PREV_COMMIT"
+            git reset --hard "$PREV_COMMIT"
+          fi
+          
+          # Restore built artifacts
+          if [ -d "$BACKUP_DIR/api-dist" ]; then
+            rm -rf apps/api/dist
+            cp -r "$BACKUP_DIR/api-dist" apps/api/dist
+          fi
+          
+          if [ -d "$BACKUP_DIR/web-next" ]; then
+            rm -rf apps/web/.next
+            cp -r "$BACKUP_DIR/web-next" apps/web/.next
+          fi
+          
+          # Reload PM2 with rolled back code
+          pm2 reload ecosystem.config.cjs --update-env
+          
+          echo "✅ Rollback completed!"
+          pm2 status
 
       - name: 🔓 Release Deployment Lock
         if: always()
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            rm -f /tmp/deploy.lock
-            echo "🔓 Deployment lock released"
-          ENDSSH
+          rm -f /tmp/deploy.lock
+          echo "🔓 Deployment lock released"
 
       - name: 📝 Deployment Summary
         if: success()
@@ -373,9 +350,3 @@ jobs:
           echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Check the workflow logs for details." >> $GITHUB_STEP_SUMMARY
-          
-          # Add your notification logic here (Slack, Discord, Email, etc.)
-          # Example for Discord webhook:
-          # curl -H "Content-Type: application/json" \
-          #   -d '{"content": "🚨 Deployment failed for convocation-pu!"}' \
-          #   ${{ secrets.DISCORD_WEBHOOK_URL }}
