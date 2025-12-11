@@ -473,6 +473,71 @@ export class AttendeeController {
   }
 
   /**
+   * Public endpoint to search for seat allocation by identifier (enrollment ID or CRR)
+   * GET /api/attendees/public/search-by/:identifier
+   */
+  static async publicSearchByIdentifier(req: Request, res: Response): Promise<void> {
+    try {
+      const { identifier } = req.params;
+      
+      logger.info(`Public search request for identifier: ${identifier}`);
+
+      if (!identifier) {
+        res.status(400).json({
+          success: false,
+          message: 'Enrollment ID or CRR is required',
+          code: 'INVALID_IDENTIFIER'
+        });
+        return;
+      }
+
+      const attendee = await AttendeeService.getByIdentifierWithSeat(identifier);
+      
+      logger.info(`Attendee lookup result: ${attendee ? 'Found' : 'Not found'}`);
+
+      if (!attendee) {
+        res.status(404).json({
+          success: false,
+          message: 'No record found for this enrollment ID or CRR',
+          code: 'ATTENDEE_NOT_FOUND'
+        });
+        return;
+      }
+
+      // Return public information only
+      const attendeeWithAllocation = attendee as any;
+      res.json({
+        success: true,
+        message: 'Attendee found',
+        data: {
+          enrollmentId: attendeeWithAllocation.enrollmentId,
+          name: attendeeWithAllocation.name,
+          course: attendeeWithAllocation.course,
+          school: attendeeWithAllocation.school,
+          degree: attendeeWithAllocation.degree,
+          convocationEligible: attendeeWithAllocation.convocationEligible,
+          convocationRegistered: attendeeWithAllocation.convocationRegistered,
+          crr: attendeeWithAllocation.crr,
+          allocation: attendeeWithAllocation.allocation ? {
+            enclosure: attendeeWithAllocation.allocation.enclosureLetter,
+            row: attendeeWithAllocation.allocation.rowLetter,
+            seat: attendeeWithAllocation.allocation.seatNumber,
+            allocatedAt: attendeeWithAllocation.allocation.allocatedAt
+          } : null,
+          hasVerificationToken: !!attendeeWithAllocation.verificationToken
+        }
+      });
+    } catch (error) {
+      logger.error('Error in AttendeeController.publicSearchByIdentifier:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Search failed',
+        code: 'SEARCH_ERROR'
+      });
+    }
+  }
+
+  /**
    * Public endpoint to search for seat allocation by enrollment ID
    * GET /api/attendees/public/search/:enrollmentId
    */

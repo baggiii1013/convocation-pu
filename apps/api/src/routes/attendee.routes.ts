@@ -68,6 +68,12 @@ const enrollmentIdParamSchema = z.object({
   })
 });
 
+const identifierParamSchema = z.object({
+  params: z.object({
+    identifier: z.string().min(1).max(50)
+  })
+});
+
 const getAllQuerySchema = z.object({
   query: z.object({
     page: z.string().regex(/^\d+$/).optional(),
@@ -143,6 +149,14 @@ router.get(
 );
 
 // Public routes (no authentication required) - MUST be before /:id route
+// New route that accepts both enrollment ID and CRR
+router.get(
+  '/public/search-by/:identifier',
+  validate(identifierParamSchema),
+  AttendeeController.publicSearchByIdentifier
+);
+
+// Legacy route for backward compatibility (enrollment ID only)
 router.get(
   '/public/search/:enrollmentId',
   AttendeeController.publicSearch

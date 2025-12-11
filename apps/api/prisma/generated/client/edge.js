@@ -326,7 +326,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/appadmin/convocation-pu/apps/api/prisma/generated/client",
+      "value": "E:\\convocation-pu\\apps\\api\\prisma\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -335,12 +335,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/appadmin/convocation-pu/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "E:\\convocation-pu\\apps\\api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

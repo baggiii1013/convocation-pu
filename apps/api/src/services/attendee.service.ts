@@ -659,6 +659,36 @@ export class AttendeeService {
   }
 
   /**
+   * Get attendee by identifier (enrollment ID or CRR) with seat allocation
+   */
+  static async getByIdentifierWithSeat(identifier: string): Promise<Attendee | null> {
+    try {
+      // Try to find by enrollment ID first
+      let attendee = await prisma.attendee.findUnique({
+        where: { enrollmentId: identifier },
+        include: {
+          allocation: true
+        }
+      });
+
+      // If not found, try to find by CRR
+      if (!attendee) {
+        attendee = await prisma.attendee.findFirst({
+          where: { crr: identifier },
+          include: {
+            allocation: true
+          }
+        });
+      }
+
+      return attendee;
+    } catch (error) {
+      logger.error(`Error getting attendee by identifier ${identifier}:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * Verify ticket token and mark attendance
    */
   static async verifyAndMarkAttendance(token: string, verifyOnly: boolean = false): Promise<{

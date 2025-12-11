@@ -1,6 +1,6 @@
 "use client";
 
-import { ProtectedQRTicket } from "@/components/ticket/ProtectedQRTicket";
+import Ticket from "@/components/ticket/Ticket";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { AlertCircle, Loader2, Search } from "lucide-react";
@@ -24,10 +24,12 @@ interface AttendeeData {
   crr: string; // Added CRR field
   allocation: SeatAllocation | null;
   hasVerificationToken: boolean; // Instead of direct verificationToken
+  verificationToken?: string; // Add direct token field
 }
 
 export default function SearchSeatPage() {
-  const [enrollmentId, setEnrollmentId] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [searchType, setSearchType] = useState<"enrollment" | "crr">("enrollment");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attendeeData, setAttendeeData] = useState<AttendeeData | null>(null);
@@ -35,8 +37,8 @@ export default function SearchSeatPage() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!enrollmentId.trim()) {
-      setError("Please enter your enrollment number");
+    if (!searchValue.trim()) {
+      setError(`Please enter your ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`);
       return;
     }
 
@@ -46,17 +48,46 @@ export default function SearchSeatPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/search/${enrollmentId.trim()}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/search-by/${searchValue.trim()}`
       );
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        setError(data.message || "No record found for this enrollment ID");
+        setError(data.message || `No record found for this ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`);
         return;
       }
 
-      setAttendeeData(data.data);
+      const attendeeInfo = data.data;
+      
+      // If attendee has a verification token, fetch it using CRR
+      if (attendeeInfo.hasVerificationToken && attendeeInfo.crr) {
+        try {
+          const tokenResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/verify-crr`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                enrollmentId: attendeeInfo.enrollmentId,
+                crr: attendeeInfo.crr
+              })
+            }
+          );
+
+          const tokenData = await tokenResponse.json();
+          
+          if (tokenResponse.ok && tokenData.success) {
+            attendeeInfo.verificationToken = tokenData.data.verificationToken;
+          }
+        } catch (err) {
+          console.error("Failed to fetch verification token:", err);
+        }
+      }
+
+      setAttendeeData(attendeeInfo);
     } catch (err) {
       setError("Failed to search. Please try again later.");
       console.error("Search error:", err);
@@ -66,7 +97,7 @@ export default function SearchSeatPage() {
   };
 
   const handleReset = () => {
-    setEnrollmentId("");
+    setSearchValue("");
     setError(null);
     setAttendeeData(null);
   };
@@ -103,7 +134,7 @@ export default function SearchSeatPage() {
               Find Your Seat
             </h1>
             <p className="text-lg text-white/90">
-              Enter your enrollment number to view your seat allocation
+              Enter your enrollment number or CRR to view your seat allocation
             </p>
           </motion.div>
 
@@ -115,19 +146,45 @@ export default function SearchSeatPage() {
             className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8 border border-white/20"
           >
             <form onSubmit={handleSearch} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="enrollmentId"
-                  className="block text-white font-medium mb-2"
+              {/* Search Type Toggle */}
+              <div className="flex justify-center gap-4 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setSearchType("enrollment")}
+                  className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                    searchType === "enrollment"
+                      ? "bg-white text-primary-600"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  }`}
                 >
                   Enrollment Number
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchType("crr")}
+                  className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                    searchType === "crr"
+                      ? "bg-white text-primary-600"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  }`}
+                >
+                  CRR Number
+                </button>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="searchValue"
+                  className="block text-white font-medium mb-2"
+                >
+                  {searchType === "enrollment" ? "Enrollment Number" : "CRR Number"}
                 </label>
                 <input
-                  id="enrollmentId"
+                  id="searchValue"
                   type="text"
-                  value={enrollmentId}
-                  onChange={(e) => setEnrollmentId(e.target.value.toUpperCase())}
-                  placeholder="Enter your enrollment number"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value.toUpperCase())}
+                  placeholder={`Enter your ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`}
                   className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
                   disabled={loading}
                 />
@@ -213,6 +270,12 @@ export default function SearchSeatPage() {
                     </p>
                   </div>
                   <div>
+                    <p className="text-white/70 text-sm">CRR Number</p>
+                    <p className="text-white font-semibold text-lg">
+                      {attendeeData.crr}
+                    </p>
+                  </div>
+                  <div>
                     <p className="text-white/70 text-sm">Course</p>
                     <p className="text-white font-semibold">
                       {attendeeData.course}
@@ -275,10 +338,43 @@ export default function SearchSeatPage() {
                     </div>
                   </div>
 
-                  {/* Protected QR Ticket */}
-                  <ProtectedQRTicket
-                    attendeeData={attendeeData}
-                  />
+                  {/* QR Ticket Display */}
+                  {attendeeData.verificationToken ? (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-white text-center">
+                        Your Digital Ticket
+                      </h3>
+                      <div className="flex justify-center">
+                        {/* @ts-expect-error - Ticket is JSX component with default props */}
+                        <Ticket
+                          mode="ticket"
+                          name={attendeeData.name}
+                          title={attendeeData.course}
+                          handle={attendeeData.enrollmentId}
+                          status={`${attendeeData.allocation.enclosure}-${attendeeData.allocation.row}-${attendeeData.allocation.seat}`}
+                          verificationToken={attendeeData.verificationToken}
+                          showUserInfo={true}
+                        />
+                      </div>
+                      <p className="text-white/70 text-sm text-center">
+                        Show this QR code at the venue for entry verification
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
+                      <div className="flex items-start gap-3">
+                        <AlertCircle className="w-6 h-6 text-yellow-200 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h3 className="text-yellow-100 font-semibold mb-1">
+                            QR Code Not Available
+                          </h3>
+                          <p className="text-yellow-200">
+                            Your digital ticket is not ready yet. Please contact the administration.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
