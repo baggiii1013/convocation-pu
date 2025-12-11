@@ -139,10 +139,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Update last login time
-    await prisma.account.update({
+    // Update last login time (non-blocking, don't fail login if this fails)
+    // Note: Some Prisma operations on MongoDB require replica set for transactions
+    prisma.account.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() }
+    }).catch(err => {
+      logger.warn(`Failed to update lastLoginAt for user ${user.email}: ${err.message}`);
     });
 
     // Generate tokens
