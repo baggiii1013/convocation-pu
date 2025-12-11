@@ -24,6 +24,10 @@ export const createApp = (): express.Application => {
 
   const app = express();
 
+  // Trust proxy - required when behind Nginx reverse proxy
+  // This ensures correct client IP detection for rate limiting
+  app.set('trust proxy', 1);
+
   // Security middleware
   app.use(helmet({
     contentSecurityPolicy: {

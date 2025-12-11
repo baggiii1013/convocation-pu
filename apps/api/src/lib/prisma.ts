@@ -9,7 +9,7 @@ declare global {
 export const prisma = global.prisma || new PrismaClient({
   datasources: {
     db: {
-      url: `${Bun.env.DATABASE_URL}&maxPoolSize=55&minPoolSize=10&maxIdleTimeMS=30000&waitQueueTimeoutMS=10000`
+      url: `${Bun.env.DATABASE_URL}`
     }
   },
   log: Bun.env.NODE_ENV === 'development' 
