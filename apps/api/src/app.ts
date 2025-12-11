@@ -24,6 +24,10 @@ export const createApp = (): express.Application => {
 
   const app = express();
 
+  // Trust proxy - required when behind Nginx reverse proxy
+  // This ensures correct client IP detection for rate limiting
+  app.set('trust proxy', 1);
+
   // Security middleware
   app.use(helmet({
     contentSecurityPolicy: {
@@ -38,9 +42,10 @@ export const createApp = (): express.Application => {
   }));
 
   // Rate limiting middleware
+  // IMPORTANT: For high-traffic event days, these limits should be relaxed or handled at Nginx level
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: config.NODE_ENV === 'production' ? 100 : 1000, // Limit each IP to 100 requests per windowMs in production
+    max: config.NODE_ENV === 'production' ? 10000 : 1000, // Increased for event day traffic
     message: {
       success: false,
       message: 'Too many requests from this IP, please try again later.',
@@ -48,6 +53,10 @@ export const createApp = (): express.Application => {
     },
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    skip: (req) => {
+      // Skip rate limiting for health checks
+      return req.path === '/api/v1/health';
+    }
   });
   app.use(limiter);
 
