@@ -54,7 +54,7 @@ model Attendee {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  crr       String   @db.ObjectId
+  crr       String
 
   // Relations
   account     Account?        @relation(fields: [accountId], references: [id])
