@@ -3,13 +3,14 @@ import { z } from 'zod';
 const attendeeRowSchema = z.object({
   enrollmentId: z.string().min(1).max(50),
   name: z.string().min(1).max(100),
-  email: z.string().email().optional().or(z.literal('').transform(() => undefined)),
-  phone: z.string().min(10).max(15).optional().or(z.literal('').transform(() => undefined)),
+  email: z.string().email().optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
+  phone: z.string().min(10).max(15).optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
   school: z.string().min(1).max(100),
   course: z.string().min(1).max(100),
   degree: z.string().min(1).max(50),
-  crr: z.string().length(24), // MongoDB ObjectId length
-  enclosure: z.string().min(1),
+  // CRR can be any string value (department code, name, or ID)
+  crr: z.string().min(1).max(100),
+  enclosure: z.string().min(1).optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
   convocationEligible: z.boolean().optional(),
   convocationRegistered: z.boolean().optional()
 });
