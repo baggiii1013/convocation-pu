@@ -70,14 +70,14 @@ export class ExcelParser {
       degree: getColumnValue(row, 'degree', 'Degree', 'DEGREE', 'Qualification', 'qualification', 'QUALIFICATION', 'Course Type', 'CourseType', 'Type') || '',
       crr: getColumnValue(row, 'crr', 'CRR', 'Crr', 'CR No', 'CR NO', 'CRR No', 'CRR NO', 'CR Number', 'CRRNo', 'CR', 'Cr') || '',
       enclosure: getColumnValue(row, 'enclosure', 'Enclosure', 'ENCLOSURE', 'Encl', 'encl', 'ENCL'),
-      convocationEligible: parseBoolean(getColumnValue(row, 'convocationEligible', 'Convocation Eligible', 'ConvocationEligible', 'Eligible', 'ELIGIBLE')),
-      convocationRegistered: parseBoolean(getColumnValue(row, 'convocationRegistered', 'Convocation Registered', 'ConvocationRegistered', 'Registered', 'REGISTERED'))
+      convocationEligible: parseBoolean(getColumnValue(row, 'convocationEligible', 'Convocation Eligible', 'ConvocationEligible', 'Eligible', 'ELIGIBLE'), true),
+      convocationRegistered: parseBoolean(getColumnValue(row, 'convocationRegistered', 'Convocation Registered', 'ConvocationRegistered', 'Registered', 'REGISTERED'), true)
     }));
-  }
+  } 
 }
 
-function parseBoolean(value: any): boolean | undefined {
-  if (value === undefined || value === null || value === '') return undefined;
+function parseBoolean(value: any, defaultValue: boolean = false): boolean {
+  if (value === undefined || value === null || value === '') return defaultValue;
   if (typeof value === 'boolean') return value;
   if (typeof value === 'string') {
     const lower = value.toLowerCase();
@@ -87,5 +87,5 @@ function parseBoolean(value: any): boolean | undefined {
   if (typeof value === 'number') {
     return value === 1;
   }
-  return undefined;
+  return defaultValue;
 }
