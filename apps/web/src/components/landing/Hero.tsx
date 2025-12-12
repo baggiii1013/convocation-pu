@@ -53,6 +53,18 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
+          {/* NAAC Accreditation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="mb-4"
+          >
+            <span className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white/90">
+              NAAC A++
+            </span>
+          </motion.div>
+
           {/* Main Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}

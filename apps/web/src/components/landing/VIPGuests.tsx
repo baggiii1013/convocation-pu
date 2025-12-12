@@ -20,7 +20,7 @@ interface Guest {
 const guests: Guest[] = [
   {
     name: 'Mr. Harsh Rameshbhai Sanghavi',
-    title: 'Honorary Guest',
+    title: 'Chief Guest',
     role: 'Minister for Home and Police Housing of Gujarat',
     bio: 'Harsh Rameshbhai Sanghavi, the Deputy Chief Minister of Gujarat, is one of the state’s youngest and fastest-rising political leaders. Beginning his journey in the BJP youth wing, he went on to become the youngest MLA from Majura and has since helmed key portfolios, shaping policies in Home, Youth, Sports, and Cultural Affairs.',
     image: '/assests/1.jpg',
@@ -53,7 +53,7 @@ const guests: Guest[] = [
   {
     name: 'Mrs. Vineeta Singh',
     title: 'Honorary Guest',
-    role: 'Indian entrepreneur',
+    role: 'Entrepreneur and CEO & Co-founder, Sugar Cosmetics',
     bio: 'Vineeta Singh is an Indian entrepreneur and CEO, co-founder of Sugar Cosmetics. She has been a Shark on the business reality TV show Shark Tank India since the show started airing on SonyLIV in 2021.',
     image: '/assests/5.jpg',
     social: {
