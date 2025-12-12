@@ -21,8 +21,8 @@ const guests: Guest[] = [
   {
     name: 'Mr. Harsh Rameshbhai Sanghavi',
     title: 'Honorary Guest',
-    role: 'Deputy chief minister of Gujarat',
-    bio: 'Indian politician from Gujarat serving as incumbent deputy chief minister of Gujarat from 2025. He is a three time member of the Gujarat Legislative Assembly representing Majura Assembly constituency representing the Bharatiya Janata Party.',
+    role: 'Minister for Home and Police Housing of Gujarat',
+    bio: 'Harsh Rameshbhai Sanghavi, the Deputy Chief Minister of Gujarat, is one of the state’s youngest and fastest-rising political leaders. Beginning his journey in the BJP youth wing, he went on to become the youngest MLA from Majura and has since helmed key portfolios, shaping policies in Home, Youth, Sports, and Cultural Affairs.',
     image: '/assests/1.jpg',
     social: {
       linkedin: '#',
@@ -31,7 +31,7 @@ const guests: Guest[] = [
   {
     name: 'Mr. Rajat Sharma',
     title: 'Honorary Guest',
-    role: 'Indian journalist and businessperson',
+    role: 'Journalist and Chairman & Editor-in-Chief of India TV.',
     bio: 'Rajat Sharma is an Indian journalist and businessperson acting as the chairman and Editor-in-chief of India TV, an Indian news channel. He is most known as host of Indian television show Aap Ki Adalat, which first aired in 1993, making it the longest-running reality show in India television history',
     image: '/assests/2.jpg',
     social: {
@@ -40,9 +40,9 @@ const guests: Guest[] = [
     },
   },
   {
-    name: 'Mrs. Sania Mirza',
+    name: 'Ms. Sania Mirza',
     title: 'Honorary Guest',
-    role: 'Former professional tennis player',
+    role: 'Former Professional Tennis Player',
     bio: 'Sania Mirza  is an Indian former professional tennis player. A former doubles world No. 1, she won six major titles – three in womens doubles and three in mixed doubles.',
     image: '/assests/4.jpg',
     social: {
@@ -61,10 +61,10 @@ const guests: Guest[] = [
     },
   },
   {
-    name: 'Ms. Mangte Chungneijang "Mary" Kom',
+    name: 'Ms. MC Mary Kom',
     title: 'Honorary Guest',
-    role: 'Indian Olympic boxer',
-    bio: 'She is the only woman to win the World Amateur Boxing Championship six times, the only female boxer to have won a medal in each one of the first seven World Championships, and the only boxer (male or female) to win eight World Championship medals',
+    role: 'Indian Boxer & Six-Time World Champion',
+    bio: 'Rising from humble beginnings in Manipur, she carved her path through sheer grit, discipline, and an unshakeable fighting spirit. As the only woman boxer to have won the World Championship title six times and the first Indian woman to earn an Olympic boxing medal, she has inspired generations. Her contributions extend beyond the ring as a Parliamentarian and advocate for youth, sports, and women’s empowerment, cementing her legacy as a true national legend.',
     image: '/assests/3.jpg',
     social: {
       linkedin: '#',

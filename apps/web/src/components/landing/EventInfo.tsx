@@ -24,7 +24,7 @@ const eventDetails = [
     icon: MapPin,
     title: 'Venue',
     value: 'Convocation Ground',
-    description: 'Parul University Campus ,Near Design Building',
+    description: 'Near Design Building, Parul University Campus ',
     color: 'from-accent-pink to-pink-600',
   },
   {
@@ -224,7 +224,7 @@ export function EventInfo() {
                   </div>
                   <ul className="space-y-4">
                     {[
-                      { icon: '🌐', text: 'paruluniversity.ac.in', link: 'paruluniversity.ac.in' },
+                      { icon: '🌐', text: 'www.paruluniversity.ac.in', link: 'www.paruluniversity.ac.in' },
                       { icon: '📞', text: '+91 2668260300', link: 'tel:+912668260300' },
                       { icon: '📧', text: 'info@paruluniversity.ac.in', link: 'info@paruluniversity.ac.in' },
                       { icon: '⏰', text: 'Helpdesk: 9:00 AM - 6:00 PM (Mon-Fri)', link: null },
