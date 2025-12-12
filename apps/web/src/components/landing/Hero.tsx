@@ -3,14 +3,23 @@
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, MapPin } from "lucide-react";
+import Image from "next/image";
 import * as React from "react";
 
 export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background with gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+      {/* Background image with overlay */}
+      <div className="absolute inset-0">
+        <Image
+          src="/assests/2con.jpg"
+          alt="Convocation background"
+          fill
+          className="object-cover opacity-80"
+          priority
+          quality={90}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900/60 via-primary-700/50 to-primary-500/40" />
       </div>
 
       {/* Animated orbs */}

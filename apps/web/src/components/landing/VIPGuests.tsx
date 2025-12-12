@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { motion } from 'framer-motion';
 import { Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
-import * as React from 'react';
 
 interface Guest {
   name: string;
@@ -20,11 +19,21 @@ interface Guest {
 
 const guests: Guest[] = [
   {
+    name: 'Mr. Harsh Rameshbhai Sanghavi',
+    title: 'Honorary Guest',
+    role: 'Deputy chief minister of Gujarat',
+    bio: 'Indian politician from Gujarat serving as incumbent deputy chief minister of Gujarat from 2025. He is a three time member of the Gujarat Legislative Assembly representing Majura Assembly constituency representing the Bharatiya Janata Party.',
+    image: '/assests/1.jpg',
+    social: {
+      linkedin: '#',
+    },
+  },
+  {
     name: 'Mr. Rajat Sharma',
     title: 'Honorary Guest',
     role: 'Indian journalist and businessperson',
     bio: 'Rajat Sharma is an Indian journalist and businessperson acting as the chairman and Editor-in-chief of India TV, an Indian news channel. He is most known as host of Indian television show Aap Ki Adalat, which first aired in 1993, making it the longest-running reality show in India television history',
-    image: 'https://medianoise.in/wp-content/uploads/2024/07/Rajat-Sharma-is-the-new-President-of-NBDA.jpg',
+    image: '/assests/2.jpg',
     social: {
       linkedin: '#',
       twitter: '#',
@@ -35,7 +44,7 @@ const guests: Guest[] = [
     title: 'Honorary Guest',
     role: 'Former professional tennis player',
     bio: 'Sania Mirza  is an Indian former professional tennis player. A former doubles world No. 1, she won six major titles – three in womens doubles and three in mixed doubles.',
-    image: 'https://media.assettype.com/newslaundry/2022-01/fb4e9dfd-337b-4935-ad5a-44e29ac79b91/AI___SANIA_MIRZA.jpg?w=1200&h=675',
+    image: '/assests/4.jpg',
     social: {
       linkedin: '#',
       twitter: '#',
@@ -44,9 +53,19 @@ const guests: Guest[] = [
   {
     name: 'Mrs. Vineeta Singh',
     title: 'Honorary Guest',
-    role: 'India entrepreneur',
+    role: 'Indian entrepreneur',
     bio: 'Vineeta Singh is an Indian entrepreneur and CEO, co-founder of Sugar Cosmetics. She has been a Shark on the business reality TV show Shark Tank India since the show started airing on SonyLIV in 2021.',
-    image: 'https://www.catchkaro.in/wp-content/uploads/2025/08/Vineeta-Singh-Success-Story.webp',
+    image: '/assests/5.jpg',
+    social: {
+      linkedin: '#',
+    },
+  },
+  {
+    name: 'Ms. Mangte Chungneijang "Mary" Kom',
+    title: 'Honorary Guest',
+    role: 'Indian Olympic boxer',
+    bio: 'She is the only woman to win the World Amateur Boxing Championship six times, the only female boxer to have won a medal in each one of the first seven World Championships, and the only boxer (male or female) to win eight World Championship medals',
+    image: '/assests/3.jpg',
     social: {
       linkedin: '#',
     },
@@ -117,7 +136,7 @@ export function VIPGuests() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+          className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto"
         >
           {guests.map((guest, index) => (
             <motion.div 
@@ -125,6 +144,7 @@ export function VIPGuests() {
               variants={itemVariants}
               whileHover={{ y: -8 }}
               transition={{ duration: 0.3 }}
+              className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]"
             >
               <Card
                 variant="elevated"
@@ -229,26 +249,6 @@ export function VIPGuests() {
               </Card>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Additional note */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-20 text-center"
-        >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-secondary-500/20 blur-xl" />
-            <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl px-8 py-6 border border-primary-200 dark:border-primary-800 shadow-lg">
-              <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-medium flex items-center justify-center gap-3">
-                <span className="text-2xl">🎭</span>
-                <span>More distinguished guests will be announced soon. Stay tuned for updates.</span>
-                <span className="text-2xl">✨</span>
-              </p>
-            </div>
-          </div>
         </motion.div>
       </div>
     </section>

@@ -16,21 +16,21 @@ const eventDetails = [
   {
     icon: Clock,
     title: 'Time',
-    value: '10:00 AM - 2:00 PM',
+    value: '3:00 PM - 9:00 PM',
     description: 'IST (UTC +5:30)',
     color: 'from-accent-blue to-blue-600',
   },
   {
     icon: MapPin,
     title: 'Venue',
-    value: 'Dhoom Ground',
+    value: 'Convocation Ground , Near Design Building',
     description: 'Parul University Campus',
     color: 'from-accent-pink to-pink-600',
   },
   {
     icon: Users,
     title: 'Attendees',
-    value: '20,000+ Expected',
+    value: '13,000+ Expected',
     description: 'Students, Faculty & Guests',
     color: 'from-accent-green to-green-600',
   },
@@ -186,9 +186,10 @@ export function EventInfo() {
                   <ul className="space-y-4">
                     {[
                       'Please arrive at least 30 minutes before the ceremony',
-                      'Formal dress code is mandatory for all attendees',
-                      'Photography and videography will be available',
-                      'Parking facilities available on campus'
+                      'Convocational dress code is mandatory for all attendees',
+                      'Attendees are expected to be seated at their designated seat',
+                      'It is mandatory to bring government & university identification proof',
+                      'Please bring a hard copy of you ticket for easy verification'
                     ].map((item, index) => (
                       <motion.li
                         key={index}
@@ -256,23 +257,6 @@ export function EventInfo() {
                   </ul>
                 </motion.div>
               </div>
-
-              {/* Call to action banner */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 1 }}
-                className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700"
-              >
-                <div className="text-center bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-950/50 dark:to-secondary-950/50 rounded-2xl p-6 border border-primary-200 dark:border-primary-800">
-                  <p className="text-gray-700 dark:text-gray-300 font-medium flex items-center justify-center gap-2 flex-wrap">
-                    <span className="text-2xl">📢</span>
-                    <span>For any queries or assistance, feel free to reach out to our helpdesk</span>
-                    <span className="text-2xl">💬</span>
-                  </p>
-                </div>
-              </motion.div>
             </CardContent>
           </Card>
         </motion.div>

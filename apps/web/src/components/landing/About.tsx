@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { motion } from 'framer-motion';
 import { ArrowRight, Award, BookOpen, Globe, Users } from 'lucide-react';
+import Image from 'next/image';
 import * as React from 'react';
 
 const features = [
@@ -28,6 +29,69 @@ const features = [
   },
 ];
 
+const slideshowImages = [
+  '/assests/slideshow/DJI_0918.jpg',
+  '/assests/slideshow/DSC00972.jpg',
+  '/assests/slideshow/DSC00980.jpg',
+  '/assests/slideshow/DSC04230 (1).jpg',
+];
+
+function ImageCarousel() {
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % slideshowImages.length);
+    }, 2000); // Change image every 4 seconds
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
+      {slideshowImages.map((image, index) => (
+        <motion.div
+          key={image}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: index === currentIndex ? 1 : 0,
+            scale: index === currentIndex ? 1 : 1.1,
+          }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+        >
+          <Image
+            src={image}
+            alt={`Campus view ${index + 1}`}
+            fill
+            className="object-cover"
+            priority={index === 0}
+          />
+        </motion.div>
+      ))}
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+        {slideshowImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentIndex
+                ? 'bg-white scale-125'
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+    </div>
+  );
+}
+
 export function About() {
   return (
     <section className="py-20 bg-white dark:bg-dark-card">
@@ -41,18 +105,8 @@ export function About() {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            {/* Main image placeholder */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
-              {/* Replace this div with actual image */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="text-6xl mb-4">🎓</div>
-                  <p className="text-gray-700 dark:text-gray-300 font-medium">
-                    Parul University Campus
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Main image carousel */}
+            <ImageCarousel />
 
             {/* Floating card */}
             <motion.div
