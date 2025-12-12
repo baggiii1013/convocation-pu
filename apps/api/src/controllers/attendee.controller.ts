@@ -340,6 +340,8 @@ export class AttendeeController {
         validateOnly: req.body.validateOnly === 'true'
       };
       
+      logger.info(`Upload options: ${JSON.stringify(options)}, body: ${JSON.stringify(req.body)}`);
+      
       if (!file) {
         res.status(400).json({
           success: false,
@@ -352,15 +354,29 @@ export class AttendeeController {
       // Parse Excel file
       const parsedData = ExcelParser.parse(file.buffer);
       
+      logger.info(`Parsed ${parsedData.length} rows from Excel file`);
+      
       // Validate data
       const validation = ExcelValidator.validate(parsedData);
       
       if (!validation.valid) {
+        // Limit the number of errors to send back (for large files)
+        const maxErrorsToShow = 50;
+        const limitedErrors = validation.errors.slice(0, maxErrorsToShow);
+        const totalErrors = validation.errors.length;
+        
+        logger.error(`Validation failed with ${totalErrors} errors. First few errors:`, 
+          JSON.stringify(limitedErrors.slice(0, 5), null, 2));
+        
         res.status(400).json({
           success: false,
-          message: 'Validation failed',
+          message: `Validation failed with ${totalErrors} errors`,
           code: 'VALIDATION_ERROR',
-          data: { errors: validation.errors }
+          data: { 
+            errors: limitedErrors,
+            totalErrors: totalErrors,
+            errorsShown: limitedErrors.length
+          }
         });
         return;
       }

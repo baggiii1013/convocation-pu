@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import api from '@/lib/axios';
 import { Copy, Download, Edit, Plus, RefreshCw, Search, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -44,11 +45,8 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
 
   const fetchEnclosures = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`, {
-        credentials: 'include',
-      });
-      const data = await res.json();
-      setEnclosures(data);
+      const res = await api.get('/api/v1/enclosures');
+      setEnclosures(res.data);
     } catch (error) {
       console.error('Failed to load enclosures:', error);
       toast.error('Failed to load enclosures');
@@ -59,20 +57,13 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
     setLoading(true);
     try {
       const url = enclosure.id
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enclosure.id}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures`;
-      const method = enclosure.id ? 'PUT' : 'POST';
+        ? `/api/v1/enclosures/${enclosure.id}`
+        : `/api/v1/enclosures`;
 
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enclosure),
-        credentials: 'include',
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error);
+      if (enclosure.id) {
+        await api.put(url, enclosure);
+      } else {
+        await api.post(url, enclosure);
       }
 
       toast.success(enclosure.id ? 'Enclosure updated' : 'Enclosure created');
@@ -92,14 +83,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
     if (!confirm('Are you sure? This cannot be undone.')) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error);
-      }
+      await api.delete(`/api/v1/enclosures/${id}`);
       toast.success('Enclosure deleted');
       await fetchEnclosures();
       router.refresh(); // Refresh server component data
@@ -121,7 +105,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
       allocatedFor: 'STUDENTS',
       entryDirection: 'NORTH',
       displayOrder: enclosures.length,
-      rows: [{ letter: 'A', startSeat: 1, endSeat: 50, reservedSeats: '', displayOrder: 0 }],
+      rows: [{ letter: 'R1', startSeat: 1, endSeat: 50, reservedSeats: '', displayOrder: 0 }],
     });
     setIsEditing(true);
   };
@@ -166,10 +150,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
     setLoading(true);
     try {
       const deletePromises = Array.from(selectedEnclosures).map(id =>
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${id}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        })
+        api.delete(`/api/v1/enclosures/${id}`)
       );
 
       const results = await Promise.allSettled(deletePromises);
@@ -206,10 +187,7 @@ export function EnclosuresClient({ initialEnclosures }: EnclosuresClientProps) {
     setLoading(true);
     try {
       const deletePromises = enclosures.map(enc =>
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enc.id}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        })
+        api.delete(`/api/v1/enclosures/${enc.id}`)
       );
 
       await Promise.all(deletePromises);

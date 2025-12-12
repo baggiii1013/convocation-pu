@@ -9,9 +9,27 @@ interface ParsedRow {
   course: string;
   degree: string;
   crr: string;
-  enclosure: string;
+  enclosure?: string;
   convocationEligible?: boolean;
   convocationRegistered?: boolean;
+}
+
+// Helper to find a value from multiple possible column names (case-insensitive)
+function getColumnValue(row: any, ...possibleNames: string[]): string | undefined {
+  for (const name of possibleNames) {
+    // Check exact match
+    if (row[name] !== undefined && row[name] !== null && row[name] !== '') {
+      return String(row[name]);
+    }
+    // Check case-insensitive match
+    const lowerName = name.toLowerCase();
+    for (const key of Object.keys(row)) {
+      if (key.toLowerCase() === lowerName && row[key] !== undefined && row[key] !== null && row[key] !== '') {
+        return String(row[key]);
+      }
+    }
+  }
+  return undefined;
 }
 
 export class ExcelParser {
@@ -35,19 +53,25 @@ export class ExcelParser {
       defval: undefined
     });
     
-    // Map to expected format
+    // Log first row to see column names (for debugging)
+    if (data.length > 0) {
+      console.log('Excel columns found:', Object.keys(data[0] as object));
+      console.log('First row data:', JSON.stringify(data[0], null, 2));
+    }
+    
+    // Map to expected format with flexible column name matching
     return data.map((row: any) => ({
-      enrollmentId: row['enrollmentId'] || row['Enrollment ID'],
-      name: row['name'] || row['Name'],
-      email: row['email'] || row['Email'] || undefined,
-      phone: row['phone'] || row['Phone'] || undefined,
-      school: row['school'] || row['School'],
-      course: row['course'] || row['Course'],
-      degree: row['degree'] || row['Degree'],
-      crr: row['crr'] || row['CRR'],
-      enclosure: row['enclosure'] || row['Enclosure'],
-      convocationEligible: parseBoolean(row['convocationEligible'] || row['Convocation Eligible']),
-      convocationRegistered: parseBoolean(row['convocationRegistered'] || row['Convocation Registered'])
+      enrollmentId: getColumnValue(row, 'enrollmentId', 'Enrollment ID', 'EnrollmentID', 'enrollment_id', 'ENROLLMENT ID', 'Enrollment Id', 'Enrollment', 'enrollment', 'ID', 'id', 'Student ID', 'StudentID') || '',
+      name: getColumnValue(row, 'name', 'Name', 'NAME', 'Student Name', 'StudentName', 'student_name', 'Full Name', 'FullName', 'Student') || '',
+      email: getColumnValue(row, 'email', 'Email', 'EMAIL', 'E-mail', 'e-mail', 'Email Address', 'EmailAddress', 'email_address'),
+      phone: getColumnValue(row, 'phone', 'Phone', 'PHONE', 'Mobile', 'mobile', 'Phone Number', 'Contact', 'Mobile Number', 'MobileNumber', 'Contact Number'),
+      school: getColumnValue(row, 'school', 'School', 'SCHOOL', 'Faculty', 'faculty', 'Institute', 'FACULTY', 'College') || '',
+      course: getColumnValue(row, 'course', 'Course', 'COURSE', 'Program', 'program', 'Programme', 'PROGRAM', 'Branch', 'branch', 'BRANCH', 'Specialization', 'Stream') || '',
+      degree: getColumnValue(row, 'degree', 'Degree', 'DEGREE', 'Qualification', 'qualification', 'QUALIFICATION', 'Course Type', 'CourseType', 'Type') || '',
+      crr: getColumnValue(row, 'crr', 'CRR', 'Crr', 'CR No', 'CR NO', 'CRR No', 'CRR NO', 'CR Number', 'CRRNo', 'CR', 'Cr') || '',
+      enclosure: getColumnValue(row, 'enclosure', 'Enclosure', 'ENCLOSURE', 'Encl', 'encl', 'ENCL'),
+      convocationEligible: parseBoolean(getColumnValue(row, 'convocationEligible', 'Convocation Eligible', 'ConvocationEligible', 'Eligible', 'ELIGIBLE')),
+      convocationRegistered: parseBoolean(getColumnValue(row, 'convocationRegistered', 'Convocation Registered', 'ConvocationRegistered', 'Registered', 'REGISTERED'))
     }));
   }
 }
