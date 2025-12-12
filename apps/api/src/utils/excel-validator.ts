@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
+// Very lenient schema - only enrollmentId and name are required
 const attendeeRowSchema = z.object({
   enrollmentId: z.string().min(1).max(50),
   name: z.string().min(1).max(100),
-  email: z.string().email().optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
-  phone: z.string().min(10).max(15).optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
-  school: z.string().min(1).max(100),
-  course: z.string().min(1).max(100),
-  degree: z.string().min(1).max(50),
-  // CRR can be any string value (department code, name, or ID)
-  crr: z.string().min(1).max(100),
-  enclosure: z.string().min(1).optional().or(z.literal('').transform(() => undefined)).or(z.undefined()),
-  convocationEligible: z.boolean().optional(),
-  convocationRegistered: z.boolean().optional()
+  email: z.string().optional().or(z.literal('')).or(z.undefined()),
+  phone: z.string().optional().or(z.literal('')).or(z.undefined()),
+  school: z.string().optional().or(z.literal('')).or(z.undefined()),
+  course: z.string().optional().or(z.literal('')).or(z.undefined()),
+  degree: z.string().optional().or(z.literal('')).or(z.undefined()),
+  crr: z.string().optional().or(z.literal('')).or(z.undefined()),
+  enclosure: z.string().optional().or(z.literal('')).or(z.undefined()),
+  convocationEligible: z.boolean().optional().or(z.undefined()),
+  convocationRegistered: z.boolean().optional().or(z.undefined())
 });
 
 export interface ValidationError {
