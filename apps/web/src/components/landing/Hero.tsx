@@ -109,7 +109,7 @@ export function Hero() {
             <div className="flex items-center gap-2 text-white/90">
               <MapPin className="w-5 h-5" />
               <span className="text-sm md:text-base font-medium">
-                Dhoom Ground, PU Campus
+                Convocation Ground, PU Campus
               </span>
             </div>
           </motion.div>

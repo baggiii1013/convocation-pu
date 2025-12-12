@@ -187,10 +187,12 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Button size="lg" variant="default">
-                Learn More About Us
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <a href="https://paruluniversity.ac.in" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="default">
+                  Learn More About Us
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </a>
             </motion.div>
           </motion.div>
         </div>
