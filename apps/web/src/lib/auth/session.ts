@@ -56,7 +56,10 @@ export async function getServerSession(): Promise<UserSession | null> {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
 
-    // No token found
+    // No access token found
+    // Note: The middleware/proxy handles proactive token refresh before
+    // the request reaches server components. If we have no access token here,
+    // either the user is not authenticated or the refresh failed.
     if (!accessToken) {
       return null;
     }

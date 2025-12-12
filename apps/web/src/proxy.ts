@@ -1,6 +1,9 @@
-import { extractTokenFromCookie, hasRequiredRole, verifyAccessToken } from '@/lib/jwt';
+import { extractTokenFromCookie, hasRequiredRole, verifyAccessToken, verifyRefreshToken } from '@/lib/jwt';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+
+// API URL for server-side calls
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 // Define public routes that don't require authentication
 const publicRoutes = [
@@ -29,6 +32,72 @@ const protectedRoutes = [
 const adminRoutes = [
   '/admin',
 ];
+
+/**
+ * Attempt to refresh tokens using the refresh token
+ * Returns the new cookies to set, or null if refresh failed
+ */
+async function attemptTokenRefresh(refreshToken: string): Promise<{
+  accessToken: string;
+  newRefreshToken: string;
+  userRole: string;
+  userData: Record<string, unknown>;
+} | null> {
+  try {
+    const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `refreshToken=${refreshToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.warn('[Proxy] Token refresh failed with status:', response.status);
+      return null;
+    }
+
+    // Extract new cookies from the response
+    const setCookieHeader = response.headers.get('set-cookie');
+    if (!setCookieHeader) {
+      console.warn('[Proxy] No cookies in refresh response');
+      return null;
+    }
+
+    // Parse the cookies from Set-Cookie header
+    const cookies = setCookieHeader.split(',').map(c => c.trim());
+    let newAccessToken = '';
+    let newRefreshToken = '';
+    let userRole = '';
+
+    for (const cookie of cookies) {
+      if (cookie.startsWith('accessToken=')) {
+        newAccessToken = cookie.split(';')[0].split('=')[1];
+      } else if (cookie.startsWith('refreshToken=')) {
+        newRefreshToken = cookie.split(';')[0].split('=')[1];
+      } else if (cookie.startsWith('userRole=')) {
+        userRole = cookie.split(';')[0].split('=')[1];
+      }
+    }
+
+    const data = await response.json();
+    
+    if (newAccessToken && data.success) {
+      console.log('[Proxy] Token refresh successful');
+      return {
+        accessToken: newAccessToken,
+        newRefreshToken: newRefreshToken || refreshToken,
+        userRole: userRole || data.data?.user?.role || '',
+        userData: data.data?.user || {},
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('[Proxy] Token refresh error:', error instanceof Error ? error.message : 'Unknown error');
+    return null;
+  }
+}
 
 /**
  * Enhanced proxy with proper JWT validation and role-based access control
@@ -65,10 +134,27 @@ export async function proxy(request: NextRequest) {
         await verifyAccessToken(accessToken);
         return NextResponse.redirect(new URL('/dashboard', request.url));
       } catch {
-        // Token is invalid, clear it and allow access to login/register
+        // Access token is invalid, check if refresh token is valid
+        const refreshToken = extractTokenFromCookie(cookieHeader, 'refreshToken');
+        
+        if (refreshToken) {
+          try {
+            await verifyRefreshToken(refreshToken);
+            // Refresh token valid - redirect to dashboard (client will refresh access token)
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+          } catch {
+            // Both tokens invalid - allow access to login/register and clear cookies
+            const response = NextResponse.next();
+            response.cookies.delete('accessToken');
+            response.cookies.delete('refreshToken');
+            response.cookies.delete('userRole');
+            return response;
+          }
+        }
+        
+        // No refresh token - clear access token and allow access
         const response = NextResponse.next();
         response.cookies.delete('accessToken');
-        response.cookies.delete('refreshToken');
         response.cookies.delete('userRole');
         return response;
       }
@@ -78,9 +164,65 @@ export async function proxy(request: NextRequest) {
 
   // For protected routes, verify authentication
   if (isProtectedRoute || isAdminRoute) {
-    // No access token found
+    // No access token found - check if we have a valid refresh token
     if (!accessToken) {
-      // Clear any invalid cookies
+      const refreshToken = extractTokenFromCookie(cookieHeader, 'refreshToken');
+      
+      if (refreshToken) {
+        try {
+          // Verify refresh token is still valid
+          await verifyRefreshToken(refreshToken);
+          
+          // Proactively refresh the tokens
+          const refreshResult = await attemptTokenRefresh(refreshToken);
+          
+          if (refreshResult) {
+            // For admin routes, verify role from refreshed data
+            if (isAdminRoute && !hasRequiredRole(refreshResult.userRole, ['ADMIN'])) {
+              console.warn(`Unauthorized access attempt to ${pathname} after token refresh`);
+              return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url));
+            }
+            
+            // Set new cookies and allow request to proceed
+            const response = NextResponse.next();
+            
+            // Set the new tokens as cookies
+            response.cookies.set('accessToken', refreshResult.accessToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'strict',
+              maxAge: 15 * 60, // 15 minutes
+              path: '/',
+            });
+            
+            response.cookies.set('refreshToken', refreshResult.newRefreshToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'strict',
+              maxAge: 7 * 24 * 60 * 60, // 7 days
+              path: '/',
+            });
+            
+            if (refreshResult.userRole) {
+              response.cookies.set('userRole', refreshResult.userRole, {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 24 * 60 * 60, // 24 hours
+                path: '/',
+              });
+            }
+            
+            console.log(`[Proxy] Token refreshed proactively for ${pathname}`);
+            return response;
+          }
+        } catch (refreshError) {
+          // Refresh token is invalid/expired
+          console.warn(`Refresh token invalid for ${pathname}:`, refreshError instanceof Error ? refreshError.message : 'Unknown error');
+        }
+      }
+      
+      // No valid tokens - redirect to login
       const response = NextResponse.redirect(new URL(`/login?redirect_url=${pathname}`, request.url));
       response.cookies.delete('accessToken');
       response.cookies.delete('refreshToken');
@@ -115,10 +257,67 @@ export async function proxy(request: NextRequest) {
       });
 
     } catch (error) {
-      // Token validation failed (expired, invalid, etc.)
-      console.warn(`Token validation failed for ${pathname}:`, error instanceof Error ? error.message : 'Unknown error');
+      // Access token validation failed (expired, invalid, etc.)
+      console.warn(`Access token validation failed for ${pathname}:`, error instanceof Error ? error.message : 'Unknown error');
       
-      // Clear invalid tokens
+      // Check if refresh token exists and try to refresh proactively
+      const refreshToken = extractTokenFromCookie(cookieHeader, 'refreshToken');
+      
+      if (refreshToken) {
+        try {
+          // Verify refresh token is still valid (not expired)
+          await verifyRefreshToken(refreshToken);
+          
+          // Proactively refresh the tokens
+          const refreshResult = await attemptTokenRefresh(refreshToken);
+          
+          if (refreshResult) {
+            // For admin routes, verify role from refreshed data
+            if (isAdminRoute && !hasRequiredRole(refreshResult.userRole, ['ADMIN'])) {
+              console.warn(`Unauthorized access attempt to ${pathname} after token refresh`);
+              return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url));
+            }
+            
+            // Set new cookies and allow request to proceed
+            const response = NextResponse.next();
+            
+            // Set the new tokens as cookies
+            response.cookies.set('accessToken', refreshResult.accessToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'strict',
+              maxAge: 15 * 60, // 15 minutes
+              path: '/',
+            });
+            
+            response.cookies.set('refreshToken', refreshResult.newRefreshToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'strict',
+              maxAge: 7 * 24 * 60 * 60, // 7 days
+              path: '/',
+            });
+            
+            if (refreshResult.userRole) {
+              response.cookies.set('userRole', refreshResult.userRole, {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 24 * 60 * 60, // 24 hours
+                path: '/',
+              });
+            }
+            
+            console.log(`[Proxy] Token refreshed after expiry for ${pathname}`);
+            return response;
+          }
+        } catch (refreshError) {
+          // Refresh token is also invalid/expired - user must re-login
+          console.warn(`Refresh token also invalid for ${pathname}:`, refreshError instanceof Error ? refreshError.message : 'Unknown error');
+        }
+      }
+      
+      // No valid refresh token - clear all tokens and redirect to login
       const response = NextResponse.redirect(new URL(`/login?redirect_url=${pathname}&error=session_expired`, request.url));
       response.cookies.delete('accessToken');
       response.cookies.delete('refreshToken');
