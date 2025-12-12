@@ -340,6 +340,8 @@ export class AttendeeController {
         validateOnly: req.body.validateOnly === 'true'
       };
       
+      logger.info(`Upload options: ${JSON.stringify(options)}, body: ${JSON.stringify(req.body)}`);
+      
       if (!file) {
         res.status(400).json({
           success: false,
