@@ -196,7 +196,7 @@ export function Footer() {
               © {new Date().getFullYear()} Parul University. All rights reserved.
             </p>
             <p className="text-gray-400 text-xs md:text-sm mb-1.5 md:mb-2">
-              Cordinators : Dr. Swapnil M Parikh, Ms. Sumitra Menaria, Mr. Mohit Rathod
+              Co-ordinators : Dr. Swapnil M Parikh, Ms. Sumitra Menaria, Mr. Mohit Rathod
             </p>
             <p className="text-gray-500 text-xs leading-relaxed">
               Designed and developed by{' '}
