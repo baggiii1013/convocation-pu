@@ -3306,9 +3306,9 @@ export namespace Prisma {
     id: string
     enrollmentId: string
     name: string
-    course: string
+    course: string | null
     school: string
-    degree: string
+    degree: string | null
     email: string
     phone: string | null
     convocationEligible: boolean
@@ -3401,9 +3401,9 @@ export namespace Prisma {
       id: string
       enrollmentId: string
       name: string
-      course: string
+      course: string | null
       school: string
-      degree: string
+      degree: string | null
       email: string
       phone: string | null
       convocationEligible: boolean
@@ -14161,9 +14161,9 @@ export namespace Prisma {
     id?: StringFilter<"Attendee"> | string
     enrollmentId?: StringFilter<"Attendee"> | string
     name?: StringFilter<"Attendee"> | string
-    course?: StringFilter<"Attendee"> | string
+    course?: StringNullableFilter<"Attendee"> | string | null
     school?: StringFilter<"Attendee"> | string
-    degree?: StringFilter<"Attendee"> | string
+    degree?: StringNullableFilter<"Attendee"> | string | null
     email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
@@ -14208,9 +14208,9 @@ export namespace Prisma {
     OR?: AttendeeWhereInput[]
     NOT?: AttendeeWhereInput | AttendeeWhereInput[]
     name?: StringFilter<"Attendee"> | string
-    course?: StringFilter<"Attendee"> | string
+    course?: StringNullableFilter<"Attendee"> | string | null
     school?: StringFilter<"Attendee"> | string
-    degree?: StringFilter<"Attendee"> | string
+    degree?: StringNullableFilter<"Attendee"> | string | null
     email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
@@ -14255,9 +14255,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Attendee"> | string
     enrollmentId?: StringWithAggregatesFilter<"Attendee"> | string
     name?: StringWithAggregatesFilter<"Attendee"> | string
-    course?: StringWithAggregatesFilter<"Attendee"> | string
+    course?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     school?: StringWithAggregatesFilter<"Attendee"> | string
-    degree?: StringWithAggregatesFilter<"Attendee"> | string
+    degree?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     email?: StringWithAggregatesFilter<"Attendee"> | string
     phone?: StringNullableWithAggregatesFilter<"Attendee"> | string | null
     convocationEligible?: BoolWithAggregatesFilter<"Attendee"> | boolean
@@ -15107,9 +15107,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -15128,9 +15128,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -15148,9 +15148,9 @@ export namespace Prisma {
   export type AttendeeUpdateInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -15168,9 +15168,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -15189,9 +15189,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -15207,9 +15207,9 @@ export namespace Prisma {
   export type AttendeeUpdateManyMutationInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -15224,9 +15224,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateManyInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -17785,9 +17785,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -17805,9 +17805,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -17896,9 +17896,9 @@ export namespace Prisma {
     id?: StringFilter<"Attendee"> | string
     enrollmentId?: StringFilter<"Attendee"> | string
     name?: StringFilter<"Attendee"> | string
-    course?: StringFilter<"Attendee"> | string
+    course?: StringNullableFilter<"Attendee"> | string | null
     school?: StringFilter<"Attendee"> | string
-    degree?: StringFilter<"Attendee"> | string
+    degree?: StringNullableFilter<"Attendee"> | string | null
     email?: StringFilter<"Attendee"> | string
     phone?: StringNullableFilter<"Attendee"> | string | null
     convocationEligible?: BoolFilter<"Attendee"> | boolean
@@ -18190,9 +18190,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -18210,9 +18210,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -18292,9 +18292,9 @@ export namespace Prisma {
   export type AttendeeUpdateWithoutAllocationInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18311,9 +18311,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateWithoutAllocationInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18533,9 +18533,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -18553,9 +18553,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -18662,9 +18662,9 @@ export namespace Prisma {
   export type AttendeeUpdateWithoutAttendancesInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18681,9 +18681,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateWithoutAttendancesInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18842,9 +18842,9 @@ export namespace Prisma {
     id?: string
     enrollmentId: string
     name: string
-    course: string
+    course?: string | null
     school: string
-    degree: string
+    degree?: string | null
     email: string
     phone?: string | null
     convocationEligible?: boolean
@@ -18876,9 +18876,9 @@ export namespace Prisma {
   export type AttendeeUpdateWithoutAccountInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18895,9 +18895,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateWithoutAccountInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean
@@ -18914,9 +18914,9 @@ export namespace Prisma {
   export type AttendeeUncheckedUpdateManyWithoutAccountInput = {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    course?: StringFieldUpdateOperationsInput | string
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     school?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     convocationEligible?: BoolFieldUpdateOperationsInput | boolean

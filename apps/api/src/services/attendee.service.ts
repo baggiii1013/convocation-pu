@@ -576,8 +576,8 @@ export class AttendeeService {
         eligible,
         registered,
         bySchool: bySchool.reduce((acc, item) => ({ ...acc, [item.school]: item._count.school }), {}),
-        byCourse: byCourse.reduce((acc, item) => ({ ...acc, [item.course]: item._count.course }), {}),
-        byDegree: byDegree.reduce((acc, item) => ({ ...acc, [item.degree]: item._count.degree }), {})
+        byCourse: byCourse.reduce((acc, item) => item.course ? { ...acc, [item.course]: item._count.course } : acc, {}),
+        byDegree: byDegree.reduce((acc, item) => item.degree ? { ...acc, [item.degree]: item._count.degree } : acc, {})
       };
     } catch (error) {
       logger.error('Error getting attendee statistics:', error);
@@ -592,9 +592,9 @@ export class AttendeeService {
     id: string;
     enrollmentId: string;
     name: string;
-    course: string;
+    course: string | null;
     school: string;
-    degree: string;
+    degree: string | null;
     assignedEnclosure: string | null;
     allocation: {
       row: string;

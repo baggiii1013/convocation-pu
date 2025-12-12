@@ -40,9 +40,9 @@ model Attendee {
   id                    String  @id @default(auto()) @map("_id") @db.ObjectId
   enrollmentId          String  @unique
   name                  String
-  course                String
+  course                String?
   school                String
-  degree                String
+  degree                String?
   email                 String
   phone                 String?
   convocationEligible   Boolean @default(false)
