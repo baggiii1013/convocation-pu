@@ -26,13 +26,14 @@ export const createAttendeeSchema = z.object({
       .string()
       .min(2, 'Course must be at least 2 characters')
       .max(100, 'Course must not exceed 100 characters')
-      .trim(),
+      .trim()
+      .optional(),
     school: z
       .string()
       .min(2, 'School must be at least 2 characters')
       .max(150, 'School must not exceed 150 characters')
       .trim(),
-    degree: DegreeEnum,
+    degree: DegreeEnum.optional(),
     email: z
       .string()
       .email('Invalid email format')
@@ -186,13 +187,14 @@ export const bulkImportAttendeesSchema = z.object({
           .string()
           .min(2, 'Course must be at least 2 characters')
           .max(100, 'Course must not exceed 100 characters')
-          .trim(),
+          .trim()
+          .optional(),
         school: z
           .string()
           .min(2, 'School must be at least 2 characters')
           .max(150, 'School must not exceed 150 characters')
           .trim(),
-        degree: DegreeEnum,
+        degree: DegreeEnum.optional(),
         email: z
           .string()
           .email('Invalid email format')
