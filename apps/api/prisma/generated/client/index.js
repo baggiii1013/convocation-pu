@@ -356,7 +356,6 @@ const config = {
   ],
   "activeProvider": "mongodb",
   "postinstall": false,
-  "ciName": "GitHub Actions",
   "inlineDatasources": {
     "db": {
       "url": {

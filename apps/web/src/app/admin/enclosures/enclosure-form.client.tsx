@@ -40,12 +40,12 @@ export function EnclosureForm({ enclosure, onSave, onCancel, loading }: Enclosur
   const [formData, setFormData] = useState<Enclosure>(enclosure);
 
   const addRow = () => {
-    const nextLetter = String.fromCharCode(65 + formData.rows.length); // A, B, C...
+    const nextRowNumber = formData.rows.length + 1; // R1, R2, R3...
     setFormData({
       ...formData,
       rows: [
         ...formData.rows,
-        { letter: nextLetter, startSeat: 1, endSeat: 50, reservedSeats: '', displayOrder: formData.rows.length },
+        { letter: `R${nextRowNumber}`, startSeat: 1, endSeat: 50, reservedSeats: '', displayOrder: formData.rows.length },
       ],
     });
   };
@@ -192,12 +192,12 @@ export function EnclosureForm({ enclosure, onSave, onCancel, loading }: Enclosur
 
                     <div className="flex-1 grid grid-cols-4 gap-2">
                       <div>
-                        <Label className="text-xs">Row Letter</Label>
+                        <Label className="text-xs">Row ID</Label>
                         <Input
                           value={row.letter}
                           onChange={(e) => updateRow(index, 'letter', e.target.value.toUpperCase())}
-                          maxLength={1}
-                          placeholder="A"
+                          maxLength={5}
+                          placeholder="R1"
                         />
                       </div>
                       <div>
