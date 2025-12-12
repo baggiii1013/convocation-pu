@@ -73,7 +73,7 @@ export class ExcelParser {
       convocationEligible: parseBoolean(getColumnValue(row, 'convocationEligible', 'Convocation Eligible', 'ConvocationEligible', 'Eligible', 'ELIGIBLE'), true),
       convocationRegistered: parseBoolean(getColumnValue(row, 'convocationRegistered', 'Convocation Registered', 'ConvocationRegistered', 'Registered', 'REGISTERED'), true)
     }));
-  }
+  } 
 }
 
 function parseBoolean(value: any, defaultValue: boolean = false): boolean {
