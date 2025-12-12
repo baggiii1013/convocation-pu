@@ -12,9 +12,7 @@ export const prisma = global.prisma || new PrismaClient({
       url: `${Bun.env.DATABASE_URL}`
     }
   },
-  log: Bun.env.NODE_ENV === 'development' 
-    ? ['query', 'error', 'warn'] 
-    : ['error'],
+  log: ['error', 'warn'],
 });
 
 if (Bun.env.NODE_ENV !== 'production') {

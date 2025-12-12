@@ -1,10 +1,11 @@
 'use client';
 
-import { AerialVenueWrapper } from '@/components/attendee/AerialVenueWrapper';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { AlertCircle, CheckCircle, Download, RefreshCw, RotateCcw, Save, Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { AlertCircle, ChevronLeft, Download, Info, Loader2, MapPin, RefreshCw, Search, Users } from 'lucide-react';
+import Image from 'next/image';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -29,34 +30,39 @@ interface Enclosure {
   }>;
 }
 
+interface SeatAllocation {
+  row: string;
+  seat: number;
+  enrollmentId: string;
+  name?: string;
+}
+
 interface AerialViewEditorClientProps {
   initialEnclosures: Enclosure[];
 }
 
 /**
- * Client Component: Aerial View Editor
+ * Client Component: Convocation Ground Overview
  * 
- * Interactive canvas editor for managing enclosure positions:
- * - Toggle edit mode for dragging enclosures
- * - Track pending position changes
- * - Save layout to server
- * - Discard unsaved changes
- * - Visual feedback for modified enclosures
- * - Overview of all enclosures with positions
- * 
- * Uses AerialVenueWrapper component for the interactive canvas.
+ * View the convocation ground layout and enclosure seat arrangements:
+ * - Display convocation venue layout image
+ * - View all enclosures with seat counts
+ * - Click on enclosures to view detailed seat maps
+ * - See which seats are occupied and by whom
  * 
  * @component
  */
 export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorClientProps) {
   const [enclosures, setEnclosures] = useState<Enclosure[]>(initialEnclosures);
-  const [editMode, setEditMode] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [pendingChanges, setPendingChanges] = useState<Map<string, { x: number; y: number }>>(new Map());
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // State for selected enclosure detail view
+  const [selectedEnclosure, setSelectedEnclosure] = useState<Enclosure | null>(null);
+  const [seatAllocations, setSeatAllocations] = useState<SeatAllocation[]>([]);
+  const [loadingAllocations, setLoadingAllocations] = useState(false);
+  const [selectedSeat, setSelectedSeat] = useState<{ row: string; seat: number } | null>(null);
 
   const fetchEnclosures = async () => {
     try {
@@ -82,147 +88,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
     }
   };
 
-  const handlePositionChange = (letter: string, position: { x: number; y: number }) => {
-    
-    // Track pending changes
-    const newPendingChanges = new Map(pendingChanges);
-    newPendingChanges.set(letter, position);
-    setPendingChanges(newPendingChanges);
-    
-    // Update local state optimistically
-    setEnclosures(prev =>
-      prev.map(enc =>
-        enc.letter === letter
-          ? { ...enc, positionX: position.x, positionY: position.y }
-          : enc
-      )
-    );
-  };
-
-  const handleSaveLayout = async () => {
-    if (pendingChanges.size === 0) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-      setError(null);
-      setSaveSuccess(false);
-
-      // Save each changed enclosure
-      const savePromises = Array.from(pendingChanges.entries()).map(async ([letter, position]) => {
-        const enclosure = enclosures.find(e => e.letter === letter);
-        if (!enclosure) {
-          console.warn(`Enclosure ${letter} not found`);
-          return { ok: false };
-        }
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enclosure.id}/layout`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            positionX: position.x,
-            positionY: position.y,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-          console.error(`Failed to save ${letter}:`, response.status, errorData);
-        } else {
-          const result = await response.json();
-        }
-
-        return response;
-      });
-
-      const results = await Promise.all(savePromises);
-      
-      // Check if all requests succeeded
-      const allSucceeded = results.every(res => res?.ok);
-      
-      if (!allSucceeded) {
-        const failedCount = results.filter(res => !res?.ok).length;
-        throw new Error(`${failedCount} enclosure(s) failed to save. Check console for details.`);
-      }
-
-      // Clear pending changes and refresh data from server
-      setPendingChanges(new Map());
-      setSaveSuccess(true);
-      
-      // Refetch enclosures to ensure we have the latest data from database
-      await fetchEnclosures();
-      
-      // Hide success message after 3 seconds
-      setTimeout(() => setSaveSuccess(false), 3000);
-      
-      toast.success('Layout saved successfully!');
-    } catch (err) {
-      console.error('Error saving layout:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save layout. Please try again.';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDiscardChanges = () => {
-    setPendingChanges(new Map());
-    fetchEnclosures(); // Reload original positions
-    toast.success('Changes discarded');
-  };
-
-  const handleResetAllPositions = async () => {
-    if (!confirm('Reset all enclosure positions to center (50%, 50%)? This will save immediately and cannot be undone.')) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-      setError(null);
-
-      // Reset all enclosures to center position
-      const resetPromises = enclosures.map(async (enclosure) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/enclosures/${enclosure.id}/layout`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            positionX: 50,
-            positionY: 50,
-          }),
-        });
-
-        return response;
-      });
-
-      const results = await Promise.all(resetPromises);
-      const allSucceeded = results.every(res => res?.ok);
-      
-      if (!allSucceeded) {
-        const failedCount = results.filter(res => !res?.ok).length;
-        throw new Error(`${failedCount} enclosure(s) failed to reset.`);
-      }
-
-      setPendingChanges(new Map());
-      await fetchEnclosures();
-      toast.success('All positions reset to center');
-    } catch (err) {
-      console.error('Error resetting positions:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to reset positions';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleExportLayout = () => {
     if (enclosures.length === 0) {
       toast.error('No enclosures to export');
@@ -231,19 +96,15 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
 
     try {
       // Create CSV content
-      const headers = ['Letter', 'Name', 'Allocated For', 'Position X (%)', 'Position Y (%)', 'Width', 'Height', 'Color', 'Total Seats'];
+      const headers = ['Letter', 'Name', 'Allocated For', 'Total Seats', 'Rows'];
       const csvContent = [
         headers.join(','),
         ...enclosures.map(e => [
           e.letter,
           `"${e.name || ''}"`,
           e.allocatedFor,
-          (e.positionX || 0).toFixed(2),
-          (e.positionY || 0).toFixed(2),
-          e.width || 0,
-          e.height || 0,
-          e.color || '',
-          e.totalSeats || 0
+          e.totalSeats || 0,
+          e.rows?.length || 0
         ].join(','))
       ].join('\n');
 
@@ -265,6 +126,115 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
     }
   };
 
+  // Handle enclosure card click to show seat details
+  const handleEnclosureClick = async (enclosure: Enclosure) => {
+    setSelectedEnclosure(enclosure);
+    setSelectedSeat(null);
+    setSeatAllocations([]);
+    setLoadingAllocations(true);
+    
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/allocations/enclosure/${enclosure.letter}`,
+        { credentials: 'include' }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const allocations: SeatAllocation[] = [];
+        if (data.data?.rows) {
+          data.data.rows.forEach((row: { row: string; attendees?: Array<{ seat: number; enrollmentId: string; name?: string }> }) => {
+            row.attendees?.forEach((attendee: { seat: number; enrollmentId: string; name?: string }) => {
+              allocations.push({
+                row: row.row,
+                seat: attendee.seat,
+                enrollmentId: attendee.enrollmentId,
+                name: attendee.name,
+              });
+            });
+          });
+        }
+        setSeatAllocations(allocations);
+      } else {
+        setSeatAllocations([]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch seat allocations:', error);
+      setSeatAllocations([]);
+    } finally {
+      setLoadingAllocations(false);
+    }
+  };
+
+  const handleCloseEnclosureDetail = () => {
+    setSelectedEnclosure(null);
+    setSeatAllocations([]);
+    setSelectedSeat(null);
+  };
+
+  // Parse reserved seats
+  const parseReserved = (reservedStr: string): number[] => {
+    if (!reservedStr) return [];
+    return reservedStr
+      .split(',')
+      .map(s => parseInt(s.trim()))
+      .filter(n => !isNaN(n));
+  };
+
+  type SeatStatus = 'available' | 'occupied' | 'reserved';
+
+  // Get seat status using real allocation data
+  const getSeatStatus = (rowLetter: string, seatNumber: number): SeatStatus => {
+    const isOccupied = seatAllocations.some(
+      allocation => allocation.row === rowLetter && allocation.seat === seatNumber
+    );
+    return isOccupied ? 'occupied' : 'available';
+  };
+
+  // Get seat allocation info for tooltip
+  const getSeatInfo = (rowLetter: string, seatNumber: number): SeatAllocation | undefined => {
+    return seatAllocations.find(
+      allocation => allocation.row === rowLetter && allocation.seat === seatNumber
+    );
+  };
+
+  // Render a single seat
+  const renderSeat = (rowLetter: string, seatNumber: number, isReserved: boolean) => {
+    const status = isReserved ? 'reserved' : getSeatStatus(rowLetter, seatNumber);
+    const isSelected = selectedSeat?.row === rowLetter && selectedSeat?.seat === seatNumber;
+    const seatInfo = getSeatInfo(rowLetter, seatNumber);
+
+    const seatColors = {
+      available: 'bg-green-100 hover:bg-green-200 border-green-300 text-green-700',
+      occupied: 'bg-gray-300 hover:bg-gray-400 border-gray-400 text-gray-700 cursor-pointer',
+      reserved: 'bg-red-100 hover:bg-red-200 border-red-300 text-red-600 cursor-pointer',
+    };
+
+    let tooltipText = `Row ${rowLetter}, Seat ${seatNumber}`;
+    if (status === 'occupied' && seatInfo) {
+      tooltipText += `\nOccupied by: ${seatInfo.name || seatInfo.enrollmentId}`;
+    } else if (status === 'reserved') {
+      tooltipText += '\nReserved';
+    } else if (status === 'available') {
+      tooltipText += '\nAvailable';
+    }
+
+    return (
+      <button
+        key={`${rowLetter}-${seatNumber}`}
+        onClick={() => setSelectedSeat({ row: rowLetter, seat: seatNumber })}
+        className={cn(
+          'relative w-8 h-8 md:w-10 md:h-10 rounded-md border-2 transition-all duration-200 text-xs font-medium flex items-center justify-center',
+          seatColors[status],
+          isSelected && 'scale-110 ring-2 ring-blue-400'
+        )}
+        title={tooltipText}
+      >
+        {seatNumber}
+      </button>
+    );
+  };
+
   // Filter enclosures based on search query
   const filteredEnclosures = enclosures.filter(e => {
     if (!searchQuery) return true;
@@ -284,23 +254,18 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Aerial View Layout Editor
+                Convocation Ground Overview
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Manage the convocation ground layout and enclosure positions
+                View the convocation venue layout and enclosure seat arrangements
               </p>
             </div>
             <div className="flex items-center gap-3">
-              {pendingChanges.size > 0 && (
-                <span className="text-sm text-amber-600 dark:text-amber-500 font-medium">
-                  {pendingChanges.size} unsaved change{pendingChanges.size > 1 ? 's' : ''}
-                </span>
-              )}
               <Button
                 onClick={fetchEnclosures}
                 variant="outline"
                 size="sm"
-                disabled={loading || saving}
+                disabled={loading}
                 className="gap-2"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -316,23 +281,6 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                 <Download className="w-4 h-4" />
                 Export
               </Button>
-              <Button
-                onClick={handleResetAllPositions}
-                variant="outline"
-                size="sm"
-                disabled={saving || loading}
-                className="gap-2"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reset All
-              </Button>
-              <Button
-                onClick={() => setEditMode(!editMode)}
-                variant={editMode ? 'default' : 'outline'}
-                className="min-w-[120px]"
-              >
-                {editMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
-              </Button>
             </div>
           </div>
 
@@ -343,112 +291,57 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
               <span>{error}</span>
             </div>
           )}
-
-          {saveSuccess && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg flex items-center gap-2 mb-4">
-              <CheckCircle className="w-5 h-5 flex-shrink-0" />
-              <span>Layout saved successfully!</span>
-            </div>
-          )}
         </div>
 
-        {/* Instructions */}
-        {editMode && (
-          <Card className="mb-6 border-blue-300 dark:border-blue-800 bg-blue-100 dark:bg-blue-900/30">
-            <CardContent className="py-4">
-              <div className="flex items-start gap-3">
-                <div className="bg-blue-600 rounded-full p-2 flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">Edit Mode Active</h3>
-                  <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-                    <li>• Click and drag enclosures to reposition them</li>
-                    <li>• Enclosures are highlighted with a blue border when hovering</li>
-                    <li>• Changes are tracked but not saved until you click &quot;Save Layout&quot;</li>
-                    <li>• Click &quot;Discard Changes&quot; to reset to the last saved positions</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Aerial View */}
+        {/* Convocation Layout Image */}
         <Card className="mb-6 bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border">
-          <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border mb-8">
-            <CardTitle className="text-xl text-gray-900 dark:text-white">Convocation Ground - Aerial View</CardTitle>
+          <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border mb-4">
+            <CardTitle className="text-xl text-gray-900 dark:text-white">Convocation Ground Layout</CardTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {editMode 
-                ? 'Drag enclosures to reposition them'
-                : 'Click on any enclosure to view detailed seat layout'}
+              Reference layout of the convocation venue
             </p>
           </CardHeader>
           <CardContent>
-            <AerialVenueWrapper
-              enclosures={enclosures}
-              editMode={editMode}
-              onEnclosurePositionChange={handlePositionChange}
-            />
+            <div className="relative w-full rounded-lg overflow-hidden border border-gray-200 dark:border-dark-border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/Convocation Layout Final-1.png"
+                alt="Convocation Ground Layout"
+                className="w-full h-auto object-contain"
+              />
+            </div>
           </CardContent>
         </Card>
 
-        {/* Action Buttons */}
-        {pendingChanges.size > 0 && (
-          <Card className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-            <CardContent className="py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">Unsaved Changes</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    You have {pendingChanges.size} enclosure{pendingChanges.size > 1 ? 's' : ''} with modified positions
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleDiscardChanges}
-                    variant="outline"
-                    disabled={saving}
-                  >
-                    Discard Changes
-                  </Button>
-                  <Button
-                    onClick={handleSaveLayout}
-                    disabled={saving}
-                    className="min-w-[140px] bg-blue-600 hover:bg-blue-700"
-                  >
-                    {saving ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Save Layout
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Enclosure List */}
+        {/* Enclosure List / Detail View */}
         <Card className="mt-6 bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border">
           <CardHeader className="bg-blue-50 dark:bg-gray-800/50 border-b border-blue-100 dark:border-dark-border mb-[32px]">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg text-gray-900 dark:text-white">Enclosures Overview</CardTitle>
-              {enclosures.length > 0 && (
+              {selectedEnclosure ? (
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCloseEnclosureDetail}
+                    className="gap-1"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Back
+                  </Button>
+                  <CardTitle className="text-lg text-gray-900 dark:text-white">
+                    Enclosure {selectedEnclosure.letter} {selectedEnclosure.name && `- ${selectedEnclosure.name}`}
+                  </CardTitle>
+                </div>
+              ) : (
+                <CardTitle className="text-lg text-gray-900 dark:text-white">Enclosures Overview</CardTitle>
+              )}
+              {!selectedEnclosure && enclosures.length > 0 && (
                 <span className="text-sm text-gray-600 dark:text-gray-400">
                   {filteredEnclosures.length} of {enclosures.length} enclosures
                 </span>
               )}
             </div>
-            {enclosures.length > 0 && (
+            {!selectedEnclosure && enclosures.length > 0 && (
               <div className="relative mt-3">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
@@ -461,7 +354,206 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
             )}
           </CardHeader>
           <CardContent>
-            {filteredEnclosures.length === 0 && searchQuery ? (
+            {selectedEnclosure ? (
+              /* Enclosure Detail View with Seat Map */
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left Column - Seat Map */}
+                <div className="flex-1">
+                  {/* Loading State */}
+                  {loadingAllocations && (
+                    <div className="mb-6 flex items-center justify-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300 font-medium">Loading seat allocations...</span>
+                    </div>
+                  )}
+
+                  {/* Enclosure Info */}
+                  <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div 
+                        className="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold text-white"
+                        style={{ backgroundColor: selectedEnclosure.color || '#3B82F6' }}
+                      >
+                        {selectedEnclosure.letter}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                          {selectedEnclosure.name || `Enclosure ${selectedEnclosure.letter}`}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                          <Users className="w-4 h-4" />
+                          {selectedEnclosure.allocatedFor}
+                          {selectedEnclosure.totalSeats && ` • ${selectedEnclosure.totalSeats} total seats`}
+                          {!loadingAllocations && ` • ${seatAllocations.length} occupied`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Entry Direction */}
+                  <div className="mb-6 flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
+                      <MapPin className="w-5 h-5" />
+                      <span className="font-semibold">Entry: {selectedEnclosure.entryDirection}</span>
+                    </div>
+                  </div>
+
+                  {/* Stage Indicator */}
+                  <div className="mb-8 text-center">
+                    <div className="inline-block bg-gray-800 dark:bg-gray-700 text-white px-8 py-3 rounded-lg shadow-lg text-sm font-bold uppercase tracking-wider">
+                      ▼ Stage Direction
+                    </div>
+                    <div className="mt-2 h-1 w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-gray-400 to-transparent rounded"></div>
+                  </div>
+
+                  {/* Seat Map */}
+                  <div className="space-y-4 overflow-x-auto">
+                    {selectedEnclosure.rows.map((row) => {
+                      const reservedSeats = parseReserved(row.reservedSeats);
+                      const seats = [];
+                      for (let seatNum = row.startSeat; seatNum <= row.endSeat; seatNum++) {
+                        seats.push(seatNum);
+                      }
+
+                      return (
+                        <div key={row.letter} className="flex items-center gap-3 justify-center min-w-fit">
+                          {/* Row Label */}
+                          <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-700 text-white rounded-md flex items-center justify-center font-bold text-sm md:text-base flex-shrink-0">
+                            {row.letter}
+                          </div>
+
+                          {/* Seats */}
+                          <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+                            {seats.map((seatNum) =>
+                              renderSeat(row.letter, seatNum, reservedSeats.includes(seatNum))
+                            )}
+                          </div>
+
+                          {/* Row Label (Right) */}
+                          <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-700 text-white rounded-md flex items-center justify-center font-bold text-sm md:text-base flex-shrink-0">
+                            {row.letter}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right Column - Selected Seat Info & Legend */}
+                <div className="w-full lg:w-80 flex-shrink-0">
+                  {/* Selected Seat Info */}
+                  <div className="mb-4">
+                    {selectedSeat ? (() => {
+                      const seatInfo = getSeatInfo(selectedSeat.row, selectedSeat.seat);
+                      const isOccupied = !!seatInfo;
+                      const isReserved = selectedEnclosure.rows
+                        .find(r => r.letter === selectedSeat.row)
+                        ?.reservedSeats.split(',')
+                        .map(s => parseInt(s.trim()))
+                        .includes(selectedSeat.seat);
+
+                      if (isOccupied) {
+                        return (
+                          <div className="p-5 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg shadow-md">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                                <Users className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-1">Occupied Seat</h4>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                  Row {selectedSeat.row}, Seat {selectedSeat.seat}
+                                </p>
+                                <div className="bg-white dark:bg-gray-800 rounded-md p-3 border border-gray-200 dark:border-gray-600">
+                                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Assigned To</p>
+                                  <p className="text-gray-900 dark:text-white font-semibold text-base">{seatInfo.name || 'Unknown'}</p>
+                                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                                    <span className="text-gray-500">Enrollment ID:</span> {seatInfo.enrollmentId}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      } else if (isReserved) {
+                        return (
+                          <div className="p-5 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border-2 border-red-300 dark:border-red-700 rounded-lg shadow-md">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-red-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                                ⚠
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-red-900 dark:text-red-300 text-lg mb-1">Reserved Seat</h4>
+                                <p className="text-sm text-red-700 dark:text-red-400">
+                                  Row {selectedSeat.row}, Seat {selectedSeat.seat}
+                                </p>
+                                <p className="text-sm text-red-600 dark:text-red-400 mt-2">
+                                  This seat is reserved and cannot be allocated
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="p-5 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-2 border-green-300 dark:border-green-700 rounded-lg shadow-md">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                                ✓
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-green-900 dark:text-green-300 text-lg mb-1">Available Seat</h4>
+                                <p className="text-sm text-green-700 dark:text-green-400">
+                                  Row {selectedSeat.row}, Seat {selectedSeat.seat}
+                                </p>
+                                <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                                  This seat is available for allocation
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    })() : (
+                      <div className="p-5 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-blue-900 dark:text-blue-200">No Seat Selected</h4>
+                            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                              Click on any seat in the map to view details and occupant information
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-6 py-4">
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3">Legend</h4>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-green-100 border-2 border-green-300 rounded"></div>
+                        <span className="text-gray-700 dark:text-gray-300">Available</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-gray-300 border-2 border-gray-400 rounded"></div>
+                        <span className="text-gray-700 dark:text-gray-300">Occupied</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-red-100 border-2 border-red-300 rounded"></div>
+                        <span className="text-gray-700 dark:text-gray-300">Reserved</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-3">
+                      <Info className="w-3 h-3" />
+                      <span>Click any seat for details</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : filteredEnclosures.length === 0 && searchQuery ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="w-8 h-8 text-gray-400" />
@@ -478,7 +570,8 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                 {filteredEnclosures.map((enc) => (
                   <div
                     key={enc.id}
-                    className="border-2 rounded-lg p-4 hover:shadow-md transition-shadow bg-gray-100 dark:bg-gray-800"
+                    onClick={() => handleEnclosureClick(enc)}
+                    className="border-2 rounded-lg p-4 hover:shadow-md transition-shadow bg-gray-100 dark:bg-gray-800 cursor-pointer hover:scale-[1.02]"
                     style={{ borderColor: enc.color || '#3B82F6' }}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -488,21 +581,16 @@ export function AerialViewEditorClient({ initialEnclosures }: AerialViewEditorCl
                       >
                         {enc.letter}
                       </span>
-                      {pendingChanges.has(enc.letter) && (
-                        <span className="text-xs bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-1 rounded font-semibold">
-                          Modified
-                        </span>
-                      )}
                     </div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
                       {enc.name || `Enclosure ${enc.letter}`}
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{enc.allocatedFor}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-500">
-                      Position: ({(enc.positionX || 0).toFixed(1)}%, {(enc.positionY || 0).toFixed(1)}%)
+                      {enc.totalSeats || 0} seats • {enc.rows?.length || 0} rows
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
-                      {enc.totalSeats || 0} seats
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-2 font-medium">
+                      Click to view seat map →
                     </p>
                   </div>
                 ))}
