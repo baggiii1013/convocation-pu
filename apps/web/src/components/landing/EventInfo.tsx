@@ -23,14 +23,14 @@ const eventDetails = [
   {
     icon: MapPin,
     title: 'Venue',
-    value: 'Convocation Ground , Near Design Building',
-    description: 'Parul University Campus',
+    value: 'Convocation Ground',
+    description: 'Parul University Campus ,Near Design Building',
     color: 'from-accent-pink to-pink-600',
   },
   {
     icon: Users,
     title: 'Attendees',
-    value: '13,000+ Expected',
+    value: '21,000+',
     description: 'Students, Faculty & Guests',
     color: 'from-accent-green to-green-600',
   },
@@ -224,10 +224,11 @@ export function EventInfo() {
                   </div>
                   <ul className="space-y-4">
                     {[
-                      { icon: '📧', text: 'convocation@pu.edu.in', link: 'mailto:convocation@pu.edu.in' },
-                      { icon: '📞', text: '+91 123 456 7890', link: 'tel:+911234567890' },
-                      { icon: '🌐', text: 'www.pu.edu.in/convocation', link: 'https://www.pu.edu.in/convocation' },
-                      { icon: '⏰', text: 'Helpdesk: 9:00 AM - 6:00 PM (Mon-Fri)', link: null }
+                      { icon: '🌐', text: 'paruluniversity.ac.in', link: 'paruluniversity.ac.in' },
+                      { icon: '📞', text: '+91 2668260300', link: 'tel:+912668260300' },
+                      { icon: '📧', text: 'info@paruluniversity.ac.in', link: 'info@paruluniversity.ac.in' },
+                      { icon: '⏰', text: 'Helpdesk: 9:00 AM - 6:00 PM (Mon-Fri)', link: null },
+                      { icon: '📍', text: 'Parul University, P.O. Limbda, Ta. Waghodia-3901760 , Dist. Vadodara(India)', link: null }
                     ].map((item, index) => (
                       <motion.li
                         key={index}

@@ -53,20 +53,6 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white mb-8"
-          >
-            <span className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
-            <a href="ums.paruluniversity.ac.in" target="_blank"
-                rel="noopener noreferrer" className="text-sm font-medium">
-              Registration Now Open , Last date November 10 2025
-            </a>
-          </motion.div>
-
           {/* Main Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
