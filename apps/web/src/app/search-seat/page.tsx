@@ -4,6 +4,7 @@ import Ticket from "@/components/ticket/Ticket";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { AlertCircle, Loader2, Search } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 interface SeatAllocation {
@@ -346,10 +347,13 @@ export default function SearchSeatPage() {
                       Venue Layout
                     </h2>
                     <div className="relative w-full overflow-hidden rounded-lg">
-                      <img
+                      <Image
                         src="/Convocation Layout Final-1.png"
                         alt="Convocation Venue Layout"
+                        width={1200}
+                        height={800}
                         className="w-full h-auto"
+                        priority
                       />
                     </div>
                   </div>
