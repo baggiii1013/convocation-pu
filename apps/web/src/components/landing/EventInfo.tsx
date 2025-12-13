@@ -188,7 +188,7 @@ export function EventInfo() {
                       'Please arrive at least 30 minutes before the ceremony',
                       'Convocational dress code is mandatory for all attendees',
                       'Attendees are expected to be seated at their designated seat',
-                      'It is mandatory to bring government & university identification proof',
+                      'It is mandatory to bring Adhaar Card & university identification proof',
                       'Please bring a hard copy of you ticket for easy verification'
                     ].map((item, index) => (
                       <motion.li

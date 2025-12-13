@@ -1,0 +1,92 @@
+[
+  {
+    "crr": "9LAW0007",
+    "enclosure": "A",
+    "row": "R8",
+    "seat": 17
+  },
+  {
+    "crr": "1FOP0043",
+    "enclosure": "A",
+    "row": "R9",
+    "seat": 29
+  },
+  {
+    "crr": "7FOP0059",
+    "enclosure": "A",
+    "row": "R14",
+    "seat": 48
+  },
+  {
+    "crr": "7FOP0094",
+    "enclosure": "A",
+    "row": "R15",
+    "seat": 13
+  },
+  {
+    "crr": "7FOP0011",
+    "enclosure": "A",
+    "row": "R17",
+    "seat": 44
+  },
+  {
+    "crr": "7FOP0012",
+    "enclosure": "A",
+    "row": "R17",
+    "seat": 45
+  },
+  {
+    "crr": "7FOP0048",
+    "enclosure": "A",
+    "row": "R18",
+    "seat": 2
+  },
+  {
+    "crr": "7FOP0142",
+    "enclosure": "A",
+    "row": "R18",
+    "seat": 45
+  },
+  {
+    "crr": "1MDMS0006",
+    "enclosure": "A",
+    "row": "R21",
+    "seat": 44
+  },
+  {
+    "crr": "1MDMS0015",
+    "enclosure": "A",
+    "row": "R21",
+    "seat": 53
+  },
+  {
+    "crr": "1MDMS0026",
+    "enclosure": "A",
+    "row": "R22",
+    "seat": 9
+  },
+  {
+    "crr": "1MDMS0029",
+    "enclosure": "A",
+    "row": "R22",
+    "seat": 12
+  },
+  {
+    "crr": "1MDMS0038",
+    "enclosure": "A",
+    "row": "R22",
+    "seat": 21
+  },
+  {
+    "crr": "1MDMS0042",
+    "enclosure": "A",
+    "row": "R22",
+    "seat": 25
+  },
+  {
+    "crr": "1MDMS0057",
+    "enclosure": "A",
+    "row": "R22",
+    "seat": 40
+  }
+]

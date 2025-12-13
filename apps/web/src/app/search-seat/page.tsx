@@ -275,24 +275,24 @@ export default function SearchSeatPage() {
                       {attendeeData.crr}
                     </p>
                   </div>
-                  <div>
+                  {/* <div>
                     <p className="text-white/70 text-sm">Course</p>
                     <p className="text-white font-semibold">
                       {attendeeData.course}
                     </p>
-                  </div>
+                  </div> */}
                   <div>
-                    <p className="text-white/70 text-sm">School</p>
+                    <p className="text-white/70 text-sm">University</p>
                     <p className="text-white font-semibold">
                       {attendeeData.school}
                     </p>
                   </div>
-                  <div>
+                  {/* <div>
                     <p className="text-white/70 text-sm">Degree</p>
                     <p className="text-white font-semibold">
                       {attendeeData.degree}
                     </p>
-                  </div>
+                  </div> */}
                   <div>
                     <p className="text-white/70 text-sm">Status</p>
                     <div className="flex gap-2 mt-1">
