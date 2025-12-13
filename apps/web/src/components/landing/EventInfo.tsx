@@ -189,7 +189,7 @@ export function EventInfo() {
                       'Convocational dress code is mandatory for all attendees',
                       'Attendees are expected to be seated at their designated seat',
                       'It is mandatory to bring Adhaar Card & university identification proof',
-                      'Please bring a hard copy of you ticket for easy verification'
+                      'All the students must collect their scarf from the respective department / institute. Only students having scarf with them will be allowed to enter at the convocation venue.'
                     ].map((item, index) => (
                       <motion.li
                         key={index}

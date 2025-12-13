@@ -313,69 +313,47 @@ export default function SearchSeatPage() {
 
               {/* Seat Allocation */}
               {attendeeData.allocation ? (
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                  <h2 className="text-2xl font-bold text-white mb-6">
-                    Seat Allocation
-                  </h2>
-                  <div className="grid md:grid-cols-3 gap-6 mb-8">
-                    <div className="text-center">
-                      <p className="text-white/70 text-sm mb-2">Enclosure</p>
-                      <p className="text-4xl font-bold text-white">
-                        {attendeeData.allocation.enclosure}
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-white/70 text-sm mb-2">Row</p>
-                      <p className="text-4xl font-bold text-white">
-                        {attendeeData.allocation.row}
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-white/70 text-sm mb-2">Seat</p>
-                      <p className="text-4xl font-bold text-white">
-                        {attendeeData.allocation.seat}
-                      </p>
+                <>
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h2 className="text-2xl font-bold text-white mb-6">
+                      Seat Allocation
+                    </h2>
+                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                      <div className="text-center">
+                        <p className="text-white/70 text-sm mb-2">Enclosure</p>
+                        <p className="text-4xl font-bold text-white">
+                          {attendeeData.allocation.enclosure}
+                        </p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-white/70 text-sm mb-2">Row</p>
+                        <p className="text-4xl font-bold text-white">
+                          {attendeeData.allocation.row}
+                        </p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-white/70 text-sm mb-2">Seat</p>
+                        <p className="text-4xl font-bold text-white">
+                          {attendeeData.allocation.seat}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* QR Ticket Display */}
-                  {attendeeData.verificationToken ? (
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-white text-center">
-                        Your Digital Ticket
-                      </h3>
-                      <div className="flex justify-center">
-                        {/* @ts-expect-error - Ticket is JSX component with default props */}
-                        <Ticket
-                          mode="ticket"
-                          name={attendeeData.name}
-                          title={attendeeData.course}
-                          handle={attendeeData.enrollmentId}
-                          status={`${attendeeData.allocation.enclosure}-${attendeeData.allocation.row}-${attendeeData.allocation.seat}`}
-                          verificationToken={attendeeData.verificationToken}
-                          showUserInfo={true}
-                        />
-                      </div>
-                      <p className="text-white/70 text-sm text-center">
-                        Show this QR code at the venue for entry verification
-                      </p>
+                  {/* Convocation Layout */}
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h2 className="text-2xl font-bold text-white mb-6">
+                      Venue Layout
+                    </h2>
+                    <div className="relative w-full overflow-hidden rounded-lg">
+                      <img
+                        src="/Convocation Layout Final-1.png"
+                        alt="Convocation Venue Layout"
+                        className="w-full h-auto"
+                      />
                     </div>
-                  ) : (
-                    <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className="w-6 h-6 text-yellow-200 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h3 className="text-yellow-100 font-semibold mb-1">
-                            QR Code Not Available
-                          </h3>
-                          <p className="text-yellow-200">
-                            Your digital ticket is not ready yet. Please contact the administration.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                </>
               ) : (
                 <div className="bg-yellow-500/20 backdrop-blur-md border border-yellow-500/50 rounded-xl p-6">
                   <div className="flex items-start gap-3">
