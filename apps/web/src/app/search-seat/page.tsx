@@ -361,7 +361,7 @@ export default function SearchSeatPage() {
                   </div>
                   {/* Convocation Layout */}
                   <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                    <h2 className="text-2xl font-bold text-white mb-6">
+                    <h2 className="text-3xl font-bold text-white text-center mb-6">
                       Venue Layout
                     </h2>
                     <div className="relative w-full overflow-hidden rounded-lg">
@@ -377,26 +377,21 @@ export default function SearchSeatPage() {
                   </div>
                   {/*food instructions */}
                   <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                    <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                      All students and parents are requested to have dinner
-                      strictly in their allotted phase (Phase 1 or Phase 2) and
-                      only in their assigned zone as mentioned on the coupon
-                      (Red Zone, Blue Zone, or Purple Zone). This phase-wise
-                      arrangement is to ensure smooth management and avoid
-                      overcrowding.
+                    <h1 className="text-3xl font-bold text-white text-center mb-6">
+                      Invitation and Guideline for the Dinner
+                    </h1>
+                    <h2 className="text-2xl semi-bold text-white mb-6 text-center">
+                      All students and parents are requested to have dinner in
+                      their allotted phase (Phase 1 or Phase 2) and only in
+                      their assigned zone as mentioned on the coupon (Red Zone,
+                      Blue Zone, or Purple Zone). This phase-wise arrangement is
+                      to ensure smooth management and avoid overcrowding.
                     </h2>
-                    <div className="relative w-full overflow-hidden rounded-lg">
-                      <Image
-                        src="/Dinner_instructions.jpeg"
-                        alt="Dinner Instructions"
-                        width={1200}
-                        height={800}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
                   </div>
                   <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h1 className="text-3xl font-bold text-white text-center mb-6">
+                      Guideline for the Photo Shoot
+                    </h1>
                     <h2 className="text-2xl font-bold text-white mb-6 text-center">
                       All students and parents are kindly requested to be
                       available at their designated photo booth after the
@@ -404,7 +399,7 @@ export default function SearchSeatPage() {
                       authorities. Your cooperation will help ensure a smooth
                       and well-organized process.
                     </h2>
-                    
+
                     {/* Excel-like Grid */}
                     <div className="mt-8 overflow-x-auto">
                       <h3 className="text-xl font-bold text-white mb-4 text-center">
@@ -420,9 +415,6 @@ export default function SearchSeatPage() {
                             <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
                               Booth No
                             </th>
-                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
-                              Students
-                            </th>
                           </tr>
                         </thead>
                         {/* Data Rows */}
@@ -434,9 +426,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               1
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              909
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -445,19 +434,14 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               2
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              612
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
-                              Nursing, Public Health, Paramedical, MBBS, Physiotherapy
+                              Nursing, Public Health, Paramedical, MBBS,
+                              Physiotherapy
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               3
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              680
                             </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
@@ -467,9 +451,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               4
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              625
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -477,9 +458,6 @@ export default function SearchSeatPage() {
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               5
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              683
                             </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
@@ -489,9 +467,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               6
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              712
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -499,9 +474,6 @@ export default function SearchSeatPage() {
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               7
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              610
                             </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
@@ -511,9 +483,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               8
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              400
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -522,9 +491,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               9
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              -
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -532,9 +498,6 @@ export default function SearchSeatPage() {
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               10
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              -
                             </td>
                           </tr>
                         </tbody>
@@ -556,12 +519,6 @@ export default function SearchSeatPage() {
                             <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
                               Zone
                             </th>
-                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
-                              Students
-                            </th>
-                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
-                              Space Alloted
-                            </th>
                           </tr>
                         </thead>
                         {/* Data Rows */}
@@ -573,12 +530,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               1
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              2230
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              30ft
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -586,12 +537,6 @@ export default function SearchSeatPage() {
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               2
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              2428
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              30ft
                             </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
@@ -601,12 +546,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               3
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              1585
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              20ft
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -615,12 +554,6 @@ export default function SearchSeatPage() {
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               4
                             </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              267
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              10ft
-                            </td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="border border-white/30 px-4 py-3 text-white">
@@ -628,12 +561,6 @@ export default function SearchSeatPage() {
                             </td>
                             <td className="border border-white/30 px-4 py-3 text-white text-center">
                               5
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              662
-                            </td>
-                            <td className="border border-white/30 px-4 py-3 text-white text-center">
-                              10ft
                             </td>
                           </tr>
                         </tbody>
