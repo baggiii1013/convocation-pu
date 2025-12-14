@@ -5,23 +5,7 @@ const nextConfig: NextConfig = {
   distDir: 'dist',
   allowedDevOrigins: ['10.0.0.171'],
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'media.assettype.com',
-        pathname: '/newslaundry/2022-01/**'
-      },
-      {
-        protocol: 'https',
-        hostname: 'medianoise.in',
-        pathname: '/wp-content/uploads/**'
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.catchkaro.in',
-        pathname: '/wp-content/uploads/**'
-      },
-    ],
+    qualities: [75, 90],
   },
 };
 

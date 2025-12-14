@@ -340,7 +340,22 @@ export default function SearchSeatPage() {
                       </div>
                     </div>
                   </div>
-
+                  {/*food instructions */}
+                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h2 className="text-2xl font-bold text-accent-red mb-6">
+                      All students and parents are requested to have dinner strictly in their allotted phase (Phase 1 or Phase 2) and only in their assigned zone as mentioned on the coupon (Red Zone, Blue Zone, or Purple Zone). This phase-wise arrangement is to ensure smooth management and avoid overcrowding.
+                    </h2>
+                    <div className="relative w-full overflow-hidden rounded-lg">
+                      <Image
+                        src="/Dinner_instructions.jpeg"
+                        alt="Dinner Instructions"
+                        width={1200}
+                        height={800}
+                        className="w-full h-auto"
+                        priority
+                      />
+                    </div>
+                  </div>
                   {/* Convocation Layout */}
                   <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                     <h2 className="text-2xl font-bold text-white mb-6">
