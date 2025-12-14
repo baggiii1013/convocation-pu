@@ -30,16 +30,22 @@ interface AttendeeData {
 
 export default function SearchSeatPage() {
   const [searchValue, setSearchValue] = useState("");
-  const [searchType, setSearchType] = useState<"enrollment" | "crr">("enrollment");
+  const [searchType, setSearchType] = useState<"enrollment" | "crr">(
+    "enrollment"
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attendeeData, setAttendeeData] = useState<AttendeeData | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!searchValue.trim()) {
-      setError(`Please enter your ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`);
+      setError(
+        `Please enter your ${
+          searchType === "enrollment" ? "enrollment number" : "CRR number"
+        }`
+      );
       return;
     }
 
@@ -49,37 +55,44 @@ export default function SearchSeatPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/search-by/${searchValue.trim()}`
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/api/v1/attendees/public/search-by/${searchValue.trim()}`
       );
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        setError(data.message || `No record found for this ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`);
+        setError(
+          data.message ||
+            `No record found for this ${
+              searchType === "enrollment" ? "enrollment number" : "CRR number"
+            }`
+        );
         return;
       }
 
       const attendeeInfo = data.data;
-      
+
       // If attendee has a verification token, fetch it using CRR
       if (attendeeInfo.hasVerificationToken && attendeeInfo.crr) {
         try {
           const tokenResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/v1/attendees/public/verify-crr`,
             {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 enrollmentId: attendeeInfo.enrollmentId,
-                crr: attendeeInfo.crr
-              })
+                crr: attendeeInfo.crr,
+              }),
             }
           );
 
           const tokenData = await tokenResponse.json();
-          
+
           if (tokenResponse.ok && tokenData.success) {
             attendeeInfo.verificationToken = tokenData.data.verificationToken;
           }
@@ -107,7 +120,7 @@ export default function SearchSeatPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
-      
+
       <motion.div
         animate={{
           x: [0, 100, 0],
@@ -178,14 +191,20 @@ export default function SearchSeatPage() {
                   htmlFor="searchValue"
                   className="block text-white font-medium mb-2"
                 >
-                  {searchType === "enrollment" ? "Enrollment Number" : "CRR Number"}
+                  {searchType === "enrollment"
+                    ? "Enrollment Number"
+                    : "CRR Number"}
                 </label>
                 <input
                   id="searchValue"
                   type="text"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value.toUpperCase())}
-                  placeholder={`Enter your ${searchType === "enrollment" ? "enrollment number" : "CRR number"}`}
+                  placeholder={`Enter your ${
+                    searchType === "enrollment"
+                      ? "enrollment number"
+                      : "CRR number"
+                  }`}
                   className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
                   disabled={loading}
                 />
@@ -253,7 +272,7 @@ export default function SearchSeatPage() {
               className="space-y-6"
             >
               {/* Attendee Info Card */}
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+              <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                 <h2 className="text-2xl font-bold text-white mb-6">
                   Student Information
                 </h2>
@@ -315,7 +334,7 @@ export default function SearchSeatPage() {
               {/* Seat Allocation */}
               {attendeeData.allocation ? (
                 <>
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                     <h2 className="text-2xl font-bold text-white mb-6">
                       Seat Allocation
                     </h2>
@@ -340,24 +359,8 @@ export default function SearchSeatPage() {
                       </div>
                     </div>
                   </div>
-                  {/*food instructions */}
-                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                    <h2 className="text-2xl font-bold text-accent-red mb-6">
-                      All students and parents are requested to have dinner strictly in their allotted phase (Phase 1 or Phase 2) and only in their assigned zone as mentioned on the coupon (Red Zone, Blue Zone, or Purple Zone). This phase-wise arrangement is to ensure smooth management and avoid overcrowding.
-                    </h2>
-                    <div className="relative w-full overflow-hidden rounded-lg">
-                      <Image
-                        src="/Dinner_instructions.jpeg"
-                        alt="Dinner Instructions"
-                        width={1200}
-                        height={800}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  </div>
                   {/* Convocation Layout */}
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                     <h2 className="text-2xl font-bold text-white mb-6">
                       Venue Layout
                     </h2>
@@ -370,6 +373,271 @@ export default function SearchSeatPage() {
                         className="w-full h-auto"
                         priority
                       />
+                    </div>
+                  </div>
+                  {/*food instructions */}
+                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">
+                      All students and parents are requested to have dinner
+                      strictly in their allotted phase (Phase 1 or Phase 2) and
+                      only in their assigned zone as mentioned on the coupon
+                      (Red Zone, Blue Zone, or Purple Zone). This phase-wise
+                      arrangement is to ensure smooth management and avoid
+                      overcrowding.
+                    </h2>
+                    <div className="relative w-full overflow-hidden rounded-lg">
+                      <Image
+                        src="/Dinner_instructions.jpeg"
+                        alt="Dinner Instructions"
+                        width={1200}
+                        height={800}
+                        className="w-full h-auto"
+                        priority
+                      />
+                    </div>
+                  </div>
+                  <div className="bg-black/50 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">
+                      All students and parents are kindly requested to be
+                      available at their designated photo booth after the
+                      convocation ceremony for photographs with the higher
+                      authorities. Your cooperation will help ensure a smooth
+                      and well-organized process.
+                    </h2>
+                    
+                    {/* Excel-like Grid */}
+                    <div className="mt-8 overflow-x-auto">
+                      <h3 className="text-xl font-bold text-white mb-4 text-center">
+                        Individual Booth
+                      </h3>
+                      <table className="w-full border-collapse bg-white/10 rounded-lg overflow-hidden">
+                        {/* Title Bar / Header Row */}
+                        <thead>
+                          <tr className="bg-primary-600/80 ">
+                            <th className="border text-center border-white/30 px-4 py-3 text-left text-white font-semibold">
+                              Faculty
+                            </th>
+                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
+                              Booth No
+                            </th>
+                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
+                              Students
+                            </th>
+                          </tr>
+                        </thead>
+                        {/* Data Rows */}
+                        <tbody className="text-center">
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              FITCS
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              1
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              909
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Arts, Agri, Commerce, Social Work, Law
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              2
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              612
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Nursing, Public Health, Paramedical, MBBS, Physiotherapy
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              3
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              680
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Pharmacy, Hotel Management
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              4
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              625
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Ayurved, Homoeopathy
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              5
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              683
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Applied Sciences
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              6
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              712
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PIET DS
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              7
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              610
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              CDOE
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              8
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              400
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              President Booth
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              9
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              -
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              Vice President Booth
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              10
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              -
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* 100ft Wall Table */}
+                    <div className="mt-12">
+                      <h3 className="text-xl font-bold text-white mb-4 text-center">
+                        100ft Wall
+                      </h3>
+                      <table className="w-full border-collapse bg-white/10 rounded-lg overflow-hidden">
+                        {/* Title Bar / Header Row */}
+                        <thead>
+                          <tr className="bg-primary-600/80">
+                            <th className="border text-center border-white/30 px-4 py-3 text-white font-semibold">
+                              Institute
+                            </th>
+                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
+                              Zone
+                            </th>
+                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
+                              Students
+                            </th>
+                            <th className="border border-white/30 px-4 py-3 text-center text-white font-semibold">
+                              Space Alloted
+                            </th>
+                          </tr>
+                        </thead>
+                        {/* Data Rows */}
+                        <tbody className="text-center">
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PIMR, PIET-MBA, PIBA
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              1
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              2230
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              30ft
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PIET
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              2
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              2428
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              30ft
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PIT, PIT DS
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              3
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              1585
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              20ft
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PID, PIFA, PIAR, PIPA
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              4
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              267
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              10ft
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="border border-white/30 px-4 py-3 text-white">
+                              PPI
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              5
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              662
+                            </td>
+                            <td className="border border-white/30 px-4 py-3 text-white text-center">
+                              10ft
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </>
