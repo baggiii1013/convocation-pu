@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
 import Link from 'next/link';
-import * as React from 'react';
 
 const footerLinks = {
   quickLinks: [
@@ -25,37 +24,9 @@ const footerLinks = {
   ],
 };
 
-const socialLinks = [
-  { icon: Facebook, href: 'https://www.facebook.com/ParulUniversity/', label: 'Facebook' },
-  { icon: Twitter, href: 'https://x.com/ParulUniversity', label: 'Twitter' },
-  { icon: Instagram, href: 'https://www.instagram.com/ParulUniversity', label: 'Instagram' },
-  { icon: Linkedin, href: 'https://linkedin.com/school/paruluniversity/', label: 'LinkedIn' },
-];
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'convocation@pu.edu.in',
-    href: 'mailto:convocation@pu.edu.in',
-  },
-  {
-    icon: Phone,
-    label: 'Phone',
-    value: '+91 123 456 7890',
-    href: 'tel:+911234567890',
-  },
-  {
-    icon: MapPin,
-    label: 'Address',
-    value: 'Parul University, Vadodara, India',
-    href: 'https://maps.google.com',
-  },
-];
-
 export function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-black text-white pt-12 pb-6 md:pt-8 md:pb-8">
+    <footer className="bg-gray-900 dark:bg-black text-white pb-6 md:pt-8 md:pb-8">
       <div className="container mx-auto px-4 md:px-6">
 
         {/* Bottom Footer */}

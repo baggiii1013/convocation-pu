@@ -23,8 +23,6 @@ export default function HomePage() {
       {/* VIP Guests Section */}
       <VIPGuests />
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

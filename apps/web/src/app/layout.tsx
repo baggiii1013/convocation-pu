@@ -1,3 +1,4 @@
+import { Footer } from '@/components/landing/Footer';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { getServerSession } from '@/lib/auth/session';
 import '@fontsource/inter/400.css';
@@ -44,6 +45,7 @@ export default async function RootLayout({
       <body className="antialiased bg-dark-bg text-foreground">
         <AuthProvider initialUser={initialUser}>
           {children}
+          <Footer />
           <Toaster
             position="top-right"
             toastOptions={{
