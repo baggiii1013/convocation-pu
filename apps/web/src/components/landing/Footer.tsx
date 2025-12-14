@@ -45,7 +45,7 @@ export function Footer() {
             <p className="text-gray-400 text-xs md:text-sm mb-1.5 md:mb-2">
               Co-ordinators : Dr. Swapnil M Parikh, Ms. Sumitra Menaria, Mr. Mohit Rathod
             </p>
-            <p className="text-gray-500 text-xs leading-relaxed">
+            <p className="text-white text-lg leading-relaxed">
               Designed and developed by{' '}
               <a
                 href="https://github.com/baggiii1013"
